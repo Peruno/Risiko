@@ -29,15 +29,13 @@ def p_swin(a, d):
 
 
 def p_recursive(a, d):
-    """Returns the probability to win an attack with a attackers against d defenders. Careful: for large a and d,
-    this function is very slow. Use p_matrix() instead."""
+    """Returns the probability to win an attack with a attackers against d defenders."""
     if a == 0:
-        y = 0
+        return 0
     elif d == 0:
-        y = 1
+        return 1
     else:
-        y = p_swin(a, d) * p_recursive(a, d-1) + (1-p_swin(a, d)) * p_recursive(a-1, d)
-    return y
+        return p_swin(a, d) * p_recursive(a, d-1) + (1-p_swin(a, d)) * p_recursive(a-1, d)
 
 
 def p_matrix(a, d):
@@ -60,7 +58,7 @@ def p_matrix(a, d):
 
 def p_precise_win(a, d, a_min):
     """Returns the probability to win an attack with a attackers against d defenders and have exactly a_min attackers
-    left afterwards."""
+    left afterward."""
     win_matrix = zeros((a + 1, d + 1))
     for i in range(a + 1):
         for j in range(d + 1):
@@ -82,7 +80,7 @@ def p_precise_win(a, d, a_min):
 
 def p_precise_loss(a, d, d_min):
     """Returns the probability to lose an attack with a attackers against d defenders with the condition, that there
-        are exactly d_min defenders left afterwards."""
+        are exactly d_min defenders left afterward."""
     loss_matrix = zeros((a + 1, d + 1))
     for i in range(a + 1):
         for j in range(d + 1):
@@ -106,7 +104,7 @@ def p_safe_stop(a, d):
     """Returns a string of probabilities. Element i (starting at 0) is the probability that the attacker loses
     all attacking units but 2 and that the defender has i losses."""
     probs = []
-    for d_losses in range(d-1): # looping over all possible losses except for d-1 (when only 1 defender remains)
+    for d_losses in range(d-1):  # looping over all possible losses except for d-1 (when only 1 defender remains)
         d_left = d - d_losses
         # Binomial distribution
         p = (1-single_probs["3v2"]) * single_probs["3v2"]**(d-d_left) * (1-single_probs["3v2"])**(a-3) * factorial(d-d_left + a-3)/factorial(d-d_left)/factorial(a-3)
