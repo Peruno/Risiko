@@ -67,7 +67,7 @@ def all_in(a, d, pick_result=True):
 
 
 # all_in(6, 1)
-safe_attack(3, 1)
+safe_attack(9, 6)
 
 # Idee_1: Angreifer kann ein Limit an Verlusten setzen
 # Idee_2: GUI

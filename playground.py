@@ -2,7 +2,7 @@
 from functions import *
 import matplotlib.pyplot as plt
 from numpy import zeros, array, arange
-from probabilities import p_32, p_31, p_22, p_21, p_12, p_11
+from probabilities import single_probs
 import random
 
 
