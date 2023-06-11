@@ -1,0 +1,6 @@
+Idee_1: Angreifer kann ein Limit an Verlusten setzen
+Idee_2: GUI
+Idee_3: Diagramme von All_in und Abbruch nebeneinander darstellen
+Idee_4: Wahrscheinlichkeiten vorberechnen und als csv-Datei speichern
+Idee_5: safe_attack: Verluste des Verteidigers ausgeben falls das Abbruchszenario eintritt
+Idee_6: Für große a und d Polynomialverteilung anwenden
