@@ -3,7 +3,7 @@ from time import time
 
 from numpy import zeros, array
 
-from basic_probabilities import BasicProbabilities
+from src.basic_probabilities import BasicProbabilities
 
 
 class CompositeProbabilities:
@@ -93,17 +93,19 @@ class CompositeProbabilities:
         for d_losses in range(d-1):  # looping over all possible losses except for d-1 (when only 1 defender remains)
             d_left = d - d_losses
             # Binomial distribution
-            p = (1-self.basic_probs.single_probs["3v2"]) * self.basic_probs.single_probs["3v2"]**(d-d_left) * \
-                (1-self.basic_probs.single_probs["3v2"])**(a-3) * \
+            p = (1-self.basic_probs.single_probs["3v2"]) * \
+                self.basic_probs.single_probs["3v2"] ** (d-d_left) * \
+                (1-self.basic_probs.single_probs["3v2"]) ** (a-3) * \
                 factorial(d-d_left + a-3) / factorial(d-d_left) / factorial(a-3)
             probs.append(p)
 
         # Now considering the special case d_left = 1. To deal with that, a matrix of probabilities is introduced:
-        # Position ij of this matrix will give the probability that the attack stops with 2 attackers and 1 defender left.
-        # The only way to reach this is from (a,d) = (3,1). The probability to reach (2,1) from (3,1) is p=(1-p_31). So
-        # the matrix element (3,1) will be assigned the value (1-p_31). Each matrix element's value will be the probability
-        # that it reaches (2,1). The value of position (i,j) is calculated by taking (i-1,j) times the probability to reach
-        # (i-1,j) from (i,j) plus (i,j-1) times the probability to reach (i,j-1) from (i,j).
+        # Position ij of this matrix will give the probability that the attack stops with 2 attackers and 1 defender
+        # left. The only way to reach this is from (a,d) = (3,1). The probability to reach (2,1) from (3,
+        # 1) is p=(1-p_31). So the matrix element (3,1) will be assigned the value (1-p_31). Each matrix element's
+        # value will be the probability that it reaches (2,1). The value of position (i,j) is calculated by taking (
+        # i-1,j) times the probability to reach (i-1,j) from (i,j) plus (i,j-1) times the probability to reach (i,
+        # j-1) from (i,j).
         matrix = zeros((a+1, d+1))
         for i in range(3, a+1):  # columns
             for j in range(1, d+1):  # rows
@@ -116,7 +118,6 @@ class CompositeProbabilities:
                                    matrix[i-1][j] * (1-self.basic_probs.single_probs["3v2"])
         probs.append(matrix[a][d])
         return array(probs)
-
 
 
 if __name__ == '__main__':
@@ -132,4 +133,3 @@ if __name__ == '__main__':
 
     print('Benötigte Zeit mit matrix Funktion: {:5.3f}s'.format(end1 - start1))
     print('Benötigte Zeit mit matrix2 Funktion: {:5.3f}s'.format(end2 - start2))
-
