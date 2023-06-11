@@ -1,8 +1,7 @@
 """Im gesamten Dokument wird mit der Michelson'schen Verzögerungstaktik gerechnet."""
-from functions import *
+from src.functions import *
 import matplotlib.pyplot as plt
 from numpy import zeros, array, arange
-from probabilities import single_probs
 import random
 
 
@@ -126,11 +125,6 @@ def safe_attack(a, d, pick_result=True):
 
         result = random.choices(result_list, weights=joined_probs)
         print(result)
-
-
-# Idee_1: Angreifer kann ein Limit an Verlusten setzen
-# Idee_2: GUI
-# Idee_3: Diagramme von Allin und Abbruch nebeneinander darstellen
 
 
 all_in(30, 25)
