@@ -1,31 +1,12 @@
 from numpy import zeros, array, arange
-from probabilities import single_probs
+from basic_probabilities import BasicProbabilities
 from math import factorial
 from random import choices
 from time import time
 import matplotlib.pyplot as plt
 
 
-def p_swin(a, d):
-    """Returns the probability to win a single roll of the dices as attacker.
-    a: number of attackers
-    d: number of defenders"""
-    if a == 0:
-        return 0
-    elif d == 0:
-        return 1
-    elif a >= 3 and d >= 2:
-        return single_probs["3v2"]
-    elif a >= 3 and d == 1:
-        return single_probs["3v1"]
-    elif a == 2 and d >= 2:
-        return single_probs["2v2"]
-    elif a == 2 and d == 1:
-        return single_probs["2v1"]
-    elif a == 1 and d >= 2:
-        return single_probs["1v2"]
-    elif a == 1 and d == 1:
-        return single_probs["1v1"]
+basic_probs = BasicProbabilities()
 
 
 def p_recursive(a, d):
@@ -35,7 +16,7 @@ def p_recursive(a, d):
     elif d == 0:
         return 1
     else:
-        return p_swin(a, d) * p_recursive(a, d-1) + (1-p_swin(a, d)) * p_recursive(a-1, d)
+        return basic_probs.p_swin(a, d) * p_recursive(a, d - 1) + (1 - basic_probs.p_swin(a, d)) * p_recursive(a - 1, d)
 
 
 def p_matrix(a, d):
@@ -51,7 +32,7 @@ def p_matrix(a, d):
             elif i == 0:
                 y = 0
             else:
-                y = p_swin(i, j) * risk_matrix[i][j - 1] + (1-p_swin(i, j)) * risk_matrix[i - 1][j]
+                y = basic_probs.p_swin(i, j) * risk_matrix[i][j - 1] + (1 - basic_probs.p_swin(i, j)) * risk_matrix[i - 1][j]
             risk_matrix[i][j] = y
     return risk_matrix[a][d]
 
@@ -69,11 +50,11 @@ def p_precise_win(a, d, a_min):
             elif i == a_min and j == 0:
                 y = 1
             elif i == a_min and j > 0:
-                y = p_swin(i, j) * win_matrix[i][j - 1]
+                y = basic_probs.p_swin(i, j) * win_matrix[i][j - 1]
             elif i > a_min and j == 0:
                 y = 0
             elif i > a_min and j > 0:
-                y = p_swin(i, j) * win_matrix[i][j - 1] + (1-p_swin(i, j)) * win_matrix[i - 1][j]
+                y = basic_probs.p_swin(i, j) * win_matrix[i][j - 1] + (1 - basic_probs.p_swin(i, j)) * win_matrix[i - 1][j]
             win_matrix[i][j] = y
     return win_matrix[a][d]
 
@@ -93,9 +74,9 @@ def p_precise_loss(a, d, d_min):
             elif j == d_min and i == 0:
                 y = 1
             elif j == d_min and i > 0:
-                y = (1-p_swin(i, j)) * loss_matrix[i - 1][j]
+                y = (1 - basic_probs.p_swin(i, j)) * loss_matrix[i - 1][j]
             elif j > d_min and i > 0:
-                y = p_swin(i, j) * loss_matrix[i][j - 1] + (1-p_swin(i, j)) * loss_matrix[i - 1][j]
+                y = basic_probs.p_swin(i, j) * loss_matrix[i][j - 1] + (1 - basic_probs.p_swin(i, j)) * loss_matrix[i - 1][j]
             loss_matrix[i][j] = y
     return loss_matrix[a][d]
 
@@ -107,7 +88,7 @@ def p_safe_stop(a, d):
     for d_losses in range(d-1):  # looping over all possible losses except for d-1 (when only 1 defender remains)
         d_left = d - d_losses
         # Binomial distribution
-        p = (1-single_probs["3v2"]) * single_probs["3v2"]**(d-d_left) * (1-single_probs["3v2"])**(a-3) * factorial(d-d_left + a-3)/factorial(d-d_left)/factorial(a-3)
+        p = (1-basic_probs.single_probs["3v2"]) * basic_probs.single_probs["3v2"]**(d-d_left) * (1-basic_probs.single_probs["3v2"])**(a-3) * factorial(d-d_left + a-3)/factorial(d-d_left)/factorial(a-3)
         probs.append(p)
 
     # Now considering the special case d_left = 1. To deal with that, a matrix of probabilities is introduced:
@@ -120,11 +101,11 @@ def p_safe_stop(a, d):
     for i in range(3, a+1):  # columns
         for j in range(1, d+1):  # rows
             if j == 1:
-                matrix[i][j] = (1-single_probs["3v1"])**(i-2)
+                matrix[i][j] = (1-basic_probs.single_probs["3v1"])**(i-2)
             elif i == 3 and j != 1:
-                matrix[i][j] = matrix[i][j-1] * single_probs["3v2"]
+                matrix[i][j] = matrix[i][j-1] * basic_probs.single_probs["3v2"]
             else:
-                matrix[i][j] = matrix[i][j-1] * single_probs["3v2"] + matrix[i-1][j] * (1-single_probs["3v2"])
+                matrix[i][j] = matrix[i][j-1] * basic_probs.single_probs["3v2"] + matrix[i-1][j] * (1-basic_probs.single_probs["3v2"])
     probs.append(matrix[a][d])
     return array(probs)
 
