@@ -1,5 +1,5 @@
 """Im gesamten Dokument wird mit der Michelson'schen Verzögerungstaktik gerechnet."""
-from src.functions import *
+from src.composite_probabilities import *
 import matplotlib.pyplot as plt
 from numpy import zeros, array, arange
 import random
