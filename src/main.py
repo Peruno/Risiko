@@ -1,4 +1,5 @@
-from simulator import safe_attack, all_in
+from simulator import Simulator
 
 if __name__ == "__main__":
-    safe_attack(10, 18)
+    simulator = Simulator()
+    simulator.safe_attack(10, 10)
