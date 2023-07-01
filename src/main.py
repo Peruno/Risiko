@@ -1,4 +1,4 @@
-from simulator import all_in, print_results
+from simulator import safe_attack, all_in
 
 if __name__ == "__main__":
-    all_in(10, 8)
+    safe_attack(10, 18)
