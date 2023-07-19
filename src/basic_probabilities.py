@@ -5,54 +5,54 @@ class BasicProbabilities:
         self.single_probs = {}
 
         wins_for_attacker_1v1 = 0
-        for j in range(1, 7):
-            for i in range(1, 7):
-                if i < j:
+        for a in range(1, 7):
+            for d in range(1, 7):
+                if d < a:
                     wins_for_attacker_1v1 += 1
         self.single_probs["1v1"] = wins_for_attacker_1v1 / 6 ** 2
 
         wins_for_attacker_1v2 = 0
-        for j in range(1, 7):
-            for i1 in range(1, 7):
-                for i2 in range(1, 7):
-                    if max(i1, i2) < j:
+        for a in range(1, 7):
+            for d1 in range(1, 7):
+                for d2 in range(1, 7):
+                    if max(d1, d2) < a:
                         wins_for_attacker_1v2 += 1
         self.single_probs["1v2"] = wins_for_attacker_1v2 / 6**3
 
         wins_for_attacker_2v1 = 0
-        for j1 in range(1, 7):
-            for j2 in range(1, 7):
-                for i1 in range(1, 7):
-                    if i1 < max(j1, j2):
+        for a1 in range(1, 7):
+            for a2 in range(1, 7):
+                for d1 in range(1, 7):
+                    if d1 < max(a1, a2):
                         wins_for_attacker_2v1 += 1
         self.single_probs["2v1"] = wins_for_attacker_2v1 / 6**3
 
         wins_for_attacker_2v2 = 0
-        for j1 in range(1, 7):
-            for j2 in range(1, 7):
-                for i1 in range(1, 7):
-                    for i2 in range(1, 7):
-                        if max(i1, i2) < max(j1, j2):
+        for a1 in range(1, 7):
+            for a2 in range(1, 7):
+                for d1 in range(1, 7):
+                    for d2 in range(1, 7):
+                        if max(d1, d2) < max(a1, a2):
                             wins_for_attacker_2v2 += 1
         self.single_probs["2v2"] = wins_for_attacker_2v2 / 6**4
 
         wins_for_attacker_3v1 = 0
-        for j1 in range(1, 7):
-            for j2 in range(1, 7):
-                for j3 in range(1, 7):
-                    for i1 in range(1, 7):
-                        if i1 < max(j1, j2, j3):
+        for a1 in range(1, 7):
+            for a2 in range(1, 7):
+                for a3 in range(1, 7):
+                    for d1 in range(1, 7):
+                        if d1 < max(a1, a2, a3):
                             wins_for_attacker_3v1 += 1
 
         self.single_probs["3v1"] = wins_for_attacker_3v1 / 6**4
 
         wins_for_attacker_3v2 = 0
-        for j1 in range(1, 7):
-            for j2 in range(1, 7):
-                for j3 in range(1, 7):
-                    for i1 in range(1, 7):
-                        for i2 in range(1, 7):
-                            if max(i1, i2) < max(j1, j2, j3):
+        for a1 in range(1, 7):
+            for a2 in range(1, 7):
+                for a3 in range(1, 7):
+                    for d1 in range(1, 7):
+                        for d2 in range(1, 7):
+                            if max(d1, d2) < max(a1, a2, a3):
                                 wins_for_attacker_3v2 += 1
         self.single_probs["3v2"] = wins_for_attacker_3v2 / 6**5
 
@@ -82,3 +82,8 @@ if __name__ == "__main__":
     probs = BasicProbabilities()
 
     print(probs.p_swin(3, 2))
+    print(probs.p_swin(3, 1))
+    print(probs.p_swin(2, 2))
+    print(probs.p_swin(2, 1))
+    print(probs.p_swin(1, 2))
+    print(probs.p_swin(1, 1))
