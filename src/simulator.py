@@ -20,6 +20,8 @@ class Simulator:
         fig, (ax1, ax2) = plt.subplots(1, 2)
         fig.suptitle(f'{a} Angreifer gegen {d} Verteidiger. \n Gesamtwahrscheinlichkeit für einen Sieg:'
                      f' {float("{0:.1f}".format(sum(list(win_probs.values())) * 100))}%')
+        ax1.set_title("Angreifer gewinnt")
+        ax2.set_title("Verteidiger gewinnt")
 
         ax1.bar(list(win_probs.keys()), [p * 100 for p in win_probs.values()], color='green')
         ax1.set_xticks(array(range(a)))
@@ -52,6 +54,8 @@ class Simulator:
         fig, (ax1, ax2) = plt.subplots(1, 2)
         fig.suptitle(f'{a} Angreifer gegen {d} Verteidiger. \n Gesamtwahrscheinlichkeit für einen Sieg:'
                      f' {float("{0:.1f}".format(sum(list(win_probs.values())) * 100))}% \n (Sicherer Angriff)')
+        ax1.set_title("Angreifer gewinnt")
+        ax2.set_title("Verteidiger gewinnt")
 
         ax1.bar(list(win_probs.keys()), [p * 100 for p in win_probs.values()], color='green')
         ax1.set_xticks(array(range(a - 2)))

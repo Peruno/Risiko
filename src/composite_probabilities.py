@@ -8,7 +8,6 @@ from src.basic_probabilities import BasicProbabilities
 class CompositeProbabilities:
     def __init__(self):
         self.basic_probs = BasicProbabilities()
-        self.risk_matrix = self.__get_probability_matrix(100, 100)
 
     def p_recursive(self, a, d):
         """Returns the probability to win an attack with a attackers against d defenders.
@@ -22,9 +21,6 @@ class CompositeProbabilities:
                 (1 - self.basic_probs.p_swin(a, d)) * self.p_recursive(a - 1, d)
 
     def p_matrix(self, a, d):
-        return self.risk_matrix[a][d]
-
-    def __get_probability_matrix(self, a, d):
         """Using the matrix-method to calculate the probability to win an attack with a attackers against d defenders.
         Each element given by (i,j) holds the probability to win with i attackers against j defenders. The next element
         will always be calculated using the ones before: (i, j-1) and (i-1, j) -> (i, j)
@@ -41,7 +37,7 @@ class CompositeProbabilities:
                         (1 - self.basic_probs.p_swin(i, j)) * risk_matrix[i - 1][j]
                 risk_matrix[i][j] = y
 
-        return risk_matrix
+        return risk_matrix[a][d]
 
     def p_precise_win(self, a, d, a_left):
         """Returns the probability to win an attack with a attackers against d defenders and have exactly a_left
