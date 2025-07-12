@@ -55,3 +55,7 @@ This is a learning project focused on:
 - Creating intuitive mobile UIs for probability visualization
 
 The application will calculate and visualize Risk battle probabilities with a native mobile interface.
+
+## Code Style Requirements
+
+**NO COMMENTS POLICY**: This project must not contain any comments in the code. All code should be self-documenting through clear naming and structure. Do not add comments to any files unless explicitly told.

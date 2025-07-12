@@ -11,7 +11,6 @@ void main() {
 
     group('Single Dice Roll Probabilities', () {
       test('1v1 probability matches Python reference', () {
-        // Python reference: 15/36 = 0.4166666666666667
         const expected = 15.0 / 36.0;
         final actual = basicProbs.singleProbs['1v1']!;
         
@@ -20,7 +19,6 @@ void main() {
       });
 
       test('1v2 probability matches Python reference', () {
-        // Python reference: 55/216 = 0.25462962962962965
         const expected = 55.0 / 216.0;
         final actual = basicProbs.singleProbs['1v2']!;
         
@@ -29,7 +27,6 @@ void main() {
       });
 
       test('2v1 probability matches Python reference', () {
-        // Python reference: 125/216 = 0.5787037037037037
         const expected = 125.0 / 216.0;
         final actual = basicProbs.singleProbs['2v1']!;
         
@@ -38,7 +35,6 @@ void main() {
       });
 
       test('2v2 probability matches Python reference', () {
-        // Python reference: 505/1296 = 0.3896604938271605
         const expected = 505.0 / 1296.0;
         final actual = basicProbs.singleProbs['2v2']!;
         
@@ -47,7 +43,6 @@ void main() {
       });
 
       test('3v1 probability matches Python reference', () {
-        // Python reference: 855/1296 = 0.6597222222222222
         const expected = 855.0 / 1296.0;
         final actual = basicProbs.singleProbs['3v1']!;
         
@@ -56,7 +51,6 @@ void main() {
       });
 
       test('3v2 probability matches Python reference', () {
-        // Python reference: 3667/7776 = 0.4715792181069959
         const expected = 3667.0 / 7776.0;
         final actual = basicProbs.singleProbs['3v2']!;
         
