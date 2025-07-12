@@ -11,20 +11,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:risiko_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Battle simulator UI test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const RisikoApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that the app has the expected UI elements.
+    expect(find.text('Enter Battle Parameters'), findsOneWidget);
+    expect(find.text('Number of Attackers'), findsOneWidget);
+    expect(find.text('Number of Defenders'), findsOneWidget);
+    expect(find.text('GO'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Test entering values and pressing GO button
+    await tester.enterText(find.byType(TextField).first, '10');
+    await tester.enterText(find.byType(TextField).last, '5');
+    await tester.tap(find.text('GO'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the result is displayed
+    expect(find.textContaining('Simulating battle: 10 attackers vs 5 defenders'), findsOneWidget);
   });
 }
