@@ -7,6 +7,9 @@ class CompositeProbabilities {
     _basicProbs = BasicProbabilities();
   }
 
+  /// Using the matrix-method to calculate the probability to win an attack with a attackers against d defenders.
+  /// Each element given by (i,j) holds the probability to win with i attackers against j defenders. The next element
+  /// will always be calculated using the ones before: (i, j-1) and (i-1, j) -> (i, j)
   double pMatrix(int a, int d) {
     if (a < 1) {
       throw ArgumentError('Number of attackers must be at least 1, got: $a');

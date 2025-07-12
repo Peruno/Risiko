@@ -10,7 +10,7 @@ class RisikoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Risiko Kampf Simulator',
+      title: 'Risiko Simulator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
@@ -60,7 +60,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Risiko Kampf Simulator'),
+        title: const Text('Risiko Simulator'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,7 +79,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               decoration: const InputDecoration(
                 labelText: 'Anzahl Angreifer',
                 border: OutlineInputBorder(),
-                hintText: 'Anzahl der angreifenden Truppen eingeben',
+                hintText: 'Anzahl der angreifenden Truppen',
               ),
             ),
             const SizedBox(height: 16),
@@ -89,7 +89,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               decoration: const InputDecoration(
                 labelText: 'Anzahl Verteidiger',
                 border: OutlineInputBorder(),
-                hintText: 'Anzahl der verteidigenden Truppen eingeben',
+                hintText: 'Anzahl der verteidigenden Truppen',
               ),
             ),
             const SizedBox(height: 24),

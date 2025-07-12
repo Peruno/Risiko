@@ -19,7 +19,6 @@ class BasicProbabilities {
       }
     }
     probs['1v1'] = winsForAttacker1v1 / (6 * 6);
-    print('Dart 1v1: $winsForAttacker1v1/36 = ${probs['1v1']}');
 
     int winsForAttacker1v2 = 0;
     for (int a = 1; a <= 6; a++) {
@@ -32,7 +31,6 @@ class BasicProbabilities {
       }
     }
     probs['1v2'] = winsForAttacker1v2 / (6 * 6 * 6);
-    print('Dart 1v2: $winsForAttacker1v2/216 = ${probs['1v2']}');
 
     int winsForAttacker2v1 = 0;
     for (int a1 = 1; a1 <= 6; a1++) {
@@ -45,7 +43,6 @@ class BasicProbabilities {
       }
     }
     probs['2v1'] = winsForAttacker2v1 / (6 * 6 * 6);
-    print('Dart 2v1: $winsForAttacker2v1/216 = ${probs['2v1']}');
 
     int winsForAttacker2v2 = 0;
     for (int a1 = 1; a1 <= 6; a1++) {
@@ -60,7 +57,6 @@ class BasicProbabilities {
       }
     }
     probs['2v2'] = winsForAttacker2v2 / (6 * 6 * 6 * 6);
-    print('Dart 2v2: $winsForAttacker2v2/1296 = ${probs['2v2']}');
 
     int winsForAttacker3v1 = 0;
     for (int a1 = 1; a1 <= 6; a1++) {
@@ -75,7 +71,6 @@ class BasicProbabilities {
       }
     }
     probs['3v1'] = winsForAttacker3v1 / (6 * 6 * 6 * 6);
-    print('Dart 3v1: $winsForAttacker3v1/1296 = ${probs['3v1']}');
 
     int winsForAttacker3v2 = 0;
     for (int a1 = 1; a1 <= 6; a1++) {
@@ -92,7 +87,6 @@ class BasicProbabilities {
       }
     }
     probs['3v2'] = winsForAttacker3v2 / (6 * 6 * 6 * 6 * 6);
-    print('Dart 3v2: $winsForAttacker3v2/7776 = ${probs['3v2']}');
 
     return probs;
   }
