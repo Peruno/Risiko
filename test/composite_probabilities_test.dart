@@ -284,5 +284,109 @@ void main() {
         }
       });
     });
+
+    group('Safe Attack Probabilities', () {
+      test('pSafeStop input validation', () {
+        expect(() => compositeProbs.pSafeStop(2, 5), 
+               throwsA(isA<ArgumentError>()));
+        expect(() => compositeProbs.pSafeStop(5, 0), 
+               throwsA(isA<ArgumentError>()));
+        expect(() => compositeProbs.pSafeStop(0, 3), 
+               throwsA(isA<ArgumentError>()));
+      });
+
+      test('pSafeStop returns correct number of probabilities', () {
+        const a = 5;
+        const d = 4;
+        
+        final safeProbs = compositeProbs.pSafeStop(a, d);
+        
+        expect(safeProbs.length, equals(d),
+               reason: 'Should return d probabilities for d defenders');
+      });
+
+      test('pSafeStop returns valid probabilities', () {
+        final testCases = [
+          [3, 3], [4, 2], [5, 4], [6, 3], [8, 5]
+        ];
+
+        for (final testCase in testCases) {
+          final a = testCase[0];
+          final d = testCase[1];
+          
+          final safeProbs = compositeProbs.pSafeStop(a, d);
+          
+          expect(safeProbs.length, equals(d));
+          
+          for (int i = 0; i < safeProbs.length; i++) {
+            expect(safeProbs[i], greaterThanOrEqualTo(0.0), 
+                   reason: 'pSafeStop($a, $d)[$i] should be >= 0');
+            expect(safeProbs[i], lessThanOrEqualTo(1.0), 
+                   reason: 'pSafeStop($a, $d)[$i] should be <= 1');
+          }
+        }
+      });
+
+      test('pSafeStop probabilities sum to reasonable value', () {
+        final testCases = [
+          [5, 3], [6, 4], [8, 5]
+        ];
+
+        for (final testCase in testCases) {
+          final a = testCase[0];
+          final d = testCase[1];
+          
+          final safeProbs = compositeProbs.pSafeStop(a, d);
+          final sum = safeProbs.reduce((a, b) => a + b);
+          
+          expect(sum, greaterThanOrEqualTo(0.0), 
+                 reason: 'Sum of safe probabilities should be >= 0');
+          expect(sum, lessThanOrEqualTo(1.0), 
+                 reason: 'Sum of safe probabilities should be <= 1');
+        }
+      });
+
+      test('pSafeStop minimum case works correctly', () {
+        const a = 3;
+        const d = 1;
+        
+        final safeProbs = compositeProbs.pSafeStop(a, d);
+        
+        expect(safeProbs.length, equals(1));
+        expect(safeProbs[0], greaterThanOrEqualTo(0.0));
+        expect(safeProbs[0], lessThanOrEqualTo(1.0));
+      });
+
+      test('pSafeStop scales correctly with more attackers', () {
+        const d = 3;
+        
+        final probs3 = compositeProbs.pSafeStop(3, d);
+        final probs5 = compositeProbs.pSafeStop(5, d);
+        final probs7 = compositeProbs.pSafeStop(7, d);
+        
+        expect(probs3.length, equals(d));
+        expect(probs5.length, equals(d));
+        expect(probs7.length, equals(d));
+        
+        for (int i = 0; i < d; i++) {
+          expect(probs3[i], greaterThanOrEqualTo(0.0));
+          expect(probs5[i], greaterThanOrEqualTo(0.0));
+          expect(probs7[i], greaterThanOrEqualTo(0.0));
+        }
+      });
+    });
+
+    group('Mathematical Properties', () {
+      test('safe attack probabilities are consistent', () {
+        const a = 5;
+        const d = 3;
+        
+        final safeProbs = compositeProbs.pSafeStop(a, d);
+        final sum = safeProbs.reduce((a, b) => a + b);
+        
+        expect(sum, lessThanOrEqualTo(1.0),
+               reason: 'Total safe attack probability should not exceed 1.0');
+      });
+    });
   });
 }

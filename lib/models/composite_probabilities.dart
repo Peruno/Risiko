@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'basic_probabilities.dart';
 
 class CompositeProbabilities {
@@ -122,5 +123,62 @@ class CompositeProbabilities {
     }
 
     return lossMatrix[a][d];
+  }
+
+  /// Returns probabilities for safe attack mode where attacker stops at 2 troops.
+  /// Element i is the probability that the attacker loses all attacking units but 2 
+  /// and that the defender has i losses.
+  List<double> pSafeStop(int a, int d) {
+    if (a < 3) {
+      throw ArgumentError('Safe attack requires at least 3 attackers, got: $a');
+    }
+    if (d < 1) {
+      throw ArgumentError('Number of defenders must be at least 1, got: $d');
+    }
+
+    final probs = <double>[];
+    final p3v2 = _basicProbs.singleProbs['3v2']!;
+    final p3v1 = _basicProbs.singleProbs['3v1']!;
+
+    for (int dLosses = 0; dLosses < d - 1; dLosses++) {
+      final dLeft = d - dLosses;
+      final p = (1 - p3v2) *
+          math.pow(p3v2, d - dLeft).toDouble() *
+          math.pow(1 - p3v2, a - 3).toDouble() *
+          _factorial(d - dLeft + a - 3) / 
+          (_factorial(d - dLeft) * _factorial(a - 3));
+      probs.add(p);
+    }
+
+    final matrix = List.generate(
+      a + 1,
+      (i) => List.filled(d + 1, 0.0)
+    );
+
+    for (int i = 3; i <= a; i++) {
+      for (int j = 1; j <= d; j++) {
+        if (j == 1) {
+          matrix[i][j] = math.pow(1 - p3v1, i - 2).toDouble();
+        } else if (i == 3 && j != 1) {
+          matrix[i][j] = matrix[i][j - 1] * p3v2;
+        } else {
+          matrix[i][j] = matrix[i][j - 1] * p3v2 + 
+                         matrix[i - 1][j] * (1 - p3v2);
+        }
+      }
+    }
+
+    probs.add(matrix[a][d]);
+    return probs;
+  }
+
+  double _factorial(int n) {
+    if (n < 0) return 0;
+    if (n <= 1) return 1;
+    double result = 1;
+    for (int i = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
   }
 }
