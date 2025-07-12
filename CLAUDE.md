@@ -4,28 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-This project uses UV for Python dependency management:
+This project uses Flutter for cross-platform mobile development:
 
-- **Install dependencies**: `uv sync`
-- **Run the application**: `uv run python src/main.py`
-- **Run tests**: `uv run pytest`
-- **Run a specific test**: `uv run pytest test/test_composite_probabilities.py::test_function_name`
-- **Run interactive Python**: `uv run python` (to import and test modules)
+- **Install dependencies**: `flutter pub get`
+- **Run the application**: `flutter run`
+- **Run tests**: `flutter test`
+- **Run a specific test**: `flutter test test/widget_test.dart`
+- **Build for release**: `flutter build apk` (Android) or `flutter build ios` (iOS)
+- **Check for issues**: `flutter doctor`
 
 ## Architecture Overview
 
-This is a Python application that simulates Risk (Risiko) battle probabilities. The codebase is organized into several key components:
+This is a Flutter application that simulates Risk (Risiko) battle probabilities. The app will be organized into several key components:
 
-### Core Components
+### Planned Core Components
 
-- **`src/basic_probabilities.py`**: Contains `BasicProbabilities` class that calculates single dice roll probabilities for different attacker/defender combinations (1v1, 1v2, 2v1, 2v2, 3v1, 3v2)
-- **`src/composite_probabilities.py`**: Contains `CompositeProbabilities` class that builds on basic probabilities to calculate complex battle outcomes using recursive and matrix methods
-- **`src/simulator.py`**: Contains `Simulator` class that provides the main interface for running simulations and generating matplotlib visualizations
-- **`src/main.py`**: Entry point that demonstrates the simulation with a sample 30v20 battle
+- **Battle probability calculations**: Dart classes to calculate single dice roll probabilities for different attacker/defender combinations (1v1, 1v2, 2v1, 2v2, 3v1, 3v2)
+- **Composite probability engine**: Advanced calculations for complex battle outcomes using recursive and matrix methods
+- **UI components**: Flutter widgets for inputting battle parameters and displaying results
+- **Visualization**: Charts and graphs to display probability distributions
 
-### Key Algorithms
+### Key Algorithms (To Implement)
 
-The application implements multiple mathematical approaches:
+The application will implement multiple mathematical approaches:
 
 1. **Recursive Method**: Direct recursive calculation of win probabilities
 2. **Matrix Method**: Dynamic programming approach using matrices for efficient calculation
@@ -34,22 +35,23 @@ The application implements multiple mathematical approaches:
 
 ### Testing
 
-- Tests are in `test/` directory using pytest
-- Key test validates that recursive and matrix methods produce identical results
-- Tests verify probability calculations sum to 1.0 (all outcomes accounted for)
+- Tests will be in `test/` directory using Flutter's testing framework
+- Unit tests for probability calculation algorithms
+- Widget tests for UI components
+- Integration tests for complete user flows
 
 ### Dependencies
 
-- **numpy**: For matrix operations and numerical calculations
-- **matplotlib**: For generating probability distribution charts
-- **pytest**: For running tests (implied by test structure)
+- **Flutter SDK**: Cross-platform mobile development framework
+- **Dart**: Programming language for Flutter applications
+- **Charts/visualization packages**: For displaying probability distributions
 
 ### Project Context
 
 This is a learning project focused on:
 - Building cross-platform mobile app capabilities
-- Understanding app development fundamentals
-- Implementing mathematical probability calculations
-- Creating intuitive UIs for probability visualization
+- Understanding app development fundamentals with Flutter
+- Implementing mathematical probability calculations in Dart
+- Creating intuitive mobile UIs for probability visualization
 
-The current implementation is a Python proof-of-concept that calculates and visualizes Risk battle probabilities, with plans to evolve into a mobile application.
+The application will calculate and visualize Risk battle probabilities with a native mobile interface.

@@ -1,9 +1,0 @@
-[project]
-name = "risiko"
-version = "0.1.0"
-description = "Simulate the probabilities for all possible outcomes of an attack in Risiko"
-requires-python = ">=3.13"
-dependencies = [
-    "matplotlib>=3.10.3",
-    "numpy>=2.3.1",
-]
