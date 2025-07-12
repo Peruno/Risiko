@@ -10,6 +10,7 @@ void main() {
     expect(find.text('Kampfparameter eingeben'), findsOneWidget);
     expect(find.text('Anzahl Angreifer'), findsOneWidget);
     expect(find.text('Anzahl Verteidiger'), findsOneWidget);
+    expect(find.text('Sicherer Angriff'), findsOneWidget);
     expect(find.text('LOS'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, '10');
@@ -17,6 +18,7 @@ void main() {
     await tester.tap(find.text('LOS'));
     await tester.pump();
 
-    expect(find.textContaining('Simuliere Kampf: 10 Angreifer gegen 5 Verteidiger'), findsOneWidget);
+    expect(find.textContaining('🎲 KAMPF SIMULIERT 🎲'), findsOneWidget);
+    expect(find.textContaining('10 Angreifer vs 5 Verteidiger'), findsOneWidget);
   });
 }

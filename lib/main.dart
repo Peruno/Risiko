@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'models/simulator.dart';
 
 void main() {
   runApp(const RisikoApp());
@@ -30,7 +31,9 @@ class BattleSimulatorPage extends StatefulWidget {
 class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   final TextEditingController _attackersController = TextEditingController();
   final TextEditingController _defendersController = TextEditingController();
+  final Simulator _simulator = Simulator();
   String _result = '';
+  bool _safeAttackMode = false;
 
   void _simulateBattle() {
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
@@ -50,9 +53,73 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    setState(() {
-      _result = 'Simuliere Kampf: $attackers Angreifer gegen $defenders Verteidiger\n(Berechnungslogik wird implementiert)';
-    });
+    if (_safeAttackMode && attackers < 3) {
+      setState(() {
+        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+      });
+      return;
+    }
+
+    try {
+      final BattleResult result;
+      if (_safeAttackMode) {
+        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: true);
+      } else {
+        result = _simulator.allIn(attackers, defenders, simulateOutcome: true);
+      }
+
+      setState(() {
+        _result = _formatBattleResult(attackers, defenders, result);
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Fehler bei der Berechnung: $e';
+      });
+    }
+  }
+
+  String _formatBattleResult(int attackers, int defenders, BattleResult result) {
+    final buffer = StringBuffer();
+    
+    buffer.writeln('🎲 KAMPF SIMULIERT 🎲');
+    buffer.writeln('');
+    buffer.writeln('$attackers Angreifer vs $defenders Verteidiger');
+    if (_safeAttackMode) {
+      buffer.writeln('(Sicherer Angriff - stoppt bei 2 Angreifern)');
+    }
+    buffer.writeln('');
+    
+    buffer.writeln('📊 ERGEBNIS:');
+    switch (result.outcome) {
+      case BattleOutcome.victory:
+        buffer.writeln('🟢 SIEG DES ANGREIFERS!');
+        buffer.writeln('Verluste des Angreifers: ${result.losses}');
+        buffer.writeln('Verbleibende Angreifer: ${attackers - result.losses}');
+        break;
+      case BattleOutcome.defeat:
+        buffer.writeln('🔴 SIEG DES VERTEIDIGERS!');
+        buffer.writeln('Verluste des Verteidigers: ${result.losses}');
+        buffer.writeln('Verbleibende Verteidiger: ${defenders - result.losses}');
+        break;
+      case BattleOutcome.retreat:
+        buffer.writeln('🟡 RÜCKZUG DES ANGREIFERS!');
+        buffer.writeln('Angreifer stoppt bei 2 Truppen');
+        buffer.writeln('Verluste des Verteidigers: ${result.losses}');
+        buffer.writeln('Verbleibende Verteidiger: ${defenders - result.losses}');
+        break;
+    }
+    
+    buffer.writeln('');
+    buffer.writeln('📈 WAHRSCHEINLICHKEITEN:');
+    buffer.writeln('Siegchance Angreifer: ${(result.winProbability * 100).toStringAsFixed(1)}%');
+    if (_safeAttackMode) {
+      final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
+      buffer.writeln('Rückzugschance: ${(retreatProb * 100).toStringAsFixed(1)}%');
+    } else {
+      buffer.writeln('Siegchance Verteidiger: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
+    }
+
+    return buffer.toString();
   }
 
   @override
@@ -64,9 +131,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             const Text(
               'Kampfparameter eingeben',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -91,6 +159,17 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 border: OutlineInputBorder(),
                 hintText: 'Anzahl der verteidigenden Truppen',
               ),
+            ),
+            const SizedBox(height: 24),
+            SwitchListTile(
+              title: const Text('Sicherer Angriff'),
+              subtitle: const Text('Stoppt bei 2 verbleibenden Angreifern'),
+              value: _safeAttackMode,
+              onChanged: (bool value) {
+                setState(() {
+                  _safeAttackMode = value;
+                });
+              },
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -118,7 +197,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
