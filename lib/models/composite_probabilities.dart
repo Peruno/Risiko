@@ -8,6 +8,13 @@ class CompositeProbabilities {
   }
 
   double pMatrix(int a, int d) {
+    if (a < 1) {
+      throw ArgumentError('Number of attackers must be at least 1, got: $a');
+    }
+    if (d < 1) {
+      throw ArgumentError('Number of defenders must be at least 1, got: $d');
+    }
+    
     final riskMatrix = List.generate(
       a + 1, 
       (i) => List.filled(d + 1, 0.0)

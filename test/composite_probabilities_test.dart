@@ -10,24 +10,25 @@ void main() {
       compositeProbs = CompositeProbabilities();
     });
 
-    group('Edge Cases', () {
-      test('pMatrix handles a=0 (no attackers)', () {
-        for (int d = 0; d <= 5; d++) {
-          final matrix = compositeProbs.pMatrix(0, d);
-          expect(matrix, equals(0.0), reason: 'pMatrix(0, $d) should be 0.0');
-        }
+    group('Input Validation', () {
+      test('pMatrix throws error for zero attackers', () {
+        expect(() => compositeProbs.pMatrix(0, 5), 
+               throwsA(isA<ArgumentError>()));
       });
 
-      test('pMatrix handles d=0 (no defenders)', () {
-        for (int a = 1; a <= 5; a++) {
-          final matrix = compositeProbs.pMatrix(a, 0);
-          expect(matrix, equals(1.0), reason: 'pMatrix($a, 0) should be 1.0');
-        }
+      test('pMatrix throws error for negative attackers', () {
+        expect(() => compositeProbs.pMatrix(-1, 5), 
+               throwsA(isA<ArgumentError>()));
       });
 
-      test('pMatrix handles (0,0) case', () {
-        final matrix = compositeProbs.pMatrix(0, 0);
-        expect(matrix, equals(0.0), reason: 'pMatrix(0, 0) should be 0.0');
+      test('pMatrix throws error for zero defenders', () {
+        expect(() => compositeProbs.pMatrix(5, 0), 
+               throwsA(isA<ArgumentError>()));
+      });
+
+      test('pMatrix throws error for negative defenders', () {
+        expect(() => compositeProbs.pMatrix(5, -1), 
+               throwsA(isA<ArgumentError>()));
       });
     });
 

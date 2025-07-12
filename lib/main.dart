@@ -10,7 +10,7 @@ class RisikoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Risiko Battle Simulator',
+      title: 'Risiko Kampf Simulator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
@@ -36,15 +36,22 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
     
-    if (attackers <= 0 || defenders <= 0) {
+    if (attackers < 1) {
       setState(() {
-        _result = 'Please enter valid numbers for attackers and defenders';
+        _result = 'Anzahl der Angreifer muss mindestens 1 sein';
+      });
+      return;
+    }
+    
+    if (defenders < 1) {
+      setState(() {
+        _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
       });
       return;
     }
 
     setState(() {
-      _result = 'Simulating battle: $attackers attackers vs $defenders defenders\n(Calculation logic to be implemented)';
+      _result = 'Simuliere Kampf: $attackers Angreifer gegen $defenders Verteidiger\n(Berechnungslogik wird implementiert)';
     });
   }
 
@@ -53,7 +60,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Risiko Battle Simulator'),
+        title: const Text('Risiko Kampf Simulator'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -61,7 +68,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Enter Battle Parameters',
+              'Kampfparameter eingeben',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
@@ -70,9 +77,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               controller: _attackersController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Number of Attackers',
+                labelText: 'Anzahl Angreifer',
                 border: OutlineInputBorder(),
-                hintText: 'Enter number of attacking troops',
+                hintText: 'Anzahl der angreifenden Truppen eingeben',
               ),
             ),
             const SizedBox(height: 16),
@@ -80,9 +87,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               controller: _defendersController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Number of Defenders',
+                labelText: 'Anzahl Verteidiger',
                 border: OutlineInputBorder(),
-                hintText: 'Enter number of defending troops',
+                hintText: 'Anzahl der verteidigenden Truppen eingeben',
               ),
             ),
             const SizedBox(height: 24),
@@ -94,7 +101,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 foregroundColor: Colors.white,
               ),
               child: const Text(
-                'GO',
+                'LOS',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
