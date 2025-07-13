@@ -34,6 +34,25 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   final Simulator _simulator = Simulator();
   String _result = '';
   bool _safeAttackMode = false;
+  bool _attackersExceedsMax = false;
+  bool _defendersExceedsMax = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _attackersController.addListener(_validateInput);
+    _defendersController.addListener(_validateInput);
+  }
+
+  void _validateInput() {
+    final int attackers = int.tryParse(_attackersController.text) ?? 0;
+    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    
+    setState(() {
+      _attackersExceedsMax = attackers > 128;
+      _defendersExceedsMax = defenders > 128;
+    });
+  }
 
   void _calculateProbabilities() {
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
@@ -45,21 +64,21 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       });
       return;
     }
-    
+
     if (attackers > 128) {
       setState(() {
         _result = 'Anzahl der Angreifer darf maximal 128 sein';
       });
       return;
     }
-    
+
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
       });
       return;
     }
-    
+
     if (defenders > 128) {
       setState(() {
         _result = 'Anzahl der Verteidiger darf maximal 128 sein';
@@ -87,7 +106,13 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       });
     } catch (e) {
       setState(() {
-        _result = 'Fehler bei der Berechnung: $e';
+        if (e.toString().contains('defenders') || e.toString().contains('Verteidiger')) {
+          _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+        } else if (e.toString().contains('attackers') || e.toString().contains('Angreifer')) {
+          _result = 'Anzahl der Angreifer muss mindestens 1 sein';
+        } else {
+          _result = 'Fehler bei der Berechnung: $e';
+        }
       });
     }
   }
@@ -173,7 +198,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       case BattleOutcome.victory:
         buffer.writeln('🟢 SIEG DES ANGREIFERS!');
         buffer.writeln('Verluste des Angreifers: ${result.losses}');
-        buffer.writeln('Verbleibende Angreifer: ${attackers - result.losses}');
         break;
       case BattleOutcome.defeat:
         buffer.writeln('🔴 SIEG DES VERTEIDIGERS!');
@@ -205,22 +229,66 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
             TextField(
               controller: _attackersController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Anzahl Angreifer',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _attackersExceedsMax ? Colors.red : Colors.grey,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _attackersExceedsMax ? Colors.red : Colors.grey,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _attackersExceedsMax ? Colors.red : Colors.blue,
+                  ),
+                ),
                 hintText: 'Anzahl der angreifenden Truppen',
                 counterText: '',
+                labelStyle: TextStyle(
+                  color: _attackersExceedsMax ? Colors.red : null,
+                ),
+                suffixText: _attackersExceedsMax ? 'max 128' : null,
+                suffixStyle: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _defendersController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Anzahl Verteidiger',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _defendersExceedsMax ? Colors.red : Colors.grey,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _defendersExceedsMax ? Colors.red : Colors.grey,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _defendersExceedsMax ? Colors.red : Colors.blue,
+                  ),
+                ),
                 hintText: 'Anzahl der verteidigenden Truppen',
                 counterText: '',
+                labelStyle: TextStyle(
+                  color: _defendersExceedsMax ? Colors.red : null,
+                ),
+                suffixText: _defendersExceedsMax ? 'max 128' : null,
+                suffixStyle: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -230,12 +298,16 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'All In',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
-                          color: _safeAttackMode ? Colors.grey : Colors.black,
+                      SizedBox(
+                        width: 60,
+                        child: Text(
+                          'All In',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
+                            color: _safeAttackMode ? Colors.grey : Colors.black,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -248,24 +320,31 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                         },
                       ),
                       const SizedBox(width: 16),
-                      Text(
-                        'Sicherer Angriff',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
-                          color: _safeAttackMode ? Colors.black : Colors.grey,
+                      SizedBox(
+                        width: 120,
+                        child: Text(
+                          'Sicherer Angriff',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
+                            color: _safeAttackMode ? Colors.black : Colors.grey,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    _safeAttackMode 
-                        ? '(Stoppt bei 2 verbleibenden Angreifern)'
-                        : '(Kampf bis zum letzten Mann)',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
+                  SizedBox(
+                    height: 16,
+                    child: Text(
+                      _safeAttackMode 
+                          ? '(Rückzug bei 2 verbleibenden Angreifern)'
+                          : '(Kampf bis zum letzten Mann)',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ],
