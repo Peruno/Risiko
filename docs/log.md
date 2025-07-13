@@ -9,3 +9,7 @@
 * Migrated all simulation stuff
 * Integrated to app
 * Display of statistics remaining
+
+* 13.07.2025, 2.5h
+* Manual comparison to verify p_matrix is correct
+* Improving the UI, the user feedback etc.
