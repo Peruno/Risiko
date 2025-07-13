@@ -35,6 +35,49 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   String _result = '';
   bool _safeAttackMode = false;
 
+  void _calculateProbabilities() {
+    final int attackers = int.tryParse(_attackersController.text) ?? 0;
+    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    
+    if (attackers < 1) {
+      setState(() {
+        _result = 'Anzahl der Angreifer muss mindestens 1 sein';
+      });
+      return;
+    }
+    
+    if (defenders < 1) {
+      setState(() {
+        _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+      });
+      return;
+    }
+
+    if (_safeAttackMode && attackers < 3) {
+      setState(() {
+        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+      });
+      return;
+    }
+
+    try {
+      final BattleResult result;
+      if (_safeAttackMode) {
+        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: false);
+      } else {
+        result = _simulator.allIn(attackers, defenders, simulateOutcome: false);
+      }
+
+      setState(() {
+        _result = _formatProbabilityResult(attackers, defenders, result);
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Fehler bei der Berechnung: $e';
+      });
+    }
+  }
+
   void _simulateBattle() {
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
@@ -76,6 +119,29 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         _result = 'Fehler bei der Berechnung: $e';
       });
     }
+  }
+
+  String _formatProbabilityResult(int attackers, int defenders, BattleResult result) {
+    final buffer = StringBuffer();
+    
+    buffer.writeln('📊 WAHRSCHEINLICHKEITEN');
+    buffer.writeln('');
+    buffer.writeln('$attackers Angreifer vs $defenders Verteidiger');
+    if (_safeAttackMode) {
+      buffer.writeln('(Sicherer Angriff - stoppt bei 2 Angreifern)');
+    }
+    buffer.writeln('');
+    
+    buffer.writeln('📈 SIEGCHANCEN:');
+    buffer.writeln('Angreifer: ${(result.winProbability * 100).toStringAsFixed(1)}%');
+    if (_safeAttackMode) {
+      final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
+      buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
+    } else {
+      buffer.writeln('Verteidiger: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
+    }
+
+    return buffer.toString();
   }
 
   String _formatBattleResult(int attackers, int defenders, BattleResult result) {
@@ -173,6 +239,19 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
+              onPressed: _calculateProbabilities,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                'Wahrscheinlichkeiten',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
               onPressed: _simulateBattle,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -180,7 +259,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 foregroundColor: Colors.white,
               ),
               child: const Text(
-                'LOS',
+                'Schlacht starten',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
