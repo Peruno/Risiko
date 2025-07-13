@@ -36,6 +36,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   bool _safeAttackMode = false;
   bool _attackersExceedsMax = false;
   bool _defendersExceedsMax = false;
+  bool _attackersInvalid = false;
+  bool _defendersInvalid = false;
+  bool _attackersNonNumeric = false;
+  bool _defendersNonNumeric = false;
 
   @override
   void initState() {
@@ -44,13 +48,46 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _defendersController.addListener(_validateInput);
   }
 
+  bool _isFieldRedForInput(String text, bool isInvalid) {
+    final value = int.tryParse(text) ?? 0;
+    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
+    final exceedsMax = value > 128;
+    
+    return isInvalid || isNonNumeric || exceedsMax;
+  }
+
+  String? _getSuffixTextForInput(String text, bool isInvalid) {
+    final value = int.tryParse(text) ?? 0;
+    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
+    final exceedsMax = value > 128;
+    
+    if (exceedsMax) return 'max 128';
+    if (isInvalid) return 'min 1';
+    if (isNonNumeric) return 'nur Zahlen';
+    return null;
+  }
+
   void _validateInput() {
-    final int attackers = int.tryParse(_attackersController.text) ?? 0;
-    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    final attackersText = _attackersController.text;
+    final defendersText = _defendersController.text;
+    final int attackers = int.tryParse(attackersText) ?? 0;
+    final int defenders = int.tryParse(defendersText) ?? 0;
     
     setState(() {
+      _attackersNonNumeric = attackersText.isNotEmpty && int.tryParse(attackersText) == null;
+      _defendersNonNumeric = defendersText.isNotEmpty && int.tryParse(defendersText) == null;
+      
       _attackersExceedsMax = attackers > 128;
       _defendersExceedsMax = defenders > 128;
+      
+      if (attackers >= 1 && attackers <= 128 && 
+          defenders >= 1 && defenders <= 128 && 
+          (!_safeAttackMode || attackers >= 3) &&
+          !_attackersNonNumeric && !_defendersNonNumeric) {
+        _result = '';
+        _attackersInvalid = false;
+        _defendersInvalid = false;
+      }
     });
   }
 
@@ -61,6 +98,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (attackers < 1) {
       setState(() {
         _result = 'Anzahl der Angreifer muss mindestens 1 sein';
+        _attackersInvalid = true;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -68,6 +107,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (attackers > 128) {
       setState(() {
         _result = 'Anzahl der Angreifer darf maximal 128 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -75,6 +116,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = true;
       });
       return;
     }
@@ -82,6 +125,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (defenders > 128) {
       setState(() {
         _result = 'Anzahl der Verteidiger darf maximal 128 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -89,6 +134,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (_safeAttackMode && attackers < 3) {
       setState(() {
         _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+        _attackersInvalid = true;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -103,6 +150,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
       setState(() {
         _result = _formatProbabilities(result);
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
     } catch (e) {
       setState(() {
@@ -124,6 +173,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (attackers < 1) {
       setState(() {
         _result = 'Anzahl der Angreifer muss mindestens 1 sein';
+        _attackersInvalid = true;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -131,6 +182,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (attackers > 128) {
       setState(() {
         _result = 'Anzahl der Angreifer darf maximal 128 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -138,6 +191,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = true;
       });
       return;
     }
@@ -145,6 +200,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (defenders > 128) {
       setState(() {
         _result = 'Anzahl der Verteidiger darf maximal 128 sein';
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -152,6 +209,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     if (_safeAttackMode && attackers < 3) {
       setState(() {
         _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+        _attackersInvalid = true;
+        _defendersInvalid = false;
       });
       return;
     }
@@ -166,6 +225,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
       setState(() {
         _result = _formatBattleResult(attackers, defenders, result);
+        _attackersInvalid = false;
+        _defendersInvalid = false;
       });
     } catch (e) {
       setState(() {
@@ -232,24 +293,24 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 labelText: 'Anzahl Angreifer',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _attackersExceedsMax ? Colors.red : Colors.grey,
+                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.grey,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _attackersExceedsMax ? Colors.red : Colors.grey,
+                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.grey,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _attackersExceedsMax ? Colors.red : Colors.blue,
+                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.blue,
                   ),
                 ),
                 counterText: '',
                 labelStyle: TextStyle(
-                  color: _attackersExceedsMax ? Colors.red : null,
+                  color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : null,
                 ),
-                suffixText: _attackersExceedsMax ? 'max 128' : null,
+                suffixText: _getSuffixTextForInput(_attackersController.text, _attackersInvalid),
                 suffixStyle: const TextStyle(
                   color: Colors.red,
                   fontSize: 12,
@@ -264,24 +325,24 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 labelText: 'Anzahl Verteidiger',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _defendersExceedsMax ? Colors.red : Colors.grey,
+                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.grey,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _defendersExceedsMax ? Colors.red : Colors.grey,
+                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.grey,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: _defendersExceedsMax ? Colors.red : Colors.blue,
+                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.blue,
                   ),
                 ),
                 counterText: '',
                 labelStyle: TextStyle(
-                  color: _defendersExceedsMax ? Colors.red : null,
+                  color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : null,
                 ),
-                suffixText: _defendersExceedsMax ? 'max 128' : null,
+                suffixText: _getSuffixTextForInput(_defendersController.text, _defendersInvalid),
                 suffixStyle: const TextStyle(
                   color: Colors.red,
                   fontSize: 12,
