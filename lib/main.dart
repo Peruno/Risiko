@@ -202,7 +202,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       case BattleOutcome.defeat:
         buffer.writeln('🔴 SIEG DES VERTEIDIGERS!');
         buffer.writeln('Verluste des Verteidigers: ${result.losses}');
-        buffer.writeln('Verbleibende Verteidiger: ${defenders - result.losses}');
         break;
       case BattleOutcome.retreat:
         buffer.writeln('🟡 RÜCKZUG DES ANGREIFERS!');
@@ -246,7 +245,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                     color: _attackersExceedsMax ? Colors.red : Colors.blue,
                   ),
                 ),
-                hintText: 'Anzahl der angreifenden Truppen',
                 counterText: '',
                 labelStyle: TextStyle(
                   color: _attackersExceedsMax ? Colors.red : null,
@@ -279,7 +277,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                     color: _defendersExceedsMax ? Colors.red : Colors.blue,
                   ),
                 ),
-                hintText: 'Anzahl der verteidigenden Truppen',
                 counterText: '',
                 labelStyle: TextStyle(
                   color: _defendersExceedsMax ? Colors.red : null,
@@ -295,22 +292,38 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
             Center(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Stack(
+                    alignment: Alignment.center,
                     children: [
-                      SizedBox(
-                        width: 60,
-                        child: Text(
-                          'All In',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
-                            color: _safeAttackMode ? Colors.grey : Colors.black,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            child: Text(
+                              'All In',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
+                                color: _safeAttackMode ? Colors.grey : Colors.black,
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 120,
+                            child: Text(
+                              'Sicherer Angriff',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
+                                color: _safeAttackMode ? Colors.black : Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
                       Switch(
                         value: _safeAttackMode,
                         onChanged: (bool value) {
@@ -318,19 +331,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                             _safeAttackMode = value;
                           });
                         },
-                      ),
-                      const SizedBox(width: 16),
-                      SizedBox(
-                        width: 120,
-                        child: Text(
-                          'Sicherer Angriff',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
-                            color: _safeAttackMode ? Colors.black : Colors.grey,
-                          ),
-                        ),
                       ),
                     ],
                   ),
