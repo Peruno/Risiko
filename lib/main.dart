@@ -40,6 +40,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   bool _defendersInvalid = false;
   bool _attackersNonNumeric = false;
   bool _defendersNonNumeric = false;
+  String? _selectedAttackMode = 'allIn';
 
   @override
   void initState() {
@@ -82,7 +83,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       
       if (attackers >= 1 && attackers <= 128 && 
           defenders >= 1 && defenders <= 128 && 
-          (!_safeAttackMode || attackers >= 3) &&
+          (_selectedAttackMode == 'allIn' || (attackers >= 3 && _selectedAttackMode == 'safe')) &&
           !_attackersNonNumeric && !_defendersNonNumeric) {
         _result = '';
         _attackersInvalid = false;
@@ -131,7 +132,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    if (_safeAttackMode && attackers < 3) {
+    if (_selectedAttackMode == 'safe' && attackers < 3) {
       setState(() {
         _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
         _attackersInvalid = true;
@@ -142,7 +143,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
     try {
       final BattleResult result;
-      if (_safeAttackMode) {
+      if (_selectedAttackMode == 'safe') {
         result = _simulator.safeAttack(attackers, defenders, simulateOutcome: false);
       } else {
         result = _simulator.allIn(attackers, defenders, simulateOutcome: false);
@@ -206,7 +207,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    if (_safeAttackMode && attackers < 3) {
+    if (_selectedAttackMode == 'safe' && attackers < 3) {
       setState(() {
         _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
         _attackersInvalid = true;
@@ -217,7 +218,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
     try {
       final BattleResult result;
-      if (_safeAttackMode) {
+      if (_selectedAttackMode == 'safe') {
         result = _simulator.safeAttack(attackers, defenders, simulateOutcome: true);
       } else {
         result = _simulator.allIn(attackers, defenders, simulateOutcome: true);
@@ -239,7 +240,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final buffer = StringBuffer();
     
     buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
-    if (_safeAttackMode) {
+    if (_selectedAttackMode == 'safe') {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
       buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
     } else {
@@ -350,66 +351,92 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               ),
             ),
             const SizedBox(height: 24),
-            Center(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedAttackMode = 'allIn';
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
+                          width: _selectedAttackMode == 'allIn' ? 2 : 1,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        color: _selectedAttackMode == 'allIn' ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                      ),
+                      child: Column(
                         children: [
-                          SizedBox(
-                            width: 60,
-                            child: Text(
-                              'All In',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
-                                color: _safeAttackMode ? Colors.grey : Colors.black,
-                              ),
+                          Text(
+                            'All In',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
                             ),
                           ),
-                          SizedBox(
-                            width: 120,
-                            child: Text(
-                              'Sicherer Angriff',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
-                                color: _safeAttackMode ? Colors.black : Colors.grey,
-                              ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Kampf bis zum letzten Mann',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
-                      Switch(
-                        value: _safeAttackMode,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _safeAttackMode = value;
-                          });
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 16,
-                    child: Text(
-                      _safeAttackMode 
-                          ? '(Rückzug bei 2 verbleibenden Angreifern)'
-                          : '(Kampf bis zum letzten Mann)',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedAttackMode = 'safe';
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                          width: _selectedAttackMode == 'safe' ? 2 : 1,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        color: _selectedAttackMode == 'safe' ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Sicherer Angriff',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Rückzug bei 2 verbleibenden Angreifern',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             ElevatedButton(
