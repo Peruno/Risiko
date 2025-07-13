@@ -46,9 +46,23 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
     
+    if (attackers > 128) {
+      setState(() {
+        _result = 'Anzahl der Angreifer darf maximal 128 sein';
+      });
+      return;
+    }
+    
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+      });
+      return;
+    }
+    
+    if (defenders > 128) {
+      setState(() {
+        _result = 'Anzahl der Verteidiger darf maximal 128 sein';
       });
       return;
     }
@@ -89,9 +103,23 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
     
+    if (attackers > 128) {
+      setState(() {
+        _result = 'Anzahl der Angreifer darf maximal 128 sein';
+      });
+      return;
+    }
+    
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
+      });
+      return;
+    }
+    
+    if (defenders > 128) {
+      setState(() {
+        _result = 'Anzahl der Verteidiger darf maximal 128 sein';
       });
       return;
     }
@@ -124,17 +152,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   String _formatProbabilities(BattleResult result) {
     final buffer = StringBuffer();
     
-    if (_safeAttackMode) {
-      buffer.writeln('(Sicherer Angriff - stoppt bei 2 Angreifern)');
-      buffer.writeln('');
-    }
-    
-    buffer.writeln('Siegchance des Angreifers: ${(result.winProbability * 100).toStringAsFixed(1)}%');
+    buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
     if (_safeAttackMode) {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
       buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
     } else {
-      buffer.writeln('Siegchance des Verteidigers: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
+      buffer.writeln('Verteidiger gewinnt: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
     }
 
     return buffer.toString();
@@ -159,9 +182,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         break;
       case BattleOutcome.retreat:
         buffer.writeln('🟡 RÜCKZUG DES ANGREIFERS!');
-        buffer.writeln('Angreifer stoppt bei 2 Truppen');
         buffer.writeln('Verluste des Verteidigers: ${result.losses}');
-        buffer.writeln('Verbleibende Verteidiger: ${defenders - result.losses}');
         break;
     }
 
@@ -188,6 +209,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 labelText: 'Anzahl Angreifer',
                 border: OutlineInputBorder(),
                 hintText: 'Anzahl der angreifenden Truppen',
+                counterText: '',
               ),
             ),
             const SizedBox(height: 16),
@@ -198,18 +220,56 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 labelText: 'Anzahl Verteidiger',
                 border: OutlineInputBorder(),
                 hintText: 'Anzahl der verteidigenden Truppen',
+                counterText: '',
               ),
             ),
             const SizedBox(height: 24),
-            SwitchListTile(
-              title: const Text('Sicherer Angriff'),
-              subtitle: const Text('Stoppt bei 2 verbleibenden Angreifern'),
-              value: _safeAttackMode,
-              onChanged: (bool value) {
-                setState(() {
-                  _safeAttackMode = value;
-                });
-              },
+            Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'All In',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: _safeAttackMode ? FontWeight.normal : FontWeight.bold,
+                          color: _safeAttackMode ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Switch(
+                        value: _safeAttackMode,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _safeAttackMode = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        'Sicherer Angriff',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: _safeAttackMode ? FontWeight.bold : FontWeight.normal,
+                          color: _safeAttackMode ? Colors.black : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _safeAttackMode 
+                        ? '(Stoppt bei 2 verbleibenden Angreifern)'
+                        : '(Kampf bis zum letzten Mann)',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -248,6 +308,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 child: Text(
                   _result,
                   style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],
