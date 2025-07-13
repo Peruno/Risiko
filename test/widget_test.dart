@@ -7,18 +7,17 @@ void main() {
   testWidgets('Battle simulator UI test', (WidgetTester tester) async {
     await tester.pumpWidget(const RisikoApp());
 
-    expect(find.text('Kampfparameter eingeben'), findsOneWidget);
     expect(find.text('Anzahl Angreifer'), findsOneWidget);
     expect(find.text('Anzahl Verteidiger'), findsOneWidget);
     expect(find.text('Sicherer Angriff'), findsOneWidget);
-    expect(find.text('LOS'), findsOneWidget);
+    expect(find.text('Chancen berechnen'), findsOneWidget);
+    expect(find.text('Schlacht starten'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, '10');
     await tester.enterText(find.byType(TextField).last, '5');
-    await tester.tap(find.text('LOS'));
+    await tester.tap(find.text('Schlacht starten'));
     await tester.pump();
 
-    expect(find.textContaining('🎲 KAMPF SIMULIERT 🎲'), findsOneWidget);
-    expect(find.textContaining('10 Angreifer vs 5 Verteidiger'), findsOneWidget);
+    expect(find.textContaining('🟢 SIEG DES ANGREIFERS!'), findsOneWidget);
   });
 }

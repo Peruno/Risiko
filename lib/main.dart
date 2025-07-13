@@ -69,7 +69,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       }
 
       setState(() {
-        _result = _formatProbabilityResult(attackers, defenders, result);
+        _result = _formatProbabilities(result);
       });
     } catch (e) {
       setState(() {
@@ -121,24 +121,20 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
   }
 
-  String _formatProbabilityResult(int attackers, int defenders, BattleResult result) {
+  String _formatProbabilities(BattleResult result) {
     final buffer = StringBuffer();
     
-    buffer.writeln('📊 WAHRSCHEINLICHKEITEN');
-    buffer.writeln('');
-    buffer.writeln('$attackers Angreifer vs $defenders Verteidiger');
     if (_safeAttackMode) {
       buffer.writeln('(Sicherer Angriff - stoppt bei 2 Angreifern)');
+      buffer.writeln('');
     }
-    buffer.writeln('');
     
-    buffer.writeln('📈 SIEGCHANCEN:');
-    buffer.writeln('Angreifer: ${(result.winProbability * 100).toStringAsFixed(1)}%');
+    buffer.writeln('Siegchance des Angreifers: ${(result.winProbability * 100).toStringAsFixed(1)}%');
     if (_safeAttackMode) {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
       buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
     } else {
-      buffer.writeln('Verteidiger: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
+      buffer.writeln('Siegchance des Verteidigers: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
     }
 
     return buffer.toString();
@@ -147,15 +143,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   String _formatBattleResult(int attackers, int defenders, BattleResult result) {
     final buffer = StringBuffer();
     
-    buffer.writeln('🎲 KAMPF SIMULIERT 🎲');
-    buffer.writeln('');
-    buffer.writeln('$attackers Angreifer vs $defenders Verteidiger');
-    if (_safeAttackMode) {
-      buffer.writeln('(Sicherer Angriff - stoppt bei 2 Angreifern)');
-    }
+    buffer.write(_formatProbabilities(result));
     buffer.writeln('');
     
-    buffer.writeln('📊 ERGEBNIS:');
     switch (result.outcome) {
       case BattleOutcome.victory:
         buffer.writeln('🟢 SIEG DES ANGREIFERS!');
@@ -174,16 +164,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         buffer.writeln('Verbleibende Verteidiger: ${defenders - result.losses}');
         break;
     }
-    
-    buffer.writeln('');
-    buffer.writeln('📈 WAHRSCHEINLICHKEITEN:');
-    buffer.writeln('Siegchance Angreifer: ${(result.winProbability * 100).toStringAsFixed(1)}%');
-    if (_safeAttackMode) {
-      final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
-      buffer.writeln('Rückzugschance: ${(retreatProb * 100).toStringAsFixed(1)}%');
-    } else {
-      buffer.writeln('Siegchance Verteidiger: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
-    }
 
     return buffer.toString();
   }
@@ -201,12 +181,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-            const Text(
-              'Kampfparameter eingeben',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
             TextField(
               controller: _attackersController,
               keyboardType: TextInputType.number,
@@ -246,7 +220,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 foregroundColor: Colors.white,
               ),
               child: const Text(
-                'Wahrscheinlichkeiten',
+                'Chancen berechnen',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
