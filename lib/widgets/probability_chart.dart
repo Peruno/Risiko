@@ -168,6 +168,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                                 ? Colors.green.shade700
                                 : Colors.green,
                             width: 16,
+                            borderRadius: BorderRadius.zero,
                           ),
                         ],
                       ))
@@ -259,6 +260,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                                 ? Colors.red.shade700
                                 : Colors.red,
                             width: 16,
+                            borderRadius: BorderRadius.zero,
                           ),
                         ],
                       ))
