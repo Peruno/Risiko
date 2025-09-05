@@ -1,7 +1,7 @@
 05.09.2025,
 * Research on licensing of image for icon
 * Created all necessary sizes of icon with imagemagic (cli tool)
-* 
+* Centered icon and removed border
 
 13.07.2025, 2.5h
 * Manual comparison to verify p_matrix is correct
