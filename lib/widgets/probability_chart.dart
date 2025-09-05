@@ -201,9 +201,10 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                         event is FlTapUpEvent) {
                       final index = barTouchResponse.spot!.touchedBarGroupIndex;
                       final defenderLosses = widget.defenderWinProbabilities.length - 1 - index;
+                      final reversedData = widget.defenderWinProbabilities.reversed.toList();
                       selectedIndex = index;
                       isAttackerSide = false;
-                      selectedValue = 'Verteidiger verliert $defenderLosses Truppen: ${(widget.defenderWinProbabilities[index] * 100).toStringAsFixed(2)}%';
+                      selectedValue = 'Verteidiger verliert $defenderLosses Truppen: ${(reversedData[index] * 100).toStringAsFixed(2)}%';
                     } else {
                       selectedValue = null;
                       selectedIndex = null;
@@ -245,6 +246,8 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
               ),
               borderData: FlBorderData(show: true),
               barGroups: widget.defenderWinProbabilities
+                  .reversed
+                  .toList()
                   .asMap()
                   .entries
                   .map((entry) => BarChartGroupData(
