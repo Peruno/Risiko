@@ -125,7 +125,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    interval: _calculateLabelInterval(widget.attackerWinProbabilities.length),
+                    interval: _calculateLabelInterval(widget.attackerWinProbabilities.length).toDouble(),
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
@@ -219,7 +219,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    interval: _calculateLabelInterval(widget.defenderWinProbabilities.length),
+                    interval: _calculateLabelInterval(widget.defenderWinProbabilities.length).toDouble(),
                     getTitlesWidget: (value, meta) {
                       final defenderLosses = widget.defenderWinProbabilities.length - 1 - value.toInt();
                       return Text(
