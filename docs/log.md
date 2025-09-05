@@ -1,5 +1,6 @@
 05.09.2025,
 * Research on licensing of image for icon
+* Created all necessary sizes of icon with imagemagic (cli tool)
 * 
 
 13.07.2025, 2.5h

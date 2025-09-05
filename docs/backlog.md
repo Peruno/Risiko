@@ -2,7 +2,6 @@
 * Add detailed statistics
   * write ADR for how to build it
 * Add an icon for the app
-  * check the licensing model
   * provide it in all required sizes
 * Overwork the general design of the app
 * Add explanations for
