@@ -280,11 +280,11 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     return (maxValue * 100 * 1.1);
   }
 
-  double _calculateLabelInterval(int dataLength) {
-    if (dataLength <= 10) return 1.0;
-    if (dataLength <= 20) return 2.0;
-    if (dataLength <= 40) return 5.0;
-    if (dataLength <= 60) return 10.0;
-    return 15.0;
+  int _calculateLabelInterval(int dataLength) {
+    if (dataLength <= 10) return 1;
+    if (dataLength <= 20) return 2;
+    if (dataLength <= 40) return 5;
+    if (dataLength <= 60) return 10;
+    return 15;
   }
 }
