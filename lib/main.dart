@@ -305,11 +305,11 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       List<double> defenderWinProbs = [];
 
       for (int i = 0; i < attackers; i++) {
-        attackerWinProbs.add(result.detailedProbabilities['attacker_losses_$i'] ?? 0.0);
+        attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
       }
 
       for (int i = 0; i < defenders; i++) {
-        defenderWinProbs.add(result.detailedProbabilities['defender_losses_$i'] ?? 0.0);
+        defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
       }
 
       Navigator.of(context).push(
