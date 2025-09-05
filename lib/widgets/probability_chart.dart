@@ -125,6 +125,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
+                    interval: _calculateLabelInterval(widget.attackerWinProbabilities.length),
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
@@ -218,6 +219,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
+                    interval: _calculateLabelInterval(widget.defenderWinProbabilities.length),
                     getTitlesWidget: (value, meta) {
                       final defenderLosses = widget.defenderWinProbabilities.length - 1 - value.toInt();
                       return Text(
@@ -276,5 +278,13 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     final allValues = [...widget.attackerWinProbabilities, ...widget.defenderWinProbabilities];
     final maxValue = allValues.reduce((a, b) => a > b ? a : b);
     return (maxValue * 100 * 1.1);
+  }
+
+  double _calculateLabelInterval(int dataLength) {
+    if (dataLength <= 10) return 1.0;
+    if (dataLength <= 20) return 2.0;
+    if (dataLength <= 40) return 5.0;
+    if (dataLength <= 60) return 10.0;
+    return 15.0;
   }
 }
