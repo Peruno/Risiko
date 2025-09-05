@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'models/simulator.dart';
+import 'widgets/probability_chart.dart';
 
 void main() {
   runApp(const RisikoApp());
@@ -274,6 +275,67 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     return buffer.toString();
   }
 
+  void _showDetailedChart() {
+    final int attackers = int.tryParse(_attackersController.text) ?? 0;
+    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    
+    if (attackers < 1 || defenders < 1 || attackers > 128 || defenders > 128) {
+      setState(() {
+        _result = 'Bitte gültige Werte für Angreifer und Verteidiger eingeben (1-128)';
+      });
+      return;
+    }
+
+    if (_selectedAttackMode == 'safe' && attackers < 3) {
+      setState(() {
+        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+      });
+      return;
+    }
+
+    try {
+      final BattleResult result;
+      if (_selectedAttackMode == 'safe') {
+        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: false);
+      } else {
+        result = _simulator.allIn(attackers, defenders, simulateOutcome: false);
+      }
+
+      List<double> attackerWinProbs = [];
+      List<double> defenderWinProbs = [];
+
+      for (int i = 0; i < attackers; i++) {
+        attackerWinProbs.add(result.detailedProbabilities['attacker_losses_$i'] ?? 0.0);
+      }
+
+      for (int i = 0; i < defenders; i++) {
+        defenderWinProbs.add(result.detailedProbabilities['defender_losses_$i'] ?? 0.0);
+      }
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: const Text('Detaillierte Wahrscheinlichkeiten'),
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            ),
+            body: ProbabilityChart(
+              attackerWinProbabilities: attackerWinProbs,
+              defenderWinProbabilities: defenderWinProbs,
+              attackers: attackers,
+              defenders: defenders,
+              totalWinProbability: result.winProbability,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _result = 'Fehler bei der Berechnung: $e';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -461,6 +523,19 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               ),
               child: const Text(
                 'Ergebnis simulieren',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: _showDetailedChart,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                'Detailliertes Diagramm',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

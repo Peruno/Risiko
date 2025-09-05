@@ -1,6 +1,5 @@
 # ADR-[NUMBER]: [TITLE]
 
-**Date:** YYYY-MM-DD
 **Status:** [Proposed | Accepted | Rejected | Superseded]
 
 ## Context

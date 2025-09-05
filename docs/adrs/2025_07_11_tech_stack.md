@@ -1,6 +1,5 @@
 # ADR-1: Overall Tech Stack
 
-**Date:** 2025-07-11
 **Status:** Accepted
 
 ## Context
