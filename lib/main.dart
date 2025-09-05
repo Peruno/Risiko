@@ -460,7 +460,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 foregroundColor: Colors.white,
               ),
               child: const Text(
-                'Schlacht starten',
+                'Ergebnis simulieren',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

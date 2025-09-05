@@ -1,5 +1,10 @@
-11.07.2025, 2.15h
-* Did some research on the frameworks and tech. 
+05.09.2025,
+* Research on licensing of image for icon
+* 
+
+13.07.2025, 2.5h
+* Manual comparison to verify p_matrix is correct
+* Improving the UI, the user feedback etc.
 
 12.07.2025, 2h
 * Set up Intellij, xcode, Android Studio, Flutter etc.
@@ -10,6 +15,5 @@
 * Integrated to app
 * Display of statistics remaining
 
-* 13.07.2025, 2.5h
-* Manual comparison to verify p_matrix is correct
-* Improving the UI, the user feedback etc.
+11.07.2025, 2.15h
+* Did some research on the frameworks and tech. 
