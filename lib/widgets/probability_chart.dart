@@ -48,7 +48,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger.\nGesamtwahrscheinlichkeit für einen Sieg: ${(widget.totalWinProbability * 100).toStringAsFixed(1)}%',
+                '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -94,9 +94,9 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     
     return Column(
       children: [
-        const Text(
-          'Angreifer gewinnt',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
+        Text(
+          'Angreifer gewinnt (${(widget.totalWinProbability * 100).toStringAsFixed(1)}%)',
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
         ),
         Expanded(
           child: BarChart(
@@ -127,30 +127,38 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                     showTitles: true,
                     interval: _calculateLabelInterval(widget.attackerWinProbabilities.length).toDouble(),
                     getTitlesWidget: (value, meta) {
+                      final interval = _calculateLabelInterval(widget.attackerWinProbabilities.length);
+                      if (value.toInt() % interval != 0) {
+                        return const SizedBox.shrink();
+                      }
                       return Text(
                         value.toInt().toString(),
-                        style: const TextStyle(fontSize: 10),
+                        style: const TextStyle(fontSize: 12),
                       );
                     },
                   ),
                   axisNameWidget: const Text(
                     'Verluste des Angreifers',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ),
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
+                      final maxY = _calculateMaxY();
+                      if (value >= maxY * 0.95) {
+                        return const SizedBox.shrink();
+                      }
                       return Text(
-                        '${value.toStringAsFixed(1)}%',
-                        style: const TextStyle(fontSize: 9),
+                        '${value.toStringAsFixed(1)}',
+                        style: const TextStyle(fontSize: 11),
                       );
                     },
                   ),
                   axisNameWidget: const Text(
                     'Wahrscheinlichkeit in %',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ),
                 topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -186,9 +194,9 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     
     return Column(
       children: [
-        const Text(
-          'Verteidiger gewinnt',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red),
+        Text(
+          'Verteidiger gewinnt (${((1 - widget.totalWinProbability) * 100).toStringAsFixed(1)}%)',
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red),
         ),
         Expanded(
           child: BarChart(
@@ -221,16 +229,20 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                     showTitles: true,
                     interval: _calculateLabelInterval(widget.defenderWinProbabilities.length).toDouble(),
                     getTitlesWidget: (value, meta) {
+                      final interval = _calculateLabelInterval(widget.defenderWinProbabilities.length);
+                      if (value.toInt() % interval != 0) {
+                        return const SizedBox.shrink();
+                      }
                       final defenderLosses = widget.defenderWinProbabilities.length - 1 - value.toInt();
                       return Text(
                         defenderLosses.toString(),
-                        style: const TextStyle(fontSize: 10),
+                        style: const TextStyle(fontSize: 12),
                       );
                     },
                   ),
                   axisNameWidget: const Text(
                     'Verluste des Verteidigers',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 12),
                   ),
                 ),
                 leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -238,9 +250,13 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
+                      final maxY = _calculateMaxY();
+                      if (value >= maxY * 0.95) {
+                        return const SizedBox.shrink();
+                      }
                       return Text(
-                        '${value.toStringAsFixed(1)}%',
-                        style: const TextStyle(fontSize: 9),
+                        '${value.toStringAsFixed(1)}',
+                        style: const TextStyle(fontSize: 11),
                       );
                     },
                   ),
@@ -281,10 +297,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
   }
 
   int _calculateLabelInterval(int dataLength) {
-    if (dataLength <= 10) return 1;
-    if (dataLength <= 20) return 2;
-    if (dataLength <= 40) return 5;
-    if (dataLength <= 60) return 10;
-    return 15;
+    if (dataLength <= 20) return 1;
+    return 5;
   }
 }

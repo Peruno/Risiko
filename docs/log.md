@@ -1,4 +1,8 @@
-05.09.2025,
+09.09.2025, 
+* Finetuning of the diagram
+* 
+
+05.09.2025, 2h
 * Research on licensing of image for icon
 * Created all necessary sizes of icon with imagemagic (cli tool)
 * Centered icon and removed border
