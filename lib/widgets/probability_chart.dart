@@ -72,7 +72,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
                       child: _buildAttackerChart(),
                     ),
                     const Expanded(
-                      flex: 10,
+                      flex: 5,
                       child: SizedBox(),
                     ),
                     Expanded(
