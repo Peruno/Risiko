@@ -50,6 +50,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _defendersController.addListener(_validateInput);
   }
 
+  void _dismissKeyboard() {
+    FocusScope.of(context).unfocus();
+  }
+
   bool _isFieldRedForInput(String text, bool isInvalid) {
     final value = int.tryParse(text) ?? 0;
     final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
@@ -94,6 +98,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   }
 
   void _calculateProbabilities() {
+    _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
     
@@ -169,6 +174,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   }
 
   void _simulateBattle() {
+    _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
     
@@ -276,6 +282,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   }
 
   void _showDetailedChart() {
+    _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
     
@@ -418,6 +425,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      _dismissKeyboard();
                       setState(() {
                         _selectedAttackMode = 'allIn';
                       });
@@ -460,6 +468,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      _dismissKeyboard();
                       setState(() {
                         _selectedAttackMode = 'safe';
                       });
