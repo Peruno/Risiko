@@ -1,6 +1,12 @@
-09.09.2025, 
+13.09.2025, 
+* Created Certificate and Ad Hoc Profile
+* Brought app to my iPhone manually
+
+10.09.2025, 1h
+* Publishing to Apple App store
+
+09.09.2025, 2h 
 * Finetuning of the diagram
-* 
 
 05.09.2025, 2h
 * Research on licensing of image for icon
