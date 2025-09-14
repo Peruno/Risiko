@@ -1,6 +1,6 @@
 # ADR-2: How to display the detailed diagram of the probabilities
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 
