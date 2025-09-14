@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'models/simulator.dart';
 import 'widgets/probability_chart.dart';
 
@@ -34,13 +35,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   final TextEditingController _defendersController = TextEditingController();
   final Simulator _simulator = Simulator();
   String _result = '';
-  bool _safeAttackMode = false;
-  bool _attackersExceedsMax = false;
-  bool _defendersExceedsMax = false;
   bool _attackersInvalid = false;
   bool _defendersInvalid = false;
   bool _attackersNonNumeric = false;
   bool _defendersNonNumeric = false;
+  bool _attackersExceedsMax = false;
+  bool _defendersExceedsMax = false;
   String? _selectedAttackMode = 'allIn';
 
   @override
@@ -52,6 +52,26 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _dismissKeyboard() {
     FocusScope.of(context).unfocus();
+  }
+
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Info', textAlign: TextAlign.center),
+          content: const Text('Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.', textAlign: TextAlign.center,),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool _isFieldRedForInput(String text, bool isInvalid) {
@@ -349,6 +369,13 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Risiko Simulator'),
+        actions: [
+          IconButton(
+            onPressed: _showInfoDialog,
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Information',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -524,19 +551,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: _simulateBattle,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Ergebnis simulieren',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
               onPressed: _showDetailedChart,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -545,6 +559,19 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               ),
               child: const Text(
                 'Detailliertes Diagramm',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: _simulateBattle,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text(
+                'Ergebnis simulieren',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),

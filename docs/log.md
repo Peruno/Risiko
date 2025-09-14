@@ -1,7 +1,11 @@
-13.09.2025, 1.5h
+14.09.2025,
+
+
+13.09.2025, 2h
 * Created Certificate and Ad Hoc Profile
 * Brought app to my iPhone manually
 * Keyboard disappears after clicking a button
+* Added brief explanation
 
 10.09.2025, 1h
 * Publishing to Apple App store

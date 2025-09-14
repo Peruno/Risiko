@@ -81,9 +81,9 @@ class BasicProbabilities:
 if __name__ == "__main__":
     probs = BasicProbabilities()
 
-    print(probs.p_swin(3, 2))
-    print(probs.p_swin(3, 1))
-    print(probs.p_swin(2, 2))
-    print(probs.p_swin(2, 1))
-    print(probs.p_swin(1, 2))
-    print(probs.p_swin(1, 1))
+    print(f"P(\"3 attackers vs 2 defenders\") = {probs.p_swin(3, 2)}")
+    print(f"P(\"3 attackers vs 1 defenders\") = {probs.p_swin(3, 1)}")
+    print(f"P(\"2 attackers vs 2 defenders\") = {probs.p_swin(2, 2)}")
+    print(f"P(\"2 attackers vs 1 defenders\") = {probs.p_swin(2, 1)}")
+    print(f"P(\"1 attackers vs 2 defenders\") = {probs.p_swin(1, 2)}")
+    print(f"P(\"1 attackers vs 1 defenders\") = {probs.p_swin(1, 1)}")
