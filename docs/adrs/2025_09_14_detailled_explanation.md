@@ -1,6 +1,6 @@
 # ADR-3: How to Display the Detailed Explanation of the Calculation
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Context
 

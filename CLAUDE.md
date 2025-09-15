@@ -13,6 +13,11 @@ This project uses Flutter for cross-platform mobile development:
 - **Build for release**: `flutter build apk` (Android) or `flutter build ios` (iOS)
 - **Check for issues**: `flutter doctor`
 
+## Documentation Commands
+
+- **Build LaTeX documentation**: `docs/latex/build.sh`
+- **Force rebuild documentation**: `docs/latex/build.sh --force`
+
 ## Architecture Overview
 
 This is a Flutter application that simulates Risk (Risiko) battle probabilities. The app will be organized into several key components:

@@ -1,5 +1,9 @@
-14.09.2025,
+15.09.2025, 1h
+* PDF Generation
 
+
+14.09.2025, 1.5h
+* Some small refinements
 
 13.09.2025, 2h
 * Created Certificate and Ad Hoc Profile
