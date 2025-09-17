@@ -1,6 +1,8 @@
-15.09.2025, 1h
-* PDF Generation
+16.09.2025, 1h
+* PDF polishing
 
+15.09.2025, 1.5h
+* PDF Generation
 
 14.09.2025, 1.5h
 * Some small refinements
