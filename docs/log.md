@@ -1,5 +1,7 @@
-18.09.2025, 
-* Finished the PDF
+18.09.2025, 2h
+* Add answers to PDF
+* Polishing
+* Asked for permission
 
 16.09.2025, 1h
 * PDF polishing
