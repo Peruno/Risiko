@@ -12,6 +12,7 @@
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage[english]{babel}
+\usepackage{caption}
 
 \geometry{margin=2.5cm}
 
@@ -76,10 +77,11 @@
 
     After attacker and defender rolled their dice, the highest of each is compared.
     If the defender's highest dice is equal to or higher than the attacker's highest dice, the attacker looses a troop.
-    Otherwise the defender looses one.
+    Otherwise, the defender looses one.
 
     When 30 attackers fight against 20 defenders, this really takes some time.
-    So naturally the question arises: Can this be calculated? Of course!
+    So naturally the question arises: Can this be calculated?
+    Of course!
 
 
     \section{Single Probabilities}
@@ -123,65 +125,69 @@
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.6\textwidth]{../images/Recursive.png}
+        \includegraphics[width=0.6\textwidth]{../images/Basic Recursion.png}
     \end{figure}
 
     So the relation is obvious:
-    \[ P_{total}(\text{"$a$ vs $d$"}) = P_{single}(\text{"$a$ vs $d$"}) \cdot P_{total}(\text{"$a$ vs $d-1$"}) + (1 - P_{single}(\text{"$a$ vs $d$"})) \cdot P_{total}(\text{"$a-1$ vs $d$"}) \]
+    \[ \begin{aligned}
+           P_{total}(\text{``$a$ vs $d$''}) = &\; P_{single}(\text{``$a$ vs $d$''}) \cdot P_{total}(\text{``$a$ vs $d-1$''}) \\
+           &+ (1 - P_{single}(\text{``$a$ vs $d$''})) \cdot P_{total}(\text{``$a-1$ vs $d$''})
+    \end{aligned} \]
 
     The base cases are where no attacker or defender is left:
     \[ \begin{aligned}
-           P_{total}(\text{$a$ vs 0}) &= 1 \; \text{ and}\\ P_{total}(\text{0 vs $d$}) &= 0 \\ \forall{a, d \geq 1}
+           P_{total}(\text{``$a$ vs 0''}) &= 1 \; \text{ and}\\ P_{total}(\text{``0 vs $d$''}) &= 0 \\ \forall{a, d \geq 1}
     \end{aligned} \]
 
     In code, this is even easier to read:
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.6\textwidth]{../images/Basic Recursion.png}
+        \includegraphics[width=0.6\textwidth]{../images/Recursive.png}
     \end{figure}
 
-    For small attacks, this works just fine. For example, $P_{total}(\text{10 vs 10}) = 36.9\%$ (which is surprisingly low). But when the numbers increase, e.g. with 15 vs 15 my laptop already gives up. But why?
+    For small attacks, this works just fine.
+    For example, $P_{total}(\text{``10 vs 10''}) = 36.9\%$ (which is surprisingly low).
+    But when the numbers increase, e.g. with 15 vs 15 my laptop already gives up.
+    But why?
 
     It turns out, by design this 2d recursion scales pretty catastrophically.
     The first node gets called only once, but subsequent ones get called increasingly often:
 
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\textwidth]{../images/Basic Recursion.png}
+        \includegraphics[width=0.8\textwidth]{../images/Pascal.png}
     \end{figure}
 
     Notice that each number of calls is of course just the sum of the number of calls for the node above and the one on the left of the current one.
     The ones on the outside can only get called once each, as they only have one left or upper neighbor.
 
-    Pascal's triangle appeared out of nowhere!
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.7\textwidth]{../images/pascale meme2.jpg}
+        \caption*{Pascal's triangle appeared out of nowhere!}
+    \end{figure}
 
     So how many possible paths are there to get from the starting field to another one, assuming that they have a difference of $a$ attackers and $d$ defenders?
     \[ M(a, d) = \frac{(a + d)!}{a! d!} \]
 
     This can be shown with induction, using the previous equation as Induction Hypothesis (IH):
-
-    The start with $(a, d) = (0, 1)$ or $(1, 0)$ is trivial. Now going from $(a, d)$ $(a+1, d)$:
+    The start with $(a, d) = (0, 1)$ or $(1, 0)$ is trivial.
+    Now going from $(a, d)$ $(a+1, d)$:
     \[ \begin{aligned}
            M(a+1, d) & = M(a, d) + M(a+1, d-1) \\ & \overset{\mathrm{IH}}{=} \frac{(a + d)!}{a! d!} + \frac{(a+1 + d-1)!}{(a+1)! (d-1)!} \\ & = \ldots \\ & = \frac{(a+1 + d)!}{(a+1)! d!}
     \end{aligned} \]
 
-    This is symmetric w.r.t exchanging $a$ and $d$, since the critical step in line 2 applies equally (any field can be reached from the fields "left" and "above" of it).
-
+    This is symmetric w.r.t exchanging $a$ and $d$, since the critical step in line 2 applies equally (any field can be reached from the fields left and above of it).
     When fighting with 30 against 20, the field (1, 1) alone is called $\frac{(29 + 19)!}{29! \cdot 19!} \approx 10^{13}$ times.
     No wonder my laptop gave up!
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.7\textwidth]{../images/pascale meme2.jpg}
-    \end{figure}
+    Although I didn't realize it at the time I initially did this calculation (it was pretty much my first program), the easiest solution would be to use a cache, e.g. the \texttt{functiontools.lru\_cache} decorator.
+    The value of each node is calculated only once and looked up from the cache when needed again.
+    This means that all child calls that would be triggered on subsequent calls fall away too, and therefore it should solve the whole issue.
 
-    Storing the results of the function for any given set of input parameters, e.g. with a decorator like \texttt{functiontools.lru\_cache} doesn't really help:
-
-    The calculation may only be done once per node, but the calculation part was never really the problem.
-    The real problem of getting called just way too often still remains.
-
-    One solution I found is to change the conceptual view of going top down towards starting at the possible outcomes and working one's way up towards the initial starting point:
+    But instead I came up with this idea, that works as well:
+    One can change the conceptual view of going top down towards starting at the possible outcomes and working one's way up towards the initial starting point:
 
     \subsection{Bottom Up}
     The basic idea is to work from the bottom up.
@@ -201,10 +207,10 @@
 
     And so on: Now it can just be iterated from the bottom right going up the columns right to left or the rows bottom to top.
     All $a \cdot d$ fields must be filled up, but this time only once!
-    Using this, values up to $\sim$1000 can easily be reached: $P_{total}(\text{1000 vs 1000}) = 0.05\%$ (for such large numbers the 47\% of a single 3v2 become very small)
+    Using this, values up to $\sim$1000 can easily be reached: $P_{total}(\text{``1000 vs 1000''}) = 0.05\%$ (for such large numbers the 47\% of a single 3v2 become very small)
 
     The idea of boundary conditions is also convenient because they now can easily be changed.
-    For example to answer questions like "How probable is it to win with the attacker having exactly 3 remaining troops?", this would just mean changing all outcomes to red (or $P=0$), except for the one where $a=3$:
+    For example to answer questions like \textit{"How probable is it to win with the attacker having exactly 3 remaining troops?"}, this would just mean changing all outcomes to red (or $P=0$), except for the one where $a=3$:
 
     \begin{figure}[H]
         \centering
@@ -218,22 +224,19 @@
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.9\textwidth]{../images/Risk5v5.png}
-        \caption{5 attackers vs 5 defenders probability distribution}
     \end{figure}
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.9\textwidth]{../images/Risk10v8.png}
-        \caption{10 attackers vs 8 defenders probability distribution}
     \end{figure}
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=0.9\textwidth]{../images/Risk30v25.png}
-        \caption{30 attackers vs 25 defenders probability distribution}
     \end{figure}
 
-    It is of course almost a binomial distribution, but with dips where the attacker or defender runs into cases where the number of dice that can be used gets reduced.
+    What can be seen is almost a binomial distribution, but with dips where the attacker or defender runs into cases where the number of dice that can be used gets reduced.
 
     For smaller troupe sizes, what strikes me is that the curves are pretty flat.
     This reflects what we all know: Attacks are often just wildcards and everything can happen.
@@ -241,7 +244,10 @@
 
     \section{Conclusion}
     It is surprising how much time one can dump into something like this.
-    But at least now we have the possibility to simulate the outcome of an attack within seconds instead of fifteen minutes. So for the first time, we started actually finishing games! Now that extinguishing a player happens within a second instead of in a 15 minutes crushing faceoff, the threshold of doing so significantly reduced. Funnily enough a new threat came up in the later stages of the game: "If you attack me, I will not simulate", which means the whole table will have to wait for quite some time until they are done...
+    But at least now we have the possibility to simulate the outcome of an attack within seconds instead of fifteen minutes.
+    So for the first time, we started actually finishing games!
+    Now that extinguishing a player happens within a second instead of in a 15 minutes crushing face-off, the threshold of doing so significantly reduced.
+    Funnily enough a new threat came up in the later stages of the game: \textit{"If you attack me, I will not simulate"}, which means the whole table will have to wait for quite some time until they are done...
 
 
     \section{Outlook}
@@ -257,9 +263,78 @@
     \end{figure}
 
     Within the Happy Field of Binomial Distribution, the probability of winning a single attack stays constant as the dice numbers don't change.
-    So the probability to "go from" point A to point B can instantly be calculated using the binomial distribution.
+    So the probability to go from point A to point B can instantly be calculated using the binomial distribution.
     Then one would sum up all paths from the initial point to the border and weigh it the probability on the respective field on the border.
     For the right border ("Geometric Border"), this would come down to something like the geometric series, so it could be written down for each point.
     For the lower border, maybe some sort of "double" geometric series will come out... In total this seems pretty doable to me!
+
+
+    \section{Addendum}
+    About one and a half months after I posted this article as a TNG internal blogpost, Stephan Steinfurter, a friend and colleague of mine posted this fabulous answer, which is given here in original form:
+
+    \vspace{\baselineskip}
+
+    Thanks again for the nice problem.
+    I was a little nerd-sniped ;).
+
+    Indeed, one can obtain a solution linear in (a + d), exactly as you already outlined, Jonas.
+    For the borders, there exist simple analytical solutions and the ``happy field of binomial distribution'' was in fact not happy at all for me.
+    It was rather painful to get all the indices right.
+    But in the end one indeed just needs the values on the borders and add them up with appropriate pre-factors (so, it is indeed just counting).
+    But getting the binomial coefficients right is a bit nasty.
+
+    I have a Jupyter notebook with all the nitty-gritty details.
+    I may upload it to BitBucket, if anybody is interested.
+    Here are the most important functions:
+
+    \begin{lstlisting}[language=Python]
+def Q_geometric_d_is_1(a, d):
+    assert d == 1
+    if a == 1:
+        return p(1, 1)
+    if a == 2:
+        return p(2, 1) + (1 - p(2, 1)) * p(1, 1)
+    return 1 - (1 - Q_dp(3, 1)) * (1 - p(3, 1))**(a-3)
+
+def Q_geometric_a_is_1(a, d):
+    assert a == 1
+    if d == 1:
+        return p(1, 1)
+    return Q_dp(1, 2) * p(1, 2)**(d-2)
+
+def Q_geometric_a_is_2(a, d):
+    assert a == 2
+    a_ = p(2, 2)
+    b_ = (1 - p(2, 2)) * Q_dp(1, 2)
+    c_ = p(1, 2)
+    return Q_dp(2, 2) * a_**(d-2) + b_ * c_ * (c_**(d-2) - a_**(d-2))/(c_ - a_)
+    \end{lstlisting}
+
+    To obtain the last one from the previous, one needs to observe that Q(1, d) is a simple exponential and then use sth. like this formula.
+
+    The rest is counting:
+
+    \begin{lstlisting}[language=Python]
+from math import comb
+def Q_linear(a, d):
+    return p(3, 3)**(d-1) * sum(comb(a + d - 4 - aa, d - 2) * (1 - p(3, 3))**(a - 2 - aa) * Q_geometric_d_is_1(aa+2, 1) for aa in range(a-2))
+    \end{lstlisting}
+
+    or as a formula:
+
+    \[ \begin{aligned}
+    Q_{ad} = &\; p_{33}^{d-1} * \sum_{a'=1}^{a-2} \binom{a + d - 4 - a'}{d - 2}(1 - p_{33})^{a-2-a'} * Q_{a'+2,1} \\
+    &+ (1 - p_{33})^{a-2} \sum_{d'=1}^{d-1} \binom{a + d - 4 - d'}{d - 1 - d'} * p_{33}^{d-1-d'} * Q_{2,d'+1}
+    \end{aligned} \]
+
+    The binomial coefficients can be visualized in Pascal's triangle as the entries going up diagonally left/right from a particular point in the triangle. That particular point has N = (a - 3) + (d - 2) and k = d - 2 when written as ``N choose k''.
+
+    Is it enough to compute Q(1000, 1000)?
+
+    Well, in principle yes, sure.
+    But in that particular version (\^{}), I get an ``OverflowError: int too large to convert to float'' for ``comb''.
+    I guess, I will just have to switch to scipy's comb with ``exact=False'' or sth. like that.
+    But who cares about the actual values...
+
 
 \end{document}

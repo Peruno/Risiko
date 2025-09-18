@@ -1,3 +1,6 @@
+18.09.2025, 
+* Finished the PDF
+
 16.09.2025, 1h
 * PDF polishing
 
