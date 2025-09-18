@@ -13,6 +13,7 @@
 \usepackage{hyperref}
 \usepackage[english]{babel}
 \usepackage{caption}
+\usepackage{mdframed}
 
 \geometry{margin=2.5cm}
 
@@ -182,7 +183,7 @@
     When fighting with 30 against 20, the field (1, 1) alone is called $\frac{(29 + 19)!}{29! \cdot 19!} \approx 10^{13}$ times.
     No wonder my laptop gave up!
 
-    Although I didn't realize it at the time I initially did this calculation (it was pretty much my first program), the easiest solution would be to use a cache, e.g. the \texttt{functiontools.lru\_cache} decorator.
+    Although I didn't realize it at the time I initially did this calculation (it was pretty much my first program), the easiest solution would be to use a cache, e.g. the \texttt{functiontools.lru\_cache} decorator.\footnote{Thank you to Nicolas Schwab for pointing this out to me!}
     The value of each node is calculated only once and looked up from the cache when needed again.
     This means that all child calls that would be triggered on subsequent calls fall away too, and therefore it should solve the whole issue.
 
@@ -270,10 +271,10 @@
 
 
     \section{Addendum}
-    About one and a half months after I posted this article as a TNG internal blogpost, Stephan Steinfurter, a friend and colleague of mine posted this fabulous answer, which is given here in original form:
+    I posted the initial and almost identical version of this article as a company-internal blogpost at TNG.
+    About one and a half months later, Stephan Steinfurter, a friend and colleague of mine posted this fabulous answer, which is given here in original form:\\
 
-    \vspace{\baselineskip}
-
+    \begin{mdframed}[leftline=true,rightline=false,topline=false,bottomline=false,linewidth=1pt,linecolor=gray,innerleftmargin=20pt,innerrightmargin=5pt,innertopmargin=0pt,innerbottommargin=0pt,leftmargin=20pt]
     Thanks again for the nice problem.
     I was a little nerd-sniped ;).
 
@@ -285,7 +286,7 @@
 
     I have a Jupyter notebook with all the nitty-gritty details.
     I may upload it to BitBucket, if anybody is interested.
-    Here are the most important functions:
+    Here are the most important functions: \\
 
     \begin{lstlisting}[language=Python]
 def Q_geometric_d_is_1(a, d):
@@ -335,6 +336,7 @@ def Q_linear(a, d):
     But in that particular version (\^{}), I get an ``OverflowError: int too large to convert to float'' for ``comb''.
     I guess, I will just have to switch to scipy's comb with ``exact=False'' or sth. like that.
     But who cares about the actual values...
+    \end{mdframed}
 
 
 \end{document}
