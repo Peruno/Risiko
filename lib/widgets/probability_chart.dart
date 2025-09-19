@@ -28,64 +28,47 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        if (orientation == Orientation.portrait) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Rotate your device to landscape mode to view the detailed probability chart.',
-                style: TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        if (selectedValue != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              selectedValue!,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              textAlign: TextAlign.center,
             ),
-          );
-        }
-
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            if (selectedValue != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  selectedValue!,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
+          ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 45,
+                  child: _buildAttackerChart(),
                 ),
-              ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 45,
-                      child: _buildAttackerChart(),
-                    ),
-                    const Expanded(
-                      flex: 5,
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      flex: 45,
-                      child: _buildDefenderChart(),
-                    ),
-                  ],
+                const Expanded(
+                  flex: 5,
+                  child: SizedBox(),
                 ),
-              ),
+                Expanded(
+                  flex: 45,
+                  child: _buildDefenderChart(),
+                ),
+              ],
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 
