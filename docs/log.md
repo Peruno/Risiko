@@ -1,3 +1,8 @@
+19.09.2025
+* Refactorings
+* Improve rotation handling
+* Correct Stephans name
+
 18.09.2025, 2h
 * Add answers to PDF
 * Polishing

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'models/simulator.dart';
 import 'widgets/probability_chart.dart';
@@ -46,6 +47,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     _attackersController.addListener(_validateInput);
     _defendersController.addListener(_validateInput);
   }
@@ -341,18 +346,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: const Text('Detaillierte Wahrscheinlichkeiten'),
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            ),
-            body: ProbabilityChart(
-              attackerWinProbabilities: attackerWinProbs,
-              defenderWinProbabilities: defenderWinProbs,
-              attackers: attackers,
-              defenders: defenders,
-              totalWinProbability: result.winProbability,
-            ),
+          builder: (context) => DetailedChartScreen(
+            attackerWinProbabilities: attackerWinProbs,
+            defenderWinProbabilities: defenderWinProbs,
+            attackers: attackers,
+            defenders: defenders,
+            totalWinProbability: result.winProbability,
           ),
         ),
       );
@@ -601,5 +600,62 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _attackersController.dispose();
     _defendersController.dispose();
     super.dispose();
+  }
+}
+
+class DetailedChartScreen extends StatefulWidget {
+  final List<double> attackerWinProbabilities;
+  final List<double> defenderWinProbabilities;
+  final int attackers;
+  final int defenders;
+  final double totalWinProbability;
+
+  const DetailedChartScreen({
+    super.key,
+    required this.attackerWinProbabilities,
+    required this.defenderWinProbabilities,
+    required this.attackers,
+    required this.defenders,
+    required this.totalWinProbability,
+  });
+
+  @override
+  State<DetailedChartScreen> createState() => _DetailedChartScreenState();
+}
+
+class _DetailedChartScreenState extends State<DetailedChartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Detaillierte Wahrscheinlichkeiten'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: ProbabilityChart(
+        attackerWinProbabilities: widget.attackerWinProbabilities,
+        defenderWinProbabilities: widget.defenderWinProbabilities,
+        attackers: widget.attackers,
+        defenders: widget.defenders,
+        totalWinProbability: widget.totalWinProbability,
+      ),
+    );
   }
 }
