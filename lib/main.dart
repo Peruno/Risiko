@@ -40,8 +40,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   bool _defendersInvalid = false;
   bool _attackersNonNumeric = false;
   bool _defendersNonNumeric = false;
-  bool _attackersExceedsMax = false;
-  bool _defendersExceedsMax = false;
   String? _selectedAttackMode = 'allIn';
 
   @override
@@ -107,12 +105,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     setState(() {
       _attackersNonNumeric = attackersText.isNotEmpty && int.tryParse(attackersText) == null;
       _defendersNonNumeric = defendersText.isNotEmpty && int.tryParse(defendersText) == null;
-      
-      _attackersExceedsMax = attackers > 128;
-      _defendersExceedsMax = defenders > 128;
-      
-      if (attackers >= 1 && attackers <= 128 && 
-          defenders >= 1 && defenders <= 128 && 
+
+      if (attackers >= 1 && attackers <= 128 &&
+          defenders >= 1 && defenders <= 128 &&
           (_selectedAttackMode == 'allIn' || (attackers >= 3 && _selectedAttackMode == 'safe')) &&
           !_attackersNonNumeric && !_defendersNonNumeric) {
         _result = '';
@@ -464,7 +459,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                           width: _selectedAttackMode == 'allIn' ? 2 : 1,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                        color: _selectedAttackMode == 'allIn' ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                        color: _selectedAttackMode == 'allIn' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
                       ),
                       child: Column(
                         children: [
@@ -507,7 +502,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
                           width: _selectedAttackMode == 'safe' ? 2 : 1,
                         ),
                         borderRadius: BorderRadius.circular(8),
-                        color: _selectedAttackMode == 'safe' ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                        color: _selectedAttackMode == 'safe' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
                       ),
                       child: Column(
                         children: [

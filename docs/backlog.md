@@ -8,3 +8,6 @@
 * Infoboxes for the countries with fun-facts
 * Fix bug of wrong diagram for higher values
 * Clean up the code a bit
+* Test the app on an andriod simulator (Galaxy S21)
+* Release it to the Apple App Store
+* Release it to the Google App Store

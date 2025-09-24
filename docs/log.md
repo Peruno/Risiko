@@ -1,7 +1,11 @@
-19.09.2025
+24.09.2025, 
+* 
+
+19.09.2025, 2h
 * Refactorings
 * Improve rotation handling
 * Correct Stephans name
+* Failed on the display of the PDF. Turns out to be a bit more tricky than I thought
 
 18.09.2025, 2h
 * Add answers to PDF
