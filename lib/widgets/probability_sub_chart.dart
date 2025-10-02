@@ -49,8 +49,8 @@ class ProbabilitySubChart extends StatelessWidget {
 
   Widget _buildChart() {
     final isAttacker = chartType == ChartType.attacker;
-    final color = isAttacker ? Colors.green : Colors.red;
-    final displayData = isAttacker ? probabilities : probabilities.reversed.toList();
+    final displayedData = isAttacker ? probabilities : probabilities.reversed
+        .toList();
 
     return BarChart(
       BarChartData(
@@ -68,23 +68,7 @@ class ProbabilitySubChart extends StatelessWidget {
         ),
         titlesData: _buildTitlesData(),
         borderData: FlBorderData(show: true),
-        barGroups: displayData
-            .asMap()
-            .entries
-            .map((entry) => BarChartGroupData(
-                  x: entry.key,
-                  barRods: [
-                    BarChartRodData(
-                      toY: entry.value * 100,
-                      color: selectedIndex == entry.key && isSelected
-                          ? color.shade700
-                          : color,
-                      width: 16,
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ],
-                ))
-            .toList(),
+        barGroups: _buildBarGroups(displayedData, isAttacker),
       ),
     );
   }
@@ -120,10 +104,35 @@ class ProbabilitySubChart extends StatelessWidget {
           style: const TextStyle(fontSize: 12),
         ),
       ),
-      leftTitles: isAttacker ? _buildLeftTitles() : const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-      rightTitles: isAttacker ? const AxisTitles(sideTitles: SideTitles(showTitles: false)) : _buildRightTitles(),
+      leftTitles: isAttacker ? _buildLeftTitles() : const AxisTitles(
+          sideTitles: SideTitles(showTitles: false)),
+      rightTitles: isAttacker ? const AxisTitles(
+          sideTitles: SideTitles(showTitles: false)) : _buildRightTitles(),
       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
     );
+  }
+
+  List<BarChartGroupData> _buildBarGroups(List<double> displayedData,
+      bool isAttacker) {
+    final color = isAttacker ? Colors.green : Colors.red;
+    return displayedData
+        .asMap()
+        .entries
+        .map((entry) =>
+        BarChartGroupData(
+          x: entry.key,
+          barRods: [
+            BarChartRodData(
+              toY: entry.value * 100,
+              color: selectedIndex == entry.key && isSelected
+                  ? color.shade700
+                  : color,
+              width: 16,
+              borderRadius: BorderRadius.zero,
+            ),
+          ],
+        ))
+        .toList();
   }
 
   AxisTitles _buildLeftTitles() {
