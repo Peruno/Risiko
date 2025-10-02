@@ -381,95 +381,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
             const SizedBox(height: 16),
             _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
             const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      _dismissKeyboard();
-                      setState(() {
-                        _selectedAttackMode = 'allIn';
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                          width: _selectedAttackMode == 'allIn' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        color: _selectedAttackMode == 'allIn' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'All In',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Kampf bis zum letzten Mann',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      _dismissKeyboard();
-                      setState(() {
-                        _selectedAttackMode = 'safe';
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                          width: _selectedAttackMode == 'safe' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        color: _selectedAttackMode == 'safe' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Sicherer Angriff',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Rückzug bei 2 verbleibenden Angreifern',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            _buildModeSelection(),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _calculateProbabilities,
@@ -528,6 +440,98 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         ),
       ),
     );
+  }
+
+  Row _buildModeSelection() {
+    return Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _dismissKeyboard();
+                    setState(() {
+                      _selectedAttackMode = 'allIn';
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
+                        width: _selectedAttackMode == 'allIn' ? 2 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: _selectedAttackMode == 'allIn' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'All In',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Kampf bis zum letzten Mann',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    _dismissKeyboard();
+                    setState(() {
+                      _selectedAttackMode = 'safe';
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                        width: _selectedAttackMode == 'safe' ? 2 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: _selectedAttackMode == 'safe' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Sicherer Angriff',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Rückzug bei 2 verbleibenden Angreifern',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   TextField _buildInputTextField(TextEditingController controller, bool isValid, String label) {
