@@ -377,69 +377,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-            TextField(
-              controller: _attackersController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Anzahl Angreifer',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.grey,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.grey,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : Colors.blue,
-                  ),
-                ),
-                counterText: '',
-                labelStyle: TextStyle(
-                  color: _isFieldRedForInput(_attackersController.text, _attackersInvalid) ? Colors.red : null,
-                ),
-                suffixText: _getSuffixTextForInput(_attackersController.text, _attackersInvalid),
-                suffixStyle: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 12,
-                ),
-              ),
-            ),
+            _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
             const SizedBox(height: 16),
-            TextField(
-              controller: _defendersController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Anzahl Verteidiger',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.grey,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.grey,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : Colors.blue,
-                  ),
-                ),
-                counterText: '',
-                labelStyle: TextStyle(
-                  color: _isFieldRedForInput(_defendersController.text, _defendersInvalid) ? Colors.red : null,
-                ),
-                suffixText: _getSuffixTextForInput(_defendersController.text, _defendersInvalid),
-                suffixStyle: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 12,
-                ),
-              ),
-            ),
+            _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
             const SizedBox(height: 24),
             Row(
               children: [
@@ -588,6 +528,40 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         ),
       ),
     );
+  }
+
+  TextField _buildInputTextField(TextEditingController controller, bool isValid, String label) {
+    return TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: label,
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.blue,
+                ),
+              ),
+              counterText: '',
+              labelStyle: TextStyle(
+                color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : null,
+              ),
+              suffixText: _getSuffixTextForInput(controller.text, isValid),
+              suffixStyle: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          );
   }
 
   @override
