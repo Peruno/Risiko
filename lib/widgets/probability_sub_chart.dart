@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 enum ChartType { attacker, defender }
 
-class ProbabilityBarChart extends StatelessWidget {
+class ProbabilitySubChart extends StatelessWidget {
   final ChartType chartType;
   final List<double> probabilities;
   final double totalWinProbability;
@@ -12,7 +12,7 @@ class ProbabilityBarChart extends StatelessWidget {
   final bool isSelected;
   final Function(int index) onBarTap;
 
-  const ProbabilityBarChart({
+  const ProbabilitySubChart({
     super.key,
     required this.chartType,
     required this.probabilities,

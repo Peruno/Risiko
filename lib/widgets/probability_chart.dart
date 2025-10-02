@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'probability_bar_chart.dart';
+import 'probability_sub_chart.dart';
 
 class ProbabilityChart extends StatefulWidget {
   final List<double> attackerWinProbabilities;
@@ -69,7 +69,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
         children: [
           Expanded(
             flex: 45,
-            child: ProbabilityBarChart(
+            child: ProbabilitySubChart(
               chartType: ChartType.attacker,
               probabilities: widget.attackerWinProbabilities,
               totalWinProbability: widget.totalWinProbability,
@@ -82,7 +82,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
           const Expanded(flex: 5, child: SizedBox()),
           Expanded(
             flex: 45,
-            child: ProbabilityBarChart(
+            child: ProbabilitySubChart(
               chartType: ChartType.defender,
               probabilities: widget.defenderWinProbabilities,
               totalWinProbability: widget.totalWinProbability,
