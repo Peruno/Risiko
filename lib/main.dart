@@ -15,10 +15,7 @@ class RisikoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Risiko Simulator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.red), useMaterial3: true),
       home: const BattleSimulatorPage(),
     );
   }
@@ -45,10 +42,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     _attackersController.addListener(_validateInput);
     _defendersController.addListener(_validateInput);
   }
@@ -63,7 +57,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Info', textAlign: TextAlign.center),
-          content: const Text('Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.', textAlign: TextAlign.center,),
+          content: const Text(
+            'Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.',
+            textAlign: TextAlign.center,
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -81,7 +78,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final value = int.tryParse(text) ?? 0;
     final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
     final exceedsMax = value > 128;
-    
+
     return isInvalid || isNonNumeric || exceedsMax;
   }
 
@@ -89,7 +86,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final value = int.tryParse(text) ?? 0;
     final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
     final exceedsMax = value > 128;
-    
+
     if (exceedsMax) return 'max 128';
     if (isInvalid) return 'min 1';
     if (isNonNumeric) return 'nur Zahlen';
@@ -101,15 +98,18 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final defendersText = _defendersController.text;
     final int attackers = int.tryParse(attackersText) ?? 0;
     final int defenders = int.tryParse(defendersText) ?? 0;
-    
+
     setState(() {
       _attackersNonNumeric = attackersText.isNotEmpty && int.tryParse(attackersText) == null;
       _defendersNonNumeric = defendersText.isNotEmpty && int.tryParse(defendersText) == null;
 
-      if (attackers >= 1 && attackers <= 128 &&
-          defenders >= 1 && defenders <= 128 &&
+      if (attackers >= 1 &&
+          attackers <= 128 &&
+          defenders >= 1 &&
+          defenders <= 128 &&
           (_selectedAttackMode == 'allIn' || (attackers >= 3 && _selectedAttackMode == 'safe')) &&
-          !_attackersNonNumeric && !_defendersNonNumeric) {
+          !_attackersNonNumeric &&
+          !_defendersNonNumeric) {
         _result = '';
         _attackersInvalid = false;
         _defendersInvalid = false;
@@ -121,7 +121,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
-    
+
     if (attackers < 1) {
       setState(() {
         _result = 'Anzahl der Angreifer muss mindestens 1 sein';
@@ -197,7 +197,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
-    
+
     if (attackers < 1) {
       setState(() {
         _result = 'Anzahl der Angreifer muss mindestens 1 sein';
@@ -206,7 +206,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       });
       return;
     }
-    
+
     if (attackers > 128) {
       setState(() {
         _result = 'Anzahl der Angreifer darf maximal 128 sein';
@@ -215,7 +215,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       });
       return;
     }
-    
+
     if (defenders < 1) {
       setState(() {
         _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
@@ -224,7 +224,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       });
       return;
     }
-    
+
     if (defenders > 128) {
       setState(() {
         _result = 'Anzahl der Verteidiger darf maximal 128 sein';
@@ -265,7 +265,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   String _formatProbabilities(BattleResult result) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
     if (_selectedAttackMode == 'safe') {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
@@ -279,10 +279,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   String _formatBattleResult(int attackers, int defenders, BattleResult result) {
     final buffer = StringBuffer();
-    
+
     buffer.write(_formatProbabilities(result));
     buffer.writeln('');
-    
+
     switch (result.outcome) {
       case BattleOutcome.victory:
         buffer.writeln('🟢 SIEG DES ANGREIFERS!');
@@ -305,7 +305,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _dismissKeyboard();
     final int attackers = int.tryParse(_attackersController.text) ?? 0;
     final int defenders = int.tryParse(_defendersController.text) ?? 0;
-    
+
     if (attackers < 1 || defenders < 1 || attackers > 128 || defenders > 128) {
       setState(() {
         _result = 'Bitte gültige Werte für Angreifer und Verteidiger eingeben (1-128)';
@@ -363,13 +363,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Risiko Simulator'),
-        actions: [
-          IconButton(
-            onPressed: _showInfoDialog,
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Information',
-          ),
-        ],
+        actions: [IconButton(onPressed: _showInfoDialog, icon: const Icon(Icons.info_outline), tooltip: 'Information')],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -377,64 +371,54 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-            _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
-            const SizedBox(height: 16),
-            _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
-            const SizedBox(height: 24),
-            _buildModeSelection(),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _calculateProbabilities,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Chancen berechnen',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _showDetailedChart,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Detailliertes Diagramm',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _simulateBattle,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Ergebnis simulieren',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 24),
-            if (_result.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
+              _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
+              const SizedBox(height: 16),
+              _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
+              const SizedBox(height: 24),
+              _buildModeSelection(),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _calculateProbabilities,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
                 ),
-                child: Text(
-                  _result,
-                  style: const TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
+                child: const Text('Chancen berechnen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _showDetailedChart,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Detailliertes Diagramm',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _simulateBattle,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Ergebnis simulieren', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 24),
+              if (_result.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                ),
             ],
           ),
         ),
@@ -444,128 +428,115 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   Row _buildModeSelection() {
     return Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    _dismissKeyboard();
-                    setState(() {
-                      _selectedAttackMode = 'allIn';
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                        width: _selectedAttackMode == 'allIn' ? 2 : 1,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                      color: _selectedAttackMode == 'allIn' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'All In',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Kampf bis zum letzten Mann',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              _dismissKeyboard();
+              setState(() {
+                _selectedAttackMode = 'allIn';
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
+                  width: _selectedAttackMode == 'allIn' ? 2 : 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                color: _selectedAttackMode == 'allIn'
+                    ? Colors.blue.withValues(alpha: 0.1)
+                    : Colors.grey.withValues(alpha: 0.1),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'All In',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Kampf bis zum letzten Mann',
+                    style: TextStyle(fontSize: 12, color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    _dismissKeyboard();
-                    setState(() {
-                      _selectedAttackMode = 'safe';
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                        width: _selectedAttackMode == 'safe' ? 2 : 1,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                      color: _selectedAttackMode == 'safe' ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Sicherer Angriff',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Rückzug bei 2 verbleibenden Angreifern',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              _dismissKeyboard();
+              setState(() {
+                _selectedAttackMode = 'safe';
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
+                  width: _selectedAttackMode == 'safe' ? 2 : 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                color: _selectedAttackMode == 'safe'
+                    ? Colors.blue.withValues(alpha: 0.1)
+                    : Colors.grey.withValues(alpha: 0.1),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Sicherer Angriff',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Rückzug bei 2 verbleibenden Angreifern',
+                    style: TextStyle(fontSize: 12, color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-            ],
-          );
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   TextField _buildInputTextField(TextEditingController controller, bool isValid, String label) {
     return TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: label,
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.blue,
-                ),
-              ),
-              counterText: '',
-              labelStyle: TextStyle(
-                color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : null,
-              ),
-              suffixText: _getSuffixTextForInput(controller.text, isValid),
-              suffixStyle: const TextStyle(
-                color: Colors.red,
-                fontSize: 12,
-              ),
-            ),
-          );
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.blue),
+        ),
+        counterText: '',
+        labelStyle: TextStyle(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : null),
+        suffixText: _getSuffixTextForInput(controller.text, isValid),
+        suffixStyle: const TextStyle(color: Colors.red, fontSize: 12),
+      ),
+    );
   }
 
   @override
@@ -600,18 +571,12 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     super.dispose();
   }
 

@@ -101,7 +101,8 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     setState(() {
       selectedIndex = index;
       isAttackerSide = true;
-      selectedValue = 'Angreifer verliert $index Truppen: ${(widget.attackerWinProbabilities[index] * 100).toStringAsFixed(2)}%';
+      selectedValue =
+          'Angreifer verliert $index Truppen: ${(widget.attackerWinProbabilities[index] * 100).toStringAsFixed(2)}%';
     });
   }
 
@@ -111,7 +112,8 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
       final reversedData = widget.defenderWinProbabilities.reversed.toList();
       selectedIndex = index;
       isAttackerSide = false;
-      selectedValue = 'Verteidiger verliert $defenderLosses Truppen: ${(reversedData[index] * 100).toStringAsFixed(2)}%';
+      selectedValue =
+          'Verteidiger verliert $defenderLosses Truppen: ${(reversedData[index] * 100).toStringAsFixed(2)}%';
     });
   }
 

@@ -116,7 +116,7 @@ class Simulator {
     bool isSafeAttack,
   ) {
     final totalWinProb = winProbs.values.reduce((a, b) => a + b);
-    
+
     if (_random.nextDouble() < totalWinProb) {
       final losses = _weightedChoice(winProbs);
       return (outcome: BattleOutcome.victory, losses: losses);
@@ -130,14 +130,14 @@ class Simulator {
   int _weightedChoice(Map<int, double> probabilities) {
     final totalWeight = probabilities.values.reduce((a, b) => a + b);
     double randomValue = _random.nextDouble() * totalWeight;
-    
+
     for (final entry in probabilities.entries) {
       randomValue -= entry.value;
       if (randomValue <= 0) {
         return entry.key;
       }
     }
-    
+
     return probabilities.keys.last;
   }
 }

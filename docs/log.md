@@ -1,5 +1,11 @@
-24.09.2025, 
-* 
+03.10.2025, 
+* Standardize formatting
+
+02.10.2025, 1h
+* Refactor the code towards more modularity
+
+24.09.2025, 1h
+* Forgot what I did
 
 19.09.2025, 2h
 * Refactorings

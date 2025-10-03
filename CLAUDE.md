@@ -66,3 +66,5 @@ The application will calculate and visualize Risk battle probabilities with a na
 **NO COMMENTS POLICY**: This project must not contain any comments in the code. All code should be self-documenting through clear naming and structure. Do not add comments to any files unless explicitly told.
 
 **TRAILING NEWLINE REQUIREMENT**: All files must end with a newline character. Ensure every file has exactly one empty line at the end.
+
+**FORMATTING**: Use `dart format --line-length=120` to format all code that is written and committed.
