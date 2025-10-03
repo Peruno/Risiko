@@ -42,17 +42,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Risiko Simulator'),
-        actions: [
-          IconButton(
-            onPressed: () => InfoDialog.show(context),
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Information',
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -76,6 +66,20 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      title: const Text('Risiko Simulator'),
+      actions: [
+        IconButton(
+          onPressed: () => InfoDialog.show(context),
+          icon: const Icon(Icons.info_outline),
+          tooltip: 'Information',
+        ),
+      ],
     );
   }
 
