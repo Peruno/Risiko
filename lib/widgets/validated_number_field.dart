@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils/input_validator.dart';
 
@@ -21,6 +22,7 @@ class ValidatedNumberField extends StatelessWidget {
     return TextField(
       controller: controller,
       keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(

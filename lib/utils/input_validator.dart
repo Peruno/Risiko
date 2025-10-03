@@ -11,25 +11,19 @@ class InputValidator {
   int? get attackers => int.tryParse(attackersText);
   int? get defenders => int.tryParse(defendersText);
 
-  bool get isAttackersNonNumeric => attackersText.isNotEmpty && attackers == null;
-  bool get isDefendersNonNumeric => defendersText.isNotEmpty && defenders == null;
-
   bool isFieldRedForInput(String text, bool isInvalid) {
     final value = int.tryParse(text) ?? 0;
-    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
     final exceedsMax = value > maxValue;
 
-    return isInvalid || isNonNumeric || exceedsMax;
+    return isInvalid || exceedsMax;
   }
 
   String? getSuffixTextForInput(String text, bool isInvalid) {
     final value = int.tryParse(text) ?? 0;
-    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
     final exceedsMax = value > maxValue;
 
     if (exceedsMax) return 'max $maxValue';
     if (isInvalid) return 'min $minValue';
-    if (isNonNumeric) return 'nur Zahlen';
     return null;
   }
 
@@ -38,15 +32,10 @@ class InputValidator {
     if (attackers! < minValue || attackers! > maxValue) return false;
     if (defenders! < minValue || defenders! > maxValue) return false;
     if (selectedAttackMode == 'safe' && attackers! < 3) return false;
-    if (isAttackersNonNumeric || isDefendersNonNumeric) return false;
     return true;
   }
 
   String? validate() {
-    if (isAttackersNonNumeric || isDefendersNonNumeric) {
-      return null;
-    }
-
     if (attackers == null || attackers! < minValue) {
       return 'Anzahl der Angreifer muss mindestens $minValue sein';
     }
