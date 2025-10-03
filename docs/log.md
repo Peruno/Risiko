@@ -1,5 +1,6 @@
 03.10.2025, 
 * Standardize formatting
+* Move detailed chart screen into separate class
 
 02.10.2025, 1h
 * Refactor the code towards more modularity

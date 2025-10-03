@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:risiko_simulator/widgets/detailed_chart_screen.dart';
 
 import 'models/simulator.dart';
-import 'widgets/probability_chart.dart';
 
 void main() {
   runApp(const RisikoApp());
@@ -47,8 +47,73 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _defendersController.addListener(_validateInput);
   }
 
-  void _dismissKeyboard() {
-    FocusScope.of(context).unfocus();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Risiko Simulator'),
+        actions: [IconButton(onPressed: _showInfoDialog, icon: const Icon(Icons.info_outline), tooltip: 'Information')],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
+              const SizedBox(height: 16),
+              _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
+              const SizedBox(height: 24),
+              _buildModeSelection(),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _calculateProbabilities,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Chancen berechnen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _showDetailedChart,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Detailliertes Diagramm',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _simulateBattle,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Ergebnis simulieren', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 24),
+              if (_result.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _showInfoDialog() {
@@ -72,6 +137,10 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         );
       },
     );
+  }
+
+  void _dismissKeyboard() {
+    FocusScope.of(context).unfocus();
   }
 
   bool _isFieldRedForInput(String text, bool isInvalid) {
@@ -357,75 +426,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Risiko Simulator'),
-        actions: [IconButton(onPressed: _showInfoDialog, icon: const Icon(Icons.info_outline), tooltip: 'Information')],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
-              const SizedBox(height: 16),
-              _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
-              const SizedBox(height: 24),
-              _buildModeSelection(),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _calculateProbabilities,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Chancen berechnen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: _showDetailedChart,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'Detailliertes Diagramm',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: _simulateBattle,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Ergebnis simulieren', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 24),
-              if (_result.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Row _buildModeSelection() {
     return Row(
       children: [
@@ -544,56 +544,5 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     _attackersController.dispose();
     _defendersController.dispose();
     super.dispose();
-  }
-}
-
-class DetailedChartScreen extends StatefulWidget {
-  final List<double> attackerWinProbabilities;
-  final List<double> defenderWinProbabilities;
-  final int attackers;
-  final int defenders;
-  final double totalWinProbability;
-
-  const DetailedChartScreen({
-    super.key,
-    required this.attackerWinProbabilities,
-    required this.defenderWinProbabilities,
-    required this.attackers,
-    required this.defenders,
-    required this.totalWinProbability,
-  });
-
-  @override
-  State<DetailedChartScreen> createState() => _DetailedChartScreenState();
-}
-
-class _DetailedChartScreenState extends State<DetailedChartScreen> {
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-  }
-
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detaillierte Wahrscheinlichkeiten'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: ProbabilityChart(
-        attackerWinProbabilities: widget.attackerWinProbabilities,
-        defenderWinProbabilities: widget.defenderWinProbabilities,
-        attackers: widget.attackers,
-        defenders: widget.defenders,
-        totalWinProbability: widget.totalWinProbability,
-      ),
-    );
   }
 }
