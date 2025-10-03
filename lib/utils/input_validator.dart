@@ -6,11 +6,7 @@ class InputValidator {
   final String defendersText;
   final String? selectedAttackMode;
 
-  InputValidator({
-    required this.attackersText,
-    required this.defendersText,
-    this.selectedAttackMode,
-  });
+  InputValidator({required this.attackersText, required this.defendersText, this.selectedAttackMode});
 
   int? get attackers => int.tryParse(attackersText);
   int? get defenders => int.tryParse(defendersText);

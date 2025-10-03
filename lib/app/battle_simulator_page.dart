@@ -6,6 +6,7 @@ import '../utils/battle_result_formatter.dart';
 import '../utils/input_validator.dart';
 import '../widgets/attack_mode_selector.dart';
 import '../widgets/detailed_chart_screen.dart';
+import '../widgets/info_dialog.dart';
 import '../widgets/validated_number_field.dart';
 
 class BattleSimulatorPage extends StatefulWidget {
@@ -44,7 +45,13 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Risiko Simulator'),
-        actions: [IconButton(onPressed: _showInfoDialog, icon: const Icon(Icons.info_outline), tooltip: 'Information')],
+        actions: [
+          IconButton(
+            onPressed: () => InfoDialog.show(context),
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Information',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,8 +71,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               const SizedBox(height: 12),
               _buildShowResultButton(),
               const SizedBox(height: 24),
-              if (_result.isNotEmpty)
-                _buildResultBox(),
+              if (_result.isNotEmpty) _buildResultBox(),
             ],
           ),
         ),
@@ -75,104 +81,78 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   Container _buildResultBox() {
     return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
-              );
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+    );
   }
 
   ElevatedButton _buildShowResultButton() {
     return ElevatedButton(
-              onPressed: _simulateBattle,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Ergebnis simulieren', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            );
+      onPressed: _simulateBattle,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+      ),
+      child: const Text('Ergebnis simulieren', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
   }
 
   ElevatedButton _buildDetailedDiagramButton() {
     return ElevatedButton(
-              onPressed: _showDetailedChart,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Detailliertes Diagramm',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            );
+      onPressed: _showDetailedChart,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
+      child: const Text('Detailliertes Diagramm', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
   }
 
   ElevatedButton buildCalculateProbabilitiesButton() {
     return ElevatedButton(
-              onPressed: _calculateProbabilities,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Chancen berechnen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            );
+      onPressed: _calculateProbabilities,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      child: const Text('Chancen berechnen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    );
   }
 
   AttackModeSelector _buildAttackModeSelector() {
     return AttackModeSelector(
-              selectedAttackMode: _selectedAttackMode,
-              onModeSelected: (mode) {
-                setState(() {
-                  _selectedAttackMode = mode;
-                });
-              },
-              onTap: _dismissKeyboard,
-            );
+      selectedAttackMode: _selectedAttackMode,
+      onModeSelected: (mode) {
+        setState(() {
+          _selectedAttackMode = mode;
+        });
+      },
+      onTap: _dismissKeyboard,
+    );
   }
 
   ValidatedNumberField _buildDefenderInputField(InputValidator validator) {
     return ValidatedNumberField(
-              controller: _defendersController,
-              label: 'Anzahl Verteidiger',
-              isInvalid: _defendersInvalid,
-              validator: validator,
-            );
+      controller: _defendersController,
+      label: 'Anzahl Verteidiger',
+      isInvalid: _defendersInvalid,
+      validator: validator,
+    );
   }
 
   ValidatedNumberField _buildAttackerInputField(InputValidator validator) {
     return ValidatedNumberField(
-              controller: _attackersController,
-              label: 'Anzahl Angreifer',
-              isInvalid: _attackersInvalid,
-              validator: validator,
-            );
-  }
-
-  void _showInfoDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Info', textAlign: TextAlign.center),
-          content: const Text(
-            'Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.',
-            textAlign: TextAlign.center,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+      controller: _attackersController,
+      label: 'Anzahl Angreifer',
+      isInvalid: _attackersInvalid,
+      validator: validator,
     );
   }
 

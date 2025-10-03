@@ -4,10 +4,7 @@ class BattleResultFormatter {
   final BattleResult result;
   final String? selectedAttackMode;
 
-  BattleResultFormatter({
-    required this.result,
-    this.selectedAttackMode,
-  });
+  BattleResultFormatter({required this.result, this.selectedAttackMode});
 
   String formatProbabilities() {
     final buffer = StringBuffer();

@@ -57,10 +57,7 @@ class AttackModeSelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey,
-            width: isSelected ? 2 : 1,
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey, width: isSelected ? 2 : 1),
           borderRadius: BorderRadius.circular(8),
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
         ),
