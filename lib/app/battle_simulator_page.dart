@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/simulator.dart';
+import '../utils/battle_result_formatter.dart';
+import '../utils/input_validator.dart';
+import '../widgets/attack_mode_selector.dart';
 import '../widgets/detailed_chart_screen.dart';
+import '../widgets/validated_number_field.dart';
 
 class BattleSimulatorPage extends StatefulWidget {
   const BattleSimulatorPage({super.key});
@@ -18,8 +22,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   String _result = '';
   bool _attackersInvalid = false;
   bool _defendersInvalid = false;
-  bool _attackersNonNumeric = false;
-  bool _defendersNonNumeric = false;
   String? _selectedAttackMode = 'allIn';
 
   @override
@@ -32,6 +34,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final validator = InputValidator(
+      attackersText: _attackersController.text,
+      defendersText: _defendersController.text,
+      selectedAttackMode: _selectedAttackMode,
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -44,11 +52,29 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildInputTextField(_attackersController, _attackersInvalid, 'Anzahl Angreifer'),
+              ValidatedNumberField(
+                controller: _attackersController,
+                label: 'Anzahl Angreifer',
+                isInvalid: _attackersInvalid,
+                validator: validator,
+              ),
               const SizedBox(height: 16),
-              _buildInputTextField(_defendersController, _defendersInvalid, 'Anzahl Verteidiger'),
+              ValidatedNumberField(
+                controller: _defendersController,
+                label: 'Anzahl Verteidiger',
+                isInvalid: _defendersInvalid,
+                validator: validator,
+              ),
               const SizedBox(height: 24),
-              _buildModeSelection(),
+              AttackModeSelector(
+                selectedAttackMode: _selectedAttackMode,
+                onModeSelected: (mode) {
+                  setState(() {
+                    _selectedAttackMode = mode;
+                  });
+                },
+                onTap: _dismissKeyboard,
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _calculateProbabilities,
@@ -126,42 +152,15 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     FocusScope.of(context).unfocus();
   }
 
-  bool _isFieldRedForInput(String text, bool isInvalid) {
-    final value = int.tryParse(text) ?? 0;
-    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
-    final exceedsMax = value > 128;
-
-    return isInvalid || isNonNumeric || exceedsMax;
-  }
-
-  String? _getSuffixTextForInput(String text, bool isInvalid) {
-    final value = int.tryParse(text) ?? 0;
-    final isNonNumeric = text.isNotEmpty && int.tryParse(text) == null;
-    final exceedsMax = value > 128;
-
-    if (exceedsMax) return 'max 128';
-    if (isInvalid) return 'min 1';
-    if (isNonNumeric) return 'nur Zahlen';
-    return null;
-  }
-
   void _validateInput() {
-    final attackersText = _attackersController.text;
-    final defendersText = _defendersController.text;
-    final int attackers = int.tryParse(attackersText) ?? 0;
-    final int defenders = int.tryParse(defendersText) ?? 0;
+    final validator = InputValidator(
+      attackersText: _attackersController.text,
+      defendersText: _defendersController.text,
+      selectedAttackMode: _selectedAttackMode,
+    );
 
     setState(() {
-      _attackersNonNumeric = attackersText.isNotEmpty && int.tryParse(attackersText) == null;
-      _defendersNonNumeric = defendersText.isNotEmpty && int.tryParse(defendersText) == null;
-
-      if (attackers >= 1 &&
-          attackers <= 128 &&
-          defenders >= 1 &&
-          defenders <= 128 &&
-          (_selectedAttackMode == 'allIn' || (attackers >= 3 && _selectedAttackMode == 'safe')) &&
-          !_attackersNonNumeric &&
-          !_defendersNonNumeric) {
+      if (validator.isValid) {
         _result = '';
         _attackersInvalid = false;
         _defendersInvalid = false;
@@ -171,50 +170,18 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _calculateProbabilities() {
     _dismissKeyboard();
-    final int attackers = int.tryParse(_attackersController.text) ?? 0;
-    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    final validator = InputValidator(
+      attackersText: _attackersController.text,
+      defendersText: _defendersController.text,
+      selectedAttackMode: _selectedAttackMode,
+    );
 
-    if (attackers < 1) {
+    final validationError = validator.validate();
+    if (validationError != null) {
       setState(() {
-        _result = 'Anzahl der Angreifer muss mindestens 1 sein';
-        _attackersInvalid = true;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (attackers > 128) {
-      setState(() {
-        _result = 'Anzahl der Angreifer darf maximal 128 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (defenders < 1) {
-      setState(() {
-        _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = true;
-      });
-      return;
-    }
-
-    if (defenders > 128) {
-      setState(() {
-        _result = 'Anzahl der Verteidiger darf maximal 128 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (_selectedAttackMode == 'safe' && attackers < 3) {
-      setState(() {
-        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
-        _attackersInvalid = true;
-        _defendersInvalid = false;
+        _result = validationError;
+        _attackersInvalid = validationError.contains('Angreifer');
+        _defendersInvalid = validationError.contains('Verteidiger');
       });
       return;
     }
@@ -222,89 +189,14 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     try {
       final BattleResult result;
       if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: false);
+        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false);
       } else {
-        result = _simulator.allIn(attackers, defenders, simulateOutcome: false);
+        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
       }
 
+      final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
       setState(() {
-        _result = _formatProbabilities(result);
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-    } catch (e) {
-      setState(() {
-        if (e.toString().contains('defenders') || e.toString().contains('Verteidiger')) {
-          _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
-        } else if (e.toString().contains('attackers') || e.toString().contains('Angreifer')) {
-          _result = 'Anzahl der Angreifer muss mindestens 1 sein';
-        } else {
-          _result = 'Fehler bei der Berechnung: $e';
-        }
-      });
-    }
-  }
-
-  void _simulateBattle() {
-    _dismissKeyboard();
-    final int attackers = int.tryParse(_attackersController.text) ?? 0;
-    final int defenders = int.tryParse(_defendersController.text) ?? 0;
-
-    if (attackers < 1) {
-      setState(() {
-        _result = 'Anzahl der Angreifer muss mindestens 1 sein';
-        _attackersInvalid = true;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (attackers > 128) {
-      setState(() {
-        _result = 'Anzahl der Angreifer darf maximal 128 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (defenders < 1) {
-      setState(() {
-        _result = 'Anzahl der Verteidiger muss mindestens 1 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = true;
-      });
-      return;
-    }
-
-    if (defenders > 128) {
-      setState(() {
-        _result = 'Anzahl der Verteidiger darf maximal 128 sein';
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    if (_selectedAttackMode == 'safe' && attackers < 3) {
-      setState(() {
-        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
-        _attackersInvalid = true;
-        _defendersInvalid = false;
-      });
-      return;
-    }
-
-    try {
-      final BattleResult result;
-      if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: true);
-      } else {
-        result = _simulator.allIn(attackers, defenders, simulateOutcome: true);
-      }
-
-      setState(() {
-        _result = _formatBattleResult(attackers, defenders, result);
+        _result = formatter.formatProbabilities();
         _attackersInvalid = false;
         _defendersInvalid = false;
       });
@@ -315,59 +207,20 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
   }
 
-  String _formatProbabilities(BattleResult result) {
-    final buffer = StringBuffer();
-
-    buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
-    if (_selectedAttackMode == 'safe') {
-      final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
-      buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
-    } else {
-      buffer.writeln('Verteidiger gewinnt: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
-    }
-
-    return buffer.toString();
-  }
-
-  String _formatBattleResult(int attackers, int defenders, BattleResult result) {
-    final buffer = StringBuffer();
-
-    buffer.write(_formatProbabilities(result));
-    buffer.writeln('');
-
-    switch (result.outcome) {
-      case BattleOutcome.victory:
-        buffer.writeln('🟢 SIEG DES ANGREIFERS!');
-        buffer.writeln('Verluste des Angreifers: ${result.losses}');
-        break;
-      case BattleOutcome.defeat:
-        buffer.writeln('🔴 SIEG DES VERTEIDIGERS!');
-        buffer.writeln('Verluste des Verteidigers: ${result.losses}');
-        break;
-      case BattleOutcome.retreat:
-        buffer.writeln('🟡 RÜCKZUG DES ANGREIFERS!');
-        buffer.writeln('Verluste des Verteidigers: ${result.losses}');
-        break;
-    }
-
-    return buffer.toString();
-  }
-
-  void _showDetailedChart() {
+  void _simulateBattle() {
     _dismissKeyboard();
-    final int attackers = int.tryParse(_attackersController.text) ?? 0;
-    final int defenders = int.tryParse(_defendersController.text) ?? 0;
+    final validator = InputValidator(
+      attackersText: _attackersController.text,
+      defendersText: _defendersController.text,
+      selectedAttackMode: _selectedAttackMode,
+    );
 
-    if (attackers < 1 || defenders < 1 || attackers > 128 || defenders > 128) {
+    final validationError = validator.validate();
+    if (validationError != null) {
       setState(() {
-        _result = 'Bitte gültige Werte für Angreifer und Verteidiger eingeben (1-128)';
-      });
-      return;
-    }
-
-    if (_selectedAttackMode == 'safe' && attackers < 3) {
-      setState(() {
-        _result = 'Sicherer Angriff benötigt mindestens 3 Angreifer';
+        _result = validationError;
+        _attackersInvalid = validationError.contains('Angreifer');
+        _defendersInvalid = validationError.contains('Verteidiger');
       });
       return;
     }
@@ -375,19 +228,56 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     try {
       final BattleResult result;
       if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(attackers, defenders, simulateOutcome: false);
+        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: true);
       } else {
-        result = _simulator.allIn(attackers, defenders, simulateOutcome: false);
+        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: true);
+      }
+
+      final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
+      setState(() {
+        _result = formatter.formatBattleOutcome();
+        _attackersInvalid = false;
+        _defendersInvalid = false;
+      });
+    } catch (e) {
+      setState(() {
+        _result = 'Fehler bei der Berechnung: $e';
+      });
+    }
+  }
+
+  void _showDetailedChart() {
+    _dismissKeyboard();
+    final validator = InputValidator(
+      attackersText: _attackersController.text,
+      defendersText: _defendersController.text,
+      selectedAttackMode: _selectedAttackMode,
+    );
+
+    final validationError = validator.validate();
+    if (validationError != null) {
+      setState(() {
+        _result = validationError;
+      });
+      return;
+    }
+
+    try {
+      final BattleResult result;
+      if (_selectedAttackMode == 'safe') {
+        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false);
+      } else {
+        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
       }
 
       List<double> attackerWinProbs = [];
       List<double> defenderWinProbs = [];
 
-      for (int i = 0; i < attackers; i++) {
+      for (int i = 0; i < validator.attackers!; i++) {
         attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
       }
 
-      for (int i = 0; i < defenders; i++) {
+      for (int i = 0; i < validator.defenders!; i++) {
         defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
       }
 
@@ -396,8 +286,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           builder: (context) => DetailedChartScreen(
             attackerWinProbabilities: attackerWinProbs,
             defenderWinProbabilities: defenderWinProbs,
-            attackers: attackers,
-            defenders: defenders,
+            attackers: validator.attackers!,
+            defenders: validator.defenders!,
             totalWinProbability: result.winProbability,
           ),
         ),
@@ -407,119 +297,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         _result = 'Fehler bei der Berechnung: $e';
       });
     }
-  }
-
-  Row _buildModeSelection() {
-    return Row(
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              _dismissKeyboard();
-              setState(() {
-                _selectedAttackMode = 'allIn';
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                  width: _selectedAttackMode == 'allIn' ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                color: _selectedAttackMode == 'allIn'
-                    ? Colors.blue.withValues(alpha: 0.1)
-                    : Colors.grey.withValues(alpha: 0.1),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'All In',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Kampf bis zum letzten Mann',
-                    style: TextStyle(fontSize: 12, color: _selectedAttackMode == 'allIn' ? Colors.blue : Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              _dismissKeyboard();
-              setState(() {
-                _selectedAttackMode = 'safe';
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                  width: _selectedAttackMode == 'safe' ? 2 : 1,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                color: _selectedAttackMode == 'safe'
-                    ? Colors.blue.withValues(alpha: 0.1)
-                    : Colors.grey.withValues(alpha: 0.1),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Sicherer Angriff',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Rückzug bei 2 verbleibenden Angreifern',
-                    style: TextStyle(fontSize: 12, color: _selectedAttackMode == 'safe' ? Colors.blue : Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  TextField _buildInputTextField(TextEditingController controller, bool isValid, String label) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : Colors.blue),
-        ),
-        counterText: '',
-        labelStyle: TextStyle(color: _isFieldRedForInput(controller.text, isValid) ? Colors.red : null),
-        suffixText: _getSuffixTextForInput(controller.text, isValid),
-        suffixStyle: const TextStyle(color: Colors.red, fontSize: 12),
-      ),
-    );
   }
 
   @override
