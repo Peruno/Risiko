@@ -7,8 +7,9 @@
   only after input has been given. Instead, show some kind of greeting
 * Infoboxes for the countries with fun-facts
 * Fix bug of wrong diagram for higher values
-* Test the app on an andriod simulator (Galaxy S21)
+* Test the app on an Android simulator (Galaxy S21)
 * Release it to the Apple App Store
 * Release it to the Google App Store
 * Extract the number 128 into a global variable (max number of attackers)
 * Refactor the main.dart file
+* Remove a lot of unnecessary tests and assertions

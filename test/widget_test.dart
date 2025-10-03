@@ -11,11 +11,11 @@ void main() {
     expect(find.text('Anzahl Verteidiger'), findsOneWidget);
     expect(find.text('Sicherer Angriff'), findsOneWidget);
     expect(find.text('Chancen berechnen'), findsOneWidget);
-    expect(find.text('Schlacht starten'), findsOneWidget);
+    expect(find.text('Ergebnis simulieren'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, '10');
     await tester.enterText(find.byType(TextField).last, '5');
-    await tester.tap(find.text('Schlacht starten'));
+    await tester.tap(find.text('Ergebnis simulieren'));
     await tester.pump();
 
     expect(find.textContaining('🟢 SIEG DES ANGREIFERS!'), findsOneWidget);
