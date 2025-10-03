@@ -8,6 +8,7 @@ class ValidatedNumberField extends StatelessWidget {
   final String label;
   final bool isInvalid;
   final InputValidator validator;
+  final bool isAttackerField;
 
   const ValidatedNumberField({
     super.key,
@@ -15,6 +16,7 @@ class ValidatedNumberField extends StatelessWidget {
     required this.label,
     required this.isInvalid,
     required this.validator,
+    this.isAttackerField = false,
   });
 
   @override
@@ -42,7 +44,7 @@ class ValidatedNumberField extends StatelessWidget {
         ),
         counterText: '',
         labelStyle: TextStyle(color: validator.isFieldRedForInput(controller.text, isInvalid) ? Colors.red : null),
-        suffixText: validator.getSuffixTextForInput(controller.text, isInvalid),
+        suffixText: validator.getSuffixTextForInput(controller.text, isInvalid, isAttackerField: isAttackerField),
         suffixStyle: const TextStyle(color: Colors.red, fontSize: 12),
       ),
     );

@@ -137,6 +137,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         setState(() {
           _selectedAttackMode = mode;
         });
+        _validateInput();
       },
       onTap: _dismissKeyboard,
     );
@@ -157,6 +158,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       label: 'Anzahl Angreifer',
       isInvalid: _attackersInvalid,
       validator: validator,
+      isAttackerField: true,
     );
   }
 
@@ -172,7 +174,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
 
     setState(() {
-      if (validator.isValid) {
+      final validationError = validator.validate();
+      if (validationError != null) {
+        _result = validationError;
+        _attackersInvalid = validator.isAttackersInvalid;
+        _defendersInvalid = validator.isDefendersInvalid;
+      } else {
         _result = '';
         _attackersInvalid = false;
         _defendersInvalid = false;

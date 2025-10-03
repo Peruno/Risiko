@@ -11,6 +11,20 @@ class InputValidator {
   int? get attackers => int.tryParse(attackersText);
   int? get defenders => int.tryParse(defendersText);
 
+  int get minAttackersForMode => selectedAttackMode == 'safe' ? 3 : minValue;
+
+  bool get isAttackersInvalid {
+    if (attackers == null) return false;
+    if (attackers! < minAttackersForMode || attackers! > maxValue) return true;
+    return false;
+  }
+
+  bool get isDefendersInvalid {
+    if (defenders == null) return false;
+    if (defenders! < minValue || defenders! > maxValue) return true;
+    return false;
+  }
+
   bool isFieldRedForInput(String text, bool isInvalid) {
     final value = int.tryParse(text) ?? 0;
     final exceedsMax = value > maxValue;
@@ -18,26 +32,26 @@ class InputValidator {
     return isInvalid || exceedsMax;
   }
 
-  String? getSuffixTextForInput(String text, bool isInvalid) {
+  String? getSuffixTextForInput(String text, bool isInvalid, {bool isAttackerField = false}) {
     final value = int.tryParse(text) ?? 0;
     final exceedsMax = value > maxValue;
+    final effectiveMin = isAttackerField ? minAttackersForMode : minValue;
 
     if (exceedsMax) return 'max $maxValue';
-    if (isInvalid) return 'min $minValue';
+    if (isInvalid) return 'min $effectiveMin';
     return null;
   }
 
   bool get isValid {
     if (attackers == null || defenders == null) return false;
-    if (attackers! < minValue || attackers! > maxValue) return false;
+    if (attackers! < minAttackersForMode || attackers! > maxValue) return false;
     if (defenders! < minValue || defenders! > maxValue) return false;
-    if (selectedAttackMode == 'safe' && attackers! < 3) return false;
     return true;
   }
 
   String? validate() {
-    if (attackers == null || attackers! < minValue) {
-      return 'Anzahl der Angreifer muss mindestens $minValue sein';
+    if (attackers == null || attackers! < minAttackersForMode) {
+      return 'Anzahl der Angreifer muss mindestens $minAttackersForMode sein';
     }
 
     if (attackers! > maxValue) {
@@ -50,10 +64,6 @@ class InputValidator {
 
     if (defenders! > maxValue) {
       return 'Anzahl der Verteidiger darf maximal $maxValue sein';
-    }
-
-    if (selectedAttackMode == 'safe' && attackers! < 3) {
-      return 'Sicherer Angriff benötigt mindestens 3 Angreifer';
     }
 
     return null;
