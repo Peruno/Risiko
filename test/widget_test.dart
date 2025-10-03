@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:risiko_simulator/main.dart';
+import 'package:risiko_simulator/app/risiko_app.dart';
 
 void main() {
   testWidgets('Battle simulator UI test', (WidgetTester tester) async {
