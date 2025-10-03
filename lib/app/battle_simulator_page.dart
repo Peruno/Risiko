@@ -283,11 +283,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
     try {
       final BattleResult result;
-      if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false);
-      } else {
-        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
-      }
+      result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
 
       List<double> attackerWinProbs = [];
       List<double> defenderWinProbs = [];
