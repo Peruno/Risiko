@@ -3,11 +3,7 @@ import 'package:risiko_simulator/models/composite_probabilities.dart';
 
 void main() {
   group('CompositeProbabilities', () {
-    late CompositeProbabilities compositeProbs;
-
-    setUp(() {
-      compositeProbs = CompositeProbabilities();
-    });
+    late CompositeProbabilities compositeProbs = CompositeProbabilities();
 
     group('Precise Win Probabilities', () {
       test('sum of all precise win probabilities equals overall win probability', () {

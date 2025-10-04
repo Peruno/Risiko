@@ -125,8 +125,8 @@ class CompositeProbabilities {
     }
 
     final probs = <double>[];
-    final p3v2 = _basicProbs.singleProbs['3v2']!;
-    final p3v1 = _basicProbs.singleProbs['3v1']!;
+    final p3v2 = _basicProbs.pSingleWin(3, 2);
+    final p3v1 = _basicProbs.pSingleWin(3, 1);
 
     for (int dLosses = 0; dLosses < d - 1; dLosses++) {
       final dLeft = d - dLosses;

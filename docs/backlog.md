@@ -1,15 +1,16 @@
-* Wololo Sound bei einer zu null Klatsche
-* Publish it into the Apple App store and the Google app store
-* Adapt Claude such that the commits are signed by me not by claude
-* Automatically turn display when the diagram is generated
-* Replace keyboard by something to scroll
-* Experiment: don't show buttons (Chancen berechnen, Ergebnis simulieren, Detailliertes Diagramm) from the start, but
-  only after input has been given. Instead, show some kind of greeting
-* Infoboxes for the countries with fun-facts
+# Todo
 * Fix bug of wrong diagram for higher values
 * Test the app on an Android simulator (Galaxy S21)
 * Release it to the Apple App Store
 * Release it to the Google App Store
-* Extract the number 128 into a global variable (max number of attackers)
-* Refactor the main.dart file
+* PDF anzeigen
+
+
+# Maybe One Day
+* Experiment: don't show buttons (Chancen berechnen, Ergebnis simulieren, Detailliertes Diagramm) from the start, but
+  only after input has been given. Instead, show some kind of greeting
+* Info boxes for the countries with fun-facts
+* Replace keyboard by something to scroll
+* Wololo Sound bei einer zu null Klatsche
 * Remove a lot of unnecessary tests and assertions
+* Adapt Claude such that the commits are signed by me not by claude

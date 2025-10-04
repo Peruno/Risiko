@@ -5,8 +5,6 @@ class BasicProbabilities {
     _singleProbs = _calculateSingleProbabilities();
   }
 
-  Map<String, double> get singleProbs => Map.from(_singleProbs);
-
   Map<String, double> _calculateSingleProbabilities() {
     final probs = <String, double>{};
 
