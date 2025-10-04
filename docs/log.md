@@ -1,3 +1,6 @@
+04.10.2025, 
+* Bugfix: safe attack works with large values now
+
 03.10.2025, 2.5
 * Standardize formatting
 * Refactorings

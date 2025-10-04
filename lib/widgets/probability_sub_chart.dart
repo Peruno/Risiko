@@ -104,6 +104,7 @@ class ProbabilitySubChart extends StatelessWidget {
 
   List<BarChartGroupData> _buildBarGroups(List<double> displayedData, bool isAttacker) {
     final color = isAttacker ? Colors.green : Colors.red;
+    final barWidth = _calculateBarWidth(displayedData.length);
     return displayedData
         .asMap()
         .entries
@@ -114,13 +115,20 @@ class ProbabilitySubChart extends StatelessWidget {
               BarChartRodData(
                 toY: entry.value * 100,
                 color: selectedIndex == entry.key && isSelected ? color.shade700 : color,
-                width: 16,
+                width: barWidth,
                 borderRadius: BorderRadius.zero,
               ),
             ],
           ),
         )
         .toList();
+  }
+
+  double _calculateBarWidth(int dataLength) {
+    if (dataLength <= 20) return 16.0;
+    if (dataLength <= 50) return 8.0;
+    if (dataLength <= 100) return 4.0;
+    return 2.0;
   }
 
   AxisTitles _buildLeftTitles() {
