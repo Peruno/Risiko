@@ -131,13 +131,12 @@ class CompositeProbabilities {
     /// looping over all possible losses except for d-1 (when only 1 defender remains)
     for (int dLosses = 0; dLosses < d - 1; dLosses++) {
       final dLeft = d - dLosses;
-      /// Binomial distribution
+
       final p =
           (1 - p3v2) *
           math.pow(p3v2, d - dLeft).toDouble() *
           math.pow(1 - p3v2, a - 3).toDouble() *
-          _factorial(d - dLeft + a - 3) /
-          (_factorial(d - dLeft) * _factorial(a - 3));
+          binomialCoefficient(d - dLeft + a - 3, d - dLeft);
       probs.add(p);
     }
 
@@ -166,9 +165,18 @@ class CompositeProbabilities {
     return probs;
   }
 
-  double _factorial(int n) {
-    if (n < 0) return 0;
-    if (n <= 1) return 1;
-    return n * _factorial(n - 1);
+  double binomialCoefficient(int n, int k) {
+    if (n < 0 || k < 0) return 0.0;
+    if (n == 0 && k == 0) return 1.0;
+
+    if (k > n) throw ArgumentError('n must be >= k, but got n=$n and k=$k');
+
+    k = math.min(k, n - k);
+    double result = 1.0;
+    for (int i = 1; i <= k; i++) {
+      result *= (n - (k - i));
+      result /= i;
+    }
+    return result;
   }
 }

@@ -116,6 +116,44 @@ void main() {
         expect(safeProbs[0], greaterThanOrEqualTo(0.0));
         expect(safeProbs[0], lessThanOrEqualTo(1.0));
       });
+
+      test('binomialCoefficient is correct', () {
+        final result = compositeProbs.binomialCoefficient(130, 120);
+
+        expect(result, equals(266401260897200.0));
+      });
+
+      test('pSafeStop handles large inputs without overflow', () {
+        final testCases = [
+          [100, 100],
+          [120, 120],
+          [150, 150],
+        ];
+
+        for (final testCase in testCases) {
+          final a = testCase[0];
+          final d = testCase[1];
+
+          final safeProbs = compositeProbs.pSafeStop(a, d);
+
+          expect(safeProbs.length, equals(d), reason: 'Should return d probabilities for ($a, $d)');
+
+          for (int i = 0; i < safeProbs.length; i++) {
+            expect(safeProbs[i].isNaN, isFalse, reason: 'Probability at index $i should not be NaN for ($a, $d)');
+            expect(
+              safeProbs[i].isInfinite,
+              isFalse,
+              reason: 'Probability at index $i should not be Infinity for ($a, $d)',
+            );
+            expect(
+              safeProbs[i],
+              greaterThanOrEqualTo(0.0),
+              reason: 'Probability at index $i should be >= 0 for ($a, $d)',
+            );
+            expect(safeProbs[i], lessThanOrEqualTo(1.0), reason: 'Probability at index $i should be <= 1 for ($a, $d)');
+          }
+        }
+      });
     });
   });
 }
