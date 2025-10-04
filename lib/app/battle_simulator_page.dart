@@ -206,12 +206,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
 
     try {
-      final BattleResult result;
-      if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false);
-      } else {
-        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
-      }
+      final BattleResult result = _selectedAttackMode == 'safe'
+          ? _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false)
+          : _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
 
       final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
       setState(() {

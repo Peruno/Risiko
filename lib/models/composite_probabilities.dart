@@ -128,8 +128,10 @@ class CompositeProbabilities {
     final p3v2 = _basicProbs.pSingleWin(3, 2);
     final p3v1 = _basicProbs.pSingleWin(3, 1);
 
+    /// looping over all possible losses except for d-1 (when only 1 defender remains)
     for (int dLosses = 0; dLosses < d - 1; dLosses++) {
       final dLeft = d - dLosses;
+      /// Binomial distribution
       final p =
           (1 - p3v2) *
           math.pow(p3v2, d - dLeft).toDouble() *
@@ -139,6 +141,13 @@ class CompositeProbabilities {
       probs.add(p);
     }
 
+    /// Now considering the special case d_left = 1. To deal with that, a matrix of probabilities is introduced:
+    /// Position ij of this matrix will give the probability that the attack stops with 2 attackers and 1 defender
+    /// left. The only way to reach this is from (a,d) = (3,1). The probability to reach (2,1) from (3,
+    /// 1) is p=(1-p_31). So the matrix element (3,1) will be assigned the value (1-p_31). Each matrix element's
+    /// value will be the probability that it reaches (2,1). The value of position (i,j) is calculated by taking (
+    /// i-1,j) times the probability to reach (i-1,j) from (i,j) plus (i,j-1) times the probability to reach (i,
+    /// j-1) from (i,j).
     final matrix = List.generate(a + 1, (i) => List.filled(d + 1, 0.0));
 
     for (int i = 3; i <= a; i++) {

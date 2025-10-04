@@ -50,7 +50,7 @@ class Simulator {
 
     if (!simulateOutcome) {
       return BattleResult(
-        outcome: BattleOutcome.victory,
+        outcome: BattleOutcome.victory, // this is shit
         losses: 0,
         winProbability: totalWinProb,
         winProbabilities: winProbs,
