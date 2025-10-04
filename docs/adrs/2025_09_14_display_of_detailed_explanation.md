@@ -19,8 +19,14 @@ rewording. This decision is about how to display it to the user.
 
 ## Decision
 
-For now I will go with option 1, because I think it is a lot easier to implement in a failsafe way. The PDF document can
+For now, I will go with option 1, because I think it is a lot easier to implement in a failsafe way. The PDF document
+can
 be generated at build time and is safe to be displayed correctly on all kinds of screens. It may disrupt the user
 experience a bit by forcing the user to look at it in another application, but that seems acceptable to me. I will
 include the entire sources of the document in this repository, such that it can be regenerated and modified at any time.
-Im not sure yet if I want to set up an automated build process for it. Maybe for now this is a bit of an overkill.
+I'm not sure yet if I want to set up an automated build process for it. Maybe for now this is a bit of an overkill.
+
+Update on 04.10.2025:
+It turns out that opening the pdf with other programs is not as straightforward as I thought. So now I will first try to
+display it within the app itself. This will make me more independent of the operating system that the application is
+running on.

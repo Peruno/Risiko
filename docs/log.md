@@ -1,5 +1,7 @@
 04.10.2025, 
 * Bugfix: safe attack works with large values now
+* Bugfix: diagram is not flattened out for large values
+* 
 
 03.10.2025, 2.5
 * Standardize formatting
@@ -10,7 +12,7 @@
 * Refactor the code towards more modularity
 
 24.09.2025, 1h
-* Forgot what I did
+* Documentation
 
 19.09.2025, 2h
 * Refactorings
