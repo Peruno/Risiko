@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pdf_viewer_screen.dart';
 
 class InfoDialog extends StatelessWidget {
   const InfoDialog({super.key});
@@ -10,10 +11,7 @@ class InfoDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.',
-            textAlign: TextAlign.center,
-          ),
+          const Text('Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.', textAlign: TextAlign.center),
           const SizedBox(height: 16),
           const Text(
             'Hier ist ein Artikel mit einer detaillierten Erklärung zur Würfeltaktik und ein paar Hintergründen zur Berechnung. Ich habe ihn vor ein paar Jahren einmal firmenintern veröffentlicht und er ist hier quasi unverändert wiedergegeben.',
@@ -21,7 +19,10 @@ class InfoDialog extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const PdfViewerScreen()));
+            },
             child: const Text('Artikel anzeigen'),
           ),
         ],
@@ -38,9 +39,6 @@ class InfoDialog extends StatelessWidget {
   }
 
   static void show(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const InfoDialog(),
-    );
+    showDialog(context: context, builder: (BuildContext context) => const InfoDialog());
   }
 }

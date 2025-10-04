@@ -1,9 +1,9 @@
-04.10.2025, 
+04.10.2025, 4h
 * Bugfix: safe attack works with large values now
 * Bugfix: diagram is not flattened out for large values
-* 
+* Display pdf
 
-03.10.2025, 2.5
+03.10.2025, 2.5h
 * Standardize formatting
 * Refactorings
 * Bugfix detailed diagram

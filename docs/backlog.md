@@ -1,5 +1,4 @@
 # Todo
-* PDF anzeigen
 * Test the app on an Android simulator (Galaxy S21)
 * Release it to the Apple App Store
 * Release it to the Google App Store
