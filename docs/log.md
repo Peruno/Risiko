@@ -1,3 +1,6 @@
+04.10.2025, 2h
+* Working towards Android emulator
+
 04.10.2025, 4h
 * Bugfix: safe attack works with large values now
 * Bugfix: diagram is not flattened out for large values
