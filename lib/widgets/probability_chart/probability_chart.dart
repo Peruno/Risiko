@@ -33,28 +33,12 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 45,
-            child: ProbabilitySubChart(
-              chartType: ChartType.attacker,
-              probabilities: widget.attackerWinProbabilities,
-              totalWinProbability: widget.totalWinProbability,
-              maxY: maxY,
-            ),
-          ),
-          const Expanded(flex: 5, child: SizedBox()),
-          Expanded(
-            flex: 45,
-            child: ProbabilitySubChart(
-              chartType: ChartType.defender,
-              probabilities: widget.defenderWinProbabilities,
-              totalWinProbability: widget.totalWinProbability,
-              maxY: maxY,
-            ),
-          ),
-        ],
+      child: ProbabilitySubChart(
+        chartType: ChartType.merged,
+        attackerProbabilities: widget.attackerWinProbabilities,
+        defenderProbabilities: widget.defenderWinProbabilities,
+        totalWinProbability: widget.totalWinProbability,
+        maxY: maxY,
       ),
     );
   }
