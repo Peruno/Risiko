@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:risiko_simulator/models/basic_probabilities.dart';
+import 'package:risiko_simulator/calculation/basic_probabilities.dart';
 
 void main() {
   group('BasicProbabilities', () {

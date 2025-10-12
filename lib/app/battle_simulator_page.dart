@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../models/simulator.dart';
+import '../calculation/simulator.dart';
 import '../utils/battle_result_formatter.dart';
 import '../utils/input_validator.dart';
 import '../widgets/attack_mode_selector.dart';

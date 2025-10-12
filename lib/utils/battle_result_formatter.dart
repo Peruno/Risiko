@@ -1,4 +1,4 @@
-import '../models/simulator.dart';
+import '../calculation/simulator.dart';
 
 class BattleResultFormatter {
   final BattleResult result;

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:risiko_simulator/models/composite_probabilities.dart';
+import 'package:risiko_simulator/calculation/composite_probabilities.dart';
 
 void main() {
   group('CompositeProbabilities', () {

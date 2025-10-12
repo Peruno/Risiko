@@ -1,7 +1,7 @@
 # Todo
 * Test the app on an Android simulator (Galaxy S21)
-* Crosscheck all calculations
 * Write a README
+* Crosscheck all calculations
 * Release it to the Apple App Store
 * Release it to the Google App Store
 
