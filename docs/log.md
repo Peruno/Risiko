@@ -1,4 +1,4 @@
-12.10.2025,
+12.10.2025, 105m
 * Making it run on an android emulator
 * Checking single probabilities for correctness
 * Remove sub-header in diagram

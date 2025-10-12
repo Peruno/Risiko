@@ -25,23 +25,7 @@ class ProbabilityChart extends StatefulWidget {
 class _ProbabilityChartState extends State<ProbabilityChart> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildTitle(),
-        Expanded(child: _buildChartsRow()),
-      ],
-    );
-  }
-
-  Widget _buildTitle() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-    );
+    return Column(children: [Expanded(child: _buildChartsRow())]);
   }
 
   Widget _buildChartsRow() {
@@ -58,7 +42,6 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
               probabilities: widget.attackerWinProbabilities,
               totalWinProbability: widget.totalWinProbability,
               maxY: maxY,
-              onBarTap: _onAttackerBarTap,
             ),
           ),
           const Expanded(flex: 5, child: SizedBox()),
@@ -69,22 +52,11 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
               probabilities: widget.defenderWinProbabilities,
               totalWinProbability: widget.totalWinProbability,
               maxY: maxY,
-              onBarTap: _onDefenderBarTap,
             ),
           ),
         ],
       ),
     );
-  }
-
-  void _onAttackerBarTap(int index) {
-    setState(() {
-    });
-  }
-
-  void _onDefenderBarTap(int index) {
-    setState(() {
-    });
   }
 
   double _calculateMaxY() {

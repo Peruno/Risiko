@@ -39,7 +39,10 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detaillierte Wahrscheinlichkeiten'),
+        title: Text(
+          '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: ProbabilityChart(

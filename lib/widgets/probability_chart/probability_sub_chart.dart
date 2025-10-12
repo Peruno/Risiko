@@ -8,7 +8,6 @@ class ProbabilitySubChart extends StatefulWidget {
   final List<double> probabilities;
   final double totalWinProbability;
   final double maxY;
-  final Function(int index) onBarTap;
 
   const ProbabilitySubChart({
     super.key,
@@ -16,7 +15,6 @@ class ProbabilitySubChart extends StatefulWidget {
     required this.probabilities,
     required this.totalWinProbability,
     required this.maxY,
-    required this.onBarTap,
   });
 
   @override
@@ -65,7 +63,9 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
               final isAttacker = widget.chartType == ChartType.attacker;
               final losses = isAttacker ? group.x.toInt() : widget.probabilities.length - 1 - group.x.toInt();
               final probability = (rod.toY).toStringAsFixed(1);
-              final label = isAttacker ? 'Sieg mit $losses Verlusten: $probability%' : 'Niederlage mit $losses Verlusten: $probability%';
+              final label = isAttacker
+                  ? 'Sieg mit $losses Verlusten: $probability%'
+                  : 'Niederlage mit $losses Verlusten: $probability%';
               return BarTooltipItem(
                 label,
                 const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
@@ -84,15 +84,18 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
                 setState(() {
                   _pressedIndex = index;
                 });
-              } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent || event is FlLongPressEnd) {
+              } else if (event is FlPanEndEvent ||
+                  event is FlTapUpEvent ||
+                  event is FlTapCancelEvent ||
+                  event is FlLongPressEnd) {
                 setState(() {
                   _pressedIndex = null;
                 });
-                if (event is! FlLongPressEnd) {
-                  widget.onBarTap(index);
-                }
               }
-            } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent || event is FlLongPressEnd) {
+            } else if (event is FlPanEndEvent ||
+                event is FlTapUpEvent ||
+                event is FlTapCancelEvent ||
+                event is FlLongPressEnd) {
               setState(() {
                 _pressedIndex = null;
               });
@@ -151,7 +154,9 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
             barRods: [
               BarChartRodData(
                 toY: entry.value * 100,
-                color: _pressedIndex == entry.key ? (isAttacker ? Colors.green.shade800 : Colors.red.shade900) : baseColor,
+                color: _pressedIndex == entry.key
+                    ? (isAttacker ? Colors.green.shade800 : Colors.red.shade900)
+                    : baseColor,
                 width: barWidth,
                 borderRadius: BorderRadius.zero,
               ),
@@ -199,6 +204,7 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
 
   int _calculateLabelInterval(int dataLength) {
     if (dataLength <= 20) return 1;
-    return 5;
+    if (dataLength <= 50) return 5;
+    return 10;
   }
 }

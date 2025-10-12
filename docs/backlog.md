@@ -1,6 +1,9 @@
 # Todo
 * Write a README
-* Improve x-labels in diagram for large values
+* Ensure that the scales are equal in the left and right so the user can see the binomial distribution
+  * Maybe move the middle depending on the inputs
+  * Consider cutting off very small values
+  * Scale should use round numbers (e.g. 5, 10, but not 4, 9)
 * Release it to the Apple App Store
 * Release it to the Google App Store
 
