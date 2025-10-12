@@ -46,7 +46,7 @@ void main() {
     });
 
     group('Complete Probability Coverage', () {
-      test('sum of all win and loss probabilities equals 1.0', () {
+      test('sum of all win and loss probabilities equals 1', () {
         final testCases = [
           [3, 3],
           [5, 4],
@@ -73,7 +73,7 @@ void main() {
           expect(
             totalProb,
             closeTo(1.0, 1e-10),
-            reason: 'Sum of all precise probabilities for ($a, $d) should equal 1.0',
+            reason: 'Sum of all precise probabilities for ($a, $d) should equal 1',
           );
         }
       });

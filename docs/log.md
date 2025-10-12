@@ -1,11 +1,10 @@
 12.10.2025,
 * Making it run on an android emulator
 * Checking single probabilities for correctness
-
+* Remove sub-header in diagram
 
 11.10.2025, 15m
 * Removing unused code
-
 
 04.10.2025, 2h
 * Working towards Android emulator

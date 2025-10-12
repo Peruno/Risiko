@@ -8,7 +8,6 @@ class ProbabilitySubChart extends StatelessWidget {
   final List<double> probabilities;
   final double totalWinProbability;
   final double maxY;
-  final int? selectedIndex;
   final bool isSelected;
   final Function(int index) onBarTap;
 
@@ -18,7 +17,6 @@ class ProbabilitySubChart extends StatelessWidget {
     required this.probabilities,
     required this.totalWinProbability,
     required this.maxY,
-    required this.selectedIndex,
     required this.isSelected,
     required this.onBarTap,
   });
@@ -114,7 +112,7 @@ class ProbabilitySubChart extends StatelessWidget {
             barRods: [
               BarChartRodData(
                 toY: entry.value * 100,
-                color: selectedIndex == entry.key && isSelected ? color.shade700 : color,
+                color: color,
                 width: barWidth,
                 borderRadius: BorderRadius.zero,
               ),
