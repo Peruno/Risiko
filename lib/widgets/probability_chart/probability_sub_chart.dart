@@ -75,17 +75,24 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
           touchCallback: (FlTouchEvent event, barTouchResponse) {
             if (barTouchResponse != null && barTouchResponse.spot != null) {
               final index = barTouchResponse.spot!.touchedBarGroupIndex;
-              if (event is FlPanDownEvent || event is FlTapDownEvent) {
+              if (event is FlPanDownEvent ||
+                  event is FlTapDownEvent ||
+                  event is FlPanUpdateEvent ||
+                  event is FlLongPressMoveUpdate ||
+                  event is FlLongPressStart ||
+                  event is FlPointerHoverEvent) {
                 setState(() {
                   _pressedIndex = index;
                 });
-              } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent) {
+              } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent || event is FlLongPressEnd) {
                 setState(() {
                   _pressedIndex = null;
                 });
-                widget.onBarTap(index);
+                if (event is! FlLongPressEnd) {
+                  widget.onBarTap(index);
+                }
               }
-            } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent) {
+            } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent || event is FlLongPressEnd) {
               setState(() {
                 _pressedIndex = null;
               });
@@ -144,7 +151,7 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
             barRods: [
               BarChartRodData(
                 toY: entry.value * 100,
-                color: _pressedIndex == entry.key ? (isAttacker ? Colors.green.shade800 : Colors.red.shade800) : baseColor,
+                color: _pressedIndex == entry.key ? (isAttacker ? Colors.green.shade800 : Colors.red.shade900) : baseColor,
                 width: barWidth,
                 borderRadius: BorderRadius.zero,
               ),

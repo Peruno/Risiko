@@ -1,10 +1,6 @@
 # Todo
 * Write a README
-* Crosscheck all calculations
-* Remove vertical lines from diagram
 * Improve x-labels in diagram for large values
-* Remove a lot of unnecessary tests and assertions
-* Improve behavior when clicking the diagram
 * Release it to the Apple App Store
 * Release it to the Google App Store
 
