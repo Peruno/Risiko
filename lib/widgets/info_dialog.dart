@@ -14,7 +14,7 @@ class InfoDialog extends StatelessWidget {
           const Text('Diese App arbeitet mit der Michelson\'schen Verzögerungstaktik.', textAlign: TextAlign.center),
           const SizedBox(height: 16),
           const Text(
-            'Hier ist ein Artikel mit einer detaillierten Erklärung zur Würfeltaktik und ein paar Hintergründen zur Berechnung. Ich habe ihn vor ein paar Jahren einmal firmenintern veröffentlicht und er ist hier quasi unverändert wiedergegeben.',
+            'Details zu den Würfelregeln und Hintergründe zur Berechnung finden sich in folgendem Artikel:',
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
