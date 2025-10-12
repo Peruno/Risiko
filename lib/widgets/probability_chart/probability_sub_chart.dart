@@ -218,13 +218,51 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
 
   int _calculateLabelInterval(int dataLength) {
     if (dataLength <= 20) return 1;
-    if (dataLength <= 50) return 5;
+    if (dataLength <= 80) return 5;
     return 10;
   }
 
+  Map<String, dynamic> _filterSignificantData(List<double> data) {
+    int start = 0;
+    int end = data.length;
+
+    while (start < data.length && (data[start] * 100).toStringAsFixed(2) == '0.00') {
+      start++;
+    }
+
+    while (end > start && (data[end - 1] * 100).toStringAsFixed(2) == '0.00') {
+      end--;
+    }
+
+    return {'data': data.sublist(start, end), 'startIndex': start};
+  }
+
   Widget _buildMergedTitles() {
+    final attackerData = widget.attackerProbabilities!;
+    final defenderData = widget.defenderProbabilities!.reversed.toList();
+
+    final filteredAttackerData = _filterSignificantData(attackerData);
+    final filteredDefenderData = _filterSignificantData(defenderData);
+
+    final hasAttackerData = filteredAttackerData['data'].isNotEmpty;
+    final hasDefenderData = filteredDefenderData['data'].isNotEmpty;
+
     final attackerPercentage = (widget.totalWinProbability * 100).toStringAsFixed(1);
     final defenderPercentage = ((1 - widget.totalWinProbability) * 100).toStringAsFixed(1);
+
+    if (hasAttackerData && !hasDefenderData) {
+      return Text(
+        'Angreifer gewinnt ($attackerPercentage%)',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
+        textAlign: TextAlign.center,
+      );
+    } else if (!hasAttackerData && hasDefenderData) {
+      return Text(
+        'Verteidiger gewinnt ($defenderPercentage%)',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.red),
+        textAlign: TextAlign.center,
+      );
+    }
 
     return Row(
       children: [
@@ -249,7 +287,17 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
   Widget _buildMergedChart() {
     final attackerData = widget.attackerProbabilities!;
     final defenderData = widget.defenderProbabilities!.reversed.toList();
-    final totalLength = attackerData.length + defenderData.length;
+
+    final filteredAttackerData = _filterSignificantData(attackerData);
+    final filteredDefenderData = _filterSignificantData(defenderData);
+
+    final hasAttackerData = filteredAttackerData['data'].isNotEmpty;
+    final hasDefenderData = filteredDefenderData['data'].isNotEmpty;
+
+    final totalLength =
+        filteredAttackerData['data'].length +
+        filteredDefenderData['data'].length +
+        (hasAttackerData && hasDefenderData ? 1 : 0);
     final barWidth = _calculateBarWidth(totalLength);
 
     return BarChart(
@@ -262,19 +310,24 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
           touchExtraThreshold: EdgeInsets.only(top: widget.maxY),
           touchTooltipData: BarTouchTooltipData(
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              if (group.x == attackerData.length) {
+              final separatorIndex = hasAttackerData ? filteredAttackerData['data'].length : 0;
+              if (hasAttackerData && hasDefenderData && group.x == separatorIndex) {
                 return null;
               }
-              final isAttacker = group.x < attackerData.length;
+              final isAttacker = group.x < separatorIndex;
               if (isAttacker) {
-                final losses = group.x.toInt();
+                final losses = filteredAttackerData['startIndex'] + group.x.toInt();
                 final probability = (rod.toY).toStringAsFixed(2);
                 return BarTooltipItem(
                   'Sieg mit $losses Verlusten: $probability%',
                   const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                 );
               } else {
-                final losses = widget.defenderProbabilities!.length - 1 - (group.x.toInt() - attackerData.length - 1);
+                final adjustedIndex = hasAttackerData && hasDefenderData
+                    ? group.x.toInt() - separatorIndex - 1
+                    : group.x.toInt();
+                final losses =
+                    widget.defenderProbabilities!.length - 1 - (filteredDefenderData['startIndex'] + adjustedIndex);
                 final probability = (rod.toY).toStringAsFixed(2);
                 return BarTooltipItem(
                   'Niederlage mit $losses Verlusten: $probability%',
@@ -313,15 +366,34 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
             }
           },
         ),
-        titlesData: _buildMergedTitlesData(attackerData.length, defenderData.length),
+        titlesData: _buildMergedTitlesData(
+          filteredAttackerData['data'],
+          filteredDefenderData['data'],
+          filteredAttackerData['startIndex'],
+          filteredDefenderData['startIndex'],
+          hasAttackerData,
+          hasDefenderData,
+        ),
         borderData: FlBorderData(show: true, border: Border.all(color: Colors.black, width: 2)),
         gridData: const FlGridData(show: true),
-        barGroups: _buildMergedBarGroups(attackerData, defenderData, barWidth),
+        barGroups: _buildMergedBarGroups(
+          filteredAttackerData['data'],
+          filteredDefenderData['data'],
+          barWidth,
+          hasAttackerData,
+          hasDefenderData,
+        ),
       ),
     );
   }
 
-  List<BarChartGroupData> _buildMergedBarGroups(List<double> attackerData, List<double> defenderData, double barWidth) {
+  List<BarChartGroupData> _buildMergedBarGroups(
+    List<double> attackerData,
+    List<double> defenderData,
+    double barWidth,
+    bool hasAttackerData,
+    bool hasDefenderData,
+  ) {
     final allBars = <BarChartGroupData>[];
 
     for (int i = 0; i < attackerData.length; i++) {
@@ -340,15 +412,17 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
       );
     }
 
-    allBars.add(
-      BarChartGroupData(
-        x: attackerData.length,
-        barRods: [BarChartRodData(toY: widget.maxY, color: Colors.black, width: 2, borderRadius: BorderRadius.zero)],
-      ),
-    );
+    if (hasAttackerData && hasDefenderData) {
+      allBars.add(
+        BarChartGroupData(
+          x: attackerData.length,
+          barRods: [BarChartRodData(toY: widget.maxY, color: Colors.black, width: 2, borderRadius: BorderRadius.zero)],
+        ),
+      );
+    }
 
     for (int i = 0; i < defenderData.length; i++) {
-      final index = attackerData.length + 1 + i;
+      final index = hasAttackerData && hasDefenderData ? attackerData.length + 1 + i : i;
       allBars.add(
         BarChartGroupData(
           x: index,
@@ -367,9 +441,37 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
     return allBars;
   }
 
-  FlTitlesData _buildMergedTitlesData(int attackerLength, int defenderLength) {
-    final attackerInterval = _calculateLabelInterval(attackerLength).toDouble();
-    final defenderInterval = _calculateLabelInterval(defenderLength).toDouble();
+  FlTitlesData _buildMergedTitlesData(
+    List<double> attackerData,
+    List<double> defenderData,
+    int attackerStartIndex,
+    int defenderStartIndex,
+    bool hasAttackerData,
+    bool hasDefenderData,
+  ) {
+    final maxDataLength = hasAttackerData && hasDefenderData
+        ? (attackerData.length > defenderData.length ? attackerData.length : defenderData.length)
+        : (hasAttackerData ? attackerData.length : defenderData.length);
+    final interval = _calculateLabelInterval(maxDataLength).toDouble();
+    final separatorIndex = hasAttackerData ? attackerData.length : 0;
+
+    Widget axisLabel;
+    if (hasAttackerData && !hasDefenderData) {
+      axisLabel = const Text('Verluste des Angreifers', style: TextStyle(fontSize: 12), textAlign: TextAlign.center);
+    } else if (!hasAttackerData && hasDefenderData) {
+      axisLabel = const Text('Verluste des Verteidigers', style: TextStyle(fontSize: 12), textAlign: TextAlign.center);
+    } else {
+      axisLabel = Row(
+        children: [
+          Expanded(
+            child: Text('Verluste des Angreifers', style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+          ),
+          Expanded(
+            child: Text('Verluste des Verteidigers', style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+          ),
+        ],
+      );
+    }
 
     return FlTitlesData(
       show: true,
@@ -378,37 +480,26 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
           showTitles: true,
           getTitlesWidget: (value, meta) {
             final x = value.toInt();
-            if (x == attackerLength) {
+            if (hasAttackerData && hasDefenderData && x == separatorIndex) {
               return const SizedBox.shrink();
             }
-            if (x < attackerLength) {
-              if (x % attackerInterval.toInt() != 0) {
+            if (x < separatorIndex) {
+              final attackerLossValue = attackerStartIndex + x;
+              if (attackerLossValue % interval.toInt() != 0) {
                 return const SizedBox.shrink();
               }
-              return Text(x.toString(), style: const TextStyle(fontSize: 12));
+              return Text(attackerLossValue.toString(), style: const TextStyle(fontSize: 12));
             } else {
-              final defenderIndex = defenderLength - 1 - (x - attackerLength - 1);
-              if ((x - attackerLength - 1) % defenderInterval.toInt() != 0) {
+              final adjustedX = hasAttackerData && hasDefenderData ? x - separatorIndex - 1 : x;
+              final defenderIndex = widget.defenderProbabilities!.length - 1 - (defenderStartIndex + adjustedX);
+              if (defenderIndex % interval.toInt() != 0) {
                 return const SizedBox.shrink();
               }
               return Text(defenderIndex.toString(), style: const TextStyle(fontSize: 12));
             }
           },
         ),
-        axisNameWidget: Row(
-          children: [
-            Expanded(
-              child: Text('Verluste des Angreifers', style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-            ),
-            Expanded(
-              child: Text(
-                'Verluste des Verteidigers',
-                style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
+        axisNameWidget: axisLabel,
       ),
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
