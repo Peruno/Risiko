@@ -5,7 +5,7 @@ import '../calculation/simulator.dart';
 import '../utils/battle_result_formatter.dart';
 import '../utils/input_validator.dart';
 import '../widgets/attack_mode_selector.dart';
-import '../widgets/detailed_chart_screen.dart';
+import '../widgets/probability_chart/detailed_chart_screen.dart';
 import '../widgets/info_dialog.dart';
 import '../widgets/validated_number_field.dart';
 

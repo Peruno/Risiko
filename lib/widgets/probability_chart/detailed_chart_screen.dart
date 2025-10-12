@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:risiko_simulator/widgets/probability_chart.dart';
+import 'package:risiko_simulator/widgets/probability_chart/probability_chart.dart';
 
 class DetailedChartScreen extends StatefulWidget {
   final List<double> attackerWinProbabilities;

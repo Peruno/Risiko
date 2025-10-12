@@ -8,7 +8,6 @@ class ProbabilitySubChart extends StatelessWidget {
   final List<double> probabilities;
   final double totalWinProbability;
   final double maxY;
-  final bool isSelected;
   final Function(int index) onBarTap;
 
   const ProbabilitySubChart({
@@ -17,7 +16,6 @@ class ProbabilitySubChart extends StatelessWidget {
     required this.probabilities,
     required this.totalWinProbability,
     required this.maxY,
-    required this.isSelected,
     required this.onBarTap,
   });
 
