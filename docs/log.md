@@ -1,3 +1,12 @@
+12.10.2025,
+* Making it run on an android emulator
+* Checking single probabilities for correctness
+
+
+11.10.2025, 15m
+* Removing unused code
+
+
 04.10.2025, 2h
 * Working towards Android emulator
 
