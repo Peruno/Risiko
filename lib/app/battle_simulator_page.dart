@@ -205,22 +205,16 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    try {
-      final BattleResult result = _selectedAttackMode == 'safe'
-          ? _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false)
-          : _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
+    final BattleResult result = _selectedAttackMode == 'safe'
+        ? _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false)
+        : _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
 
-      final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
-      setState(() {
-        _result = formatter.formatProbabilities();
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-    } catch (e) {
-      setState(() {
-        _result = 'Fehler bei der Berechnung: $e';
-      });
-    }
+    final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
+    setState(() {
+      _result = formatter.formatProbabilities();
+      _attackersInvalid = false;
+      _defendersInvalid = false;
+    });
   }
 
   void _simulateBattle() {
@@ -241,25 +235,19 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    try {
-      final BattleResult result;
-      if (_selectedAttackMode == 'safe') {
-        result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: true);
-      } else {
-        result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: true);
-      }
-
-      final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
-      setState(() {
-        _result = formatter.formatBattleOutcome();
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      });
-    } catch (e) {
-      setState(() {
-        _result = 'Fehler bei der Berechnung: $e';
-      });
+    final BattleResult result;
+    if (_selectedAttackMode == 'safe') {
+      result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: true);
+    } else {
+      result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: true);
     }
+
+    final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
+    setState(() {
+      _result = formatter.formatBattleOutcome();
+      _attackersInvalid = false;
+      _defendersInvalid = false;
+    });
   }
 
   void _showDetailedChart() {
@@ -278,37 +266,31 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    try {
-      final BattleResult result;
-      result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
+    final BattleResult result;
+    result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
 
-      List<double> attackerWinProbs = [];
-      List<double> defenderWinProbs = [];
+    List<double> attackerWinProbs = [];
+    List<double> defenderWinProbs = [];
 
-      for (int i = 0; i < validator.attackers!; i++) {
-        attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
-      }
-
-      for (int i = 0; i < validator.defenders!; i++) {
-        defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
-      }
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DetailedChartScreen(
-            attackerWinProbabilities: attackerWinProbs,
-            defenderWinProbabilities: defenderWinProbs,
-            attackers: validator.attackers!,
-            defenders: validator.defenders!,
-            totalWinProbability: result.winProbability,
-          ),
-        ),
-      );
-    } catch (e) {
-      setState(() {
-        _result = 'Fehler bei der Berechnung: $e';
-      });
+    for (int i = 0; i < validator.attackers!; i++) {
+      attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
     }
+
+    for (int i = 0; i < validator.defenders!; i++) {
+      defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => DetailedChartScreen(
+          attackerWinProbabilities: attackerWinProbs,
+          defenderWinProbabilities: defenderWinProbs,
+          attackers: validator.attackers!,
+          defenders: validator.defenders!,
+          totalWinProbability: result.winProbability,
+        ),
+      ),
+    );
   }
 
   @override
