@@ -21,6 +21,9 @@ class ValidatedNumberField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final value = int.tryParse(controller.text);
+    final isRed = validator.isFieldRedForInput(isInvalid, value);
+
     return TextField(
       controller: controller,
       keyboardType: TextInputType.number,
@@ -29,22 +32,22 @@ class ValidatedNumberField extends StatelessWidget {
         labelText: label,
         border: OutlineInputBorder(
           borderSide: BorderSide(
-            color: validator.isFieldRedForInput(controller.text, isInvalid) ? Colors.red : Colors.grey,
+            color: isRed ? Colors.red : Colors.grey,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: validator.isFieldRedForInput(controller.text, isInvalid) ? Colors.red : Colors.grey,
+            color: isRed ? Colors.red : Colors.grey,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: validator.isFieldRedForInput(controller.text, isInvalid) ? Colors.red : Colors.blue,
+            color: isRed ? Colors.red : Colors.blue,
           ),
         ),
         counterText: '',
-        labelStyle: TextStyle(color: validator.isFieldRedForInput(controller.text, isInvalid) ? Colors.red : null),
-        suffixText: validator.getSuffixTextForInput(controller.text, isInvalid, isAttackerField: isAttackerField),
+        labelStyle: TextStyle(color: isRed ? Colors.red : null),
+        suffixText: validator.getSuffixTextForInput(isInvalid, value, isAttackerField: isAttackerField),
         suffixStyle: const TextStyle(color: Colors.red, fontSize: 12),
       ),
     );

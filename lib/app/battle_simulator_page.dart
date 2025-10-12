@@ -36,8 +36,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   @override
   Widget build(BuildContext context) {
     final validator = InputValidator(
-      attackersText: _attackersController.text,
-      defendersText: _defendersController.text,
+      attackers: int.tryParse(_attackersController.text),
+      defenders: int.tryParse(_defendersController.text),
       selectedAttackMode: _selectedAttackMode,
     );
 
@@ -168,8 +168,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _validateInput() {
     final validator = InputValidator(
-      attackersText: _attackersController.text,
-      defendersText: _defendersController.text,
+      attackers: int.tryParse(_attackersController.text),
+      defenders: int.tryParse(_defendersController.text),
       selectedAttackMode: _selectedAttackMode,
     );
 
@@ -190,8 +190,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   void _calculateProbabilities() {
     _dismissKeyboard();
     final validator = InputValidator(
-      attackersText: _attackersController.text,
-      defendersText: _defendersController.text,
+      attackers: int.tryParse(_attackersController.text),
+      defenders: int.tryParse(_defendersController.text),
       selectedAttackMode: _selectedAttackMode,
     );
 
@@ -220,8 +220,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   void _simulateBattle() {
     _dismissKeyboard();
     final validator = InputValidator(
-      attackersText: _attackersController.text,
-      defendersText: _defendersController.text,
+      attackers: int.tryParse(_attackersController.text),
+      defenders: int.tryParse(_defendersController.text),
       selectedAttackMode: _selectedAttackMode,
     );
 
@@ -253,8 +253,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   void _showDetailedChart() {
     _dismissKeyboard();
     final validator = InputValidator(
-      attackersText: _attackersController.text,
-      defendersText: _defendersController.text,
+      attackers: int.tryParse(_attackersController.text),
+      defenders: int.tryParse(_defendersController.text),
       selectedAttackMode: _selectedAttackMode,
     );
 

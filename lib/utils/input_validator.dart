@@ -2,14 +2,11 @@ class InputValidator {
   static const int minValue = 1;
   static const int maxValue = 128;
 
-  final String attackersText;
-  final String defendersText;
+  final int? attackers;
+  final int? defenders;
   final String? selectedAttackMode;
 
-  InputValidator({required this.attackersText, required this.defendersText, this.selectedAttackMode});
-
-  int? get attackers => int.tryParse(attackersText);
-  int? get defenders => int.tryParse(defendersText);
+  InputValidator({required this.attackers, required this.defenders, this.selectedAttackMode});
 
   int get minAttackersForMode => selectedAttackMode == 'safe' ? 3 : minValue;
 
@@ -25,15 +22,14 @@ class InputValidator {
     return false;
   }
 
-  bool isFieldRedForInput(String text, bool isInvalid) {
-    final value = int.tryParse(text) ?? 0;
+  bool isFieldRedForInput(bool isInvalid, int? value) {
+    if (value == null) return false;
     final exceedsMax = value > maxValue;
-
     return isInvalid || exceedsMax;
   }
 
-  String? getSuffixTextForInput(String text, bool isInvalid, {bool isAttackerField = false}) {
-    final value = int.tryParse(text) ?? 0;
+  String? getSuffixTextForInput(bool isInvalid, int? value, {bool isAttackerField = false}) {
+    if (value == null) return null;
     final exceedsMax = value > maxValue;
     final effectiveMin = isAttackerField ? minAttackersForMode : minValue;
 

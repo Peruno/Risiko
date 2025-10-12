@@ -1,9 +1,10 @@
-12.10.2025, 105m
+12.10.2025, 4h
 * Making it run on an android emulator
 * Checking single probabilities for correctness
 * Remove sub-header in diagram
+* Merge and improve diagrams
 
-11.10.2025, 15m
+11.10.2025, -
 * Removing unused code
 
 04.10.2025, 2h
