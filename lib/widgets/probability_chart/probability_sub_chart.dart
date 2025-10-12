@@ -70,11 +70,13 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
         maxY: widget.maxY,
         barTouchData: BarTouchData(
           enabled: true,
+          allowTouchBarBackDraw: true,
+          touchExtraThreshold: EdgeInsets.only(top: widget.maxY),
           touchTooltipData: BarTouchTooltipData(
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final isAttacker = widget.chartType == ChartType.attacker;
               final losses = isAttacker ? group.x.toInt() : widget.probabilities!.length - 1 - group.x.toInt();
-              final probability = (rod.toY).toStringAsFixed(1);
+              final probability = (rod.toY).toStringAsFixed(2);
               final label = isAttacker
                   ? 'Sieg mit $losses Verlusten: $probability%'
                   : 'Niederlage mit $losses Verlusten: $probability%';
@@ -256,6 +258,8 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
         maxY: widget.maxY,
         barTouchData: BarTouchData(
           enabled: true,
+          allowTouchBarBackDraw: true,
+          touchExtraThreshold: EdgeInsets.only(top: widget.maxY),
           touchTooltipData: BarTouchTooltipData(
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               if (group.x == attackerData.length) {
@@ -264,14 +268,14 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
               final isAttacker = group.x < attackerData.length;
               if (isAttacker) {
                 final losses = group.x.toInt();
-                final probability = (rod.toY).toStringAsFixed(1);
+                final probability = (rod.toY).toStringAsFixed(2);
                 return BarTooltipItem(
                   'Sieg mit $losses Verlusten: $probability%',
                   const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                 );
               } else {
                 final losses = widget.defenderProbabilities!.length - 1 - (group.x.toInt() - attackerData.length - 1);
-                final probability = (rod.toY).toStringAsFixed(1);
+                final probability = (rod.toY).toStringAsFixed(2);
                 return BarTooltipItem(
                   'Niederlage mit $losses Verlusten: $probability%',
                   const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
@@ -310,7 +314,7 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
           },
         ),
         titlesData: _buildMergedTitlesData(attackerData.length, defenderData.length),
-        borderData: FlBorderData(show: true),
+        borderData: FlBorderData(show: true, border: Border.all(color: Colors.black, width: 2)),
         gridData: const FlGridData(show: true),
         barGroups: _buildMergedBarGroups(attackerData, defenderData, barWidth),
       ),
