@@ -23,8 +23,6 @@ class ProbabilityChart extends StatefulWidget {
 }
 
 class _ProbabilityChartState extends State<ProbabilityChart> {
-  bool isAttackerSide = true;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,13 +79,11 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
 
   void _onAttackerBarTap(int index) {
     setState(() {
-      isAttackerSide = true;
     });
   }
 
   void _onDefenderBarTap(int index) {
     setState(() {
-      isAttackerSide = false;
     });
   }
 

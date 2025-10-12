@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 enum ChartType { attacker, defender }
 
-class ProbabilitySubChart extends StatelessWidget {
+class ProbabilitySubChart extends StatefulWidget {
   final ChartType chartType;
   final List<double> probabilities;
   final double totalWinProbability;
@@ -20,6 +20,13 @@ class ProbabilitySubChart extends StatelessWidget {
   });
 
   @override
+  State<ProbabilitySubChart> createState() => _ProbabilitySubChartState();
+}
+
+class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
+  int? _pressedIndex;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -30,10 +37,10 @@ class ProbabilitySubChart extends StatelessWidget {
   }
 
   Widget _buildTitle() {
-    final isAttacker = chartType == ChartType.attacker;
+    final isAttacker = widget.chartType == ChartType.attacker;
     final percentage = isAttacker
-        ? (totalWinProbability * 100).toStringAsFixed(1)
-        : ((1 - totalWinProbability) * 100).toStringAsFixed(1);
+        ? (widget.totalWinProbability * 100).toStringAsFixed(1)
+        : ((1 - widget.totalWinProbability) * 100).toStringAsFixed(1);
     final title = isAttacker ? 'Angreifer gewinnt' : 'Verteidiger gewinnt';
     final color = isAttacker ? Colors.green : Colors.red;
 
@@ -44,31 +51,58 @@ class ProbabilitySubChart extends StatelessWidget {
   }
 
   Widget _buildChart() {
-    final isAttacker = chartType == ChartType.attacker;
-    final displayedData = isAttacker ? probabilities : probabilities.reversed.toList();
+    final isAttacker = widget.chartType == ChartType.attacker;
+    final displayedData = isAttacker ? widget.probabilities : widget.probabilities.reversed.toList();
 
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        maxY: maxY,
+        maxY: widget.maxY,
         barTouchData: BarTouchData(
+          enabled: true,
+          touchTooltipData: BarTouchTooltipData(
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              final isAttacker = widget.chartType == ChartType.attacker;
+              final losses = isAttacker ? group.x.toInt() : widget.probabilities.length - 1 - group.x.toInt();
+              final probability = (rod.toY).toStringAsFixed(1);
+              final label = isAttacker ? 'Sieg mit $losses Verlusten: $probability%' : 'Niederlage mit $losses Verlusten: $probability%';
+              return BarTooltipItem(
+                label,
+                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+              );
+            },
+          ),
           touchCallback: (FlTouchEvent event, barTouchResponse) {
-            if (barTouchResponse != null && barTouchResponse.spot != null && event is FlTapUpEvent) {
+            if (barTouchResponse != null && barTouchResponse.spot != null) {
               final index = barTouchResponse.spot!.touchedBarGroupIndex;
-              onBarTap(index);
+              if (event is FlPanDownEvent || event is FlTapDownEvent) {
+                setState(() {
+                  _pressedIndex = index;
+                });
+              } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent) {
+                setState(() {
+                  _pressedIndex = null;
+                });
+                widget.onBarTap(index);
+              }
+            } else if (event is FlPanEndEvent || event is FlTapUpEvent || event is FlTapCancelEvent) {
+              setState(() {
+                _pressedIndex = null;
+              });
             }
           },
         ),
         titlesData: _buildTitlesData(),
         borderData: FlBorderData(show: true),
+        gridData: const FlGridData(show: true),
         barGroups: _buildBarGroups(displayedData, isAttacker),
       ),
     );
   }
 
   FlTitlesData _buildTitlesData() {
-    final isAttacker = chartType == ChartType.attacker;
-    final interval = _calculateLabelInterval(probabilities.length).toDouble();
+    final isAttacker = widget.chartType == ChartType.attacker;
+    final interval = _calculateLabelInterval(widget.probabilities.length).toDouble();
 
     return FlTitlesData(
       show: true,
@@ -82,7 +116,7 @@ class ProbabilitySubChart extends StatelessWidget {
               return const SizedBox.shrink();
             }
 
-            final displayValue = isAttacker ? value.toInt() : probabilities.length - 1 - value.toInt();
+            final displayValue = isAttacker ? value.toInt() : widget.probabilities.length - 1 - value.toInt();
 
             return Text(displayValue.toString(), style: const TextStyle(fontSize: 12));
           },
@@ -99,7 +133,7 @@ class ProbabilitySubChart extends StatelessWidget {
   }
 
   List<BarChartGroupData> _buildBarGroups(List<double> displayedData, bool isAttacker) {
-    final color = isAttacker ? Colors.green : Colors.red;
+    final baseColor = isAttacker ? Colors.green : Colors.red;
     final barWidth = _calculateBarWidth(displayedData.length);
     return displayedData
         .asMap()
@@ -110,7 +144,7 @@ class ProbabilitySubChart extends StatelessWidget {
             barRods: [
               BarChartRodData(
                 toY: entry.value * 100,
-                color: color,
+                color: _pressedIndex == entry.key ? (isAttacker ? Colors.green.shade800 : Colors.red.shade800) : baseColor,
                 width: barWidth,
                 borderRadius: BorderRadius.zero,
               ),
@@ -132,7 +166,7 @@ class ProbabilitySubChart extends StatelessWidget {
       sideTitles: SideTitles(
         showTitles: true,
         getTitlesWidget: (value, meta) {
-          if (value >= maxY * 0.95) {
+          if (value >= widget.maxY * 0.95) {
             return const SizedBox.shrink();
           }
           return Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 11));
@@ -147,7 +181,7 @@ class ProbabilitySubChart extends StatelessWidget {
       sideTitles: SideTitles(
         showTitles: true,
         getTitlesWidget: (value, meta) {
-          if (value >= maxY * 0.95) {
+          if (value >= widget.maxY * 0.95) {
             return const SizedBox.shrink();
           }
           return Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 11));
