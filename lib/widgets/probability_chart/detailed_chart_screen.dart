@@ -38,12 +38,27 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
-          style: TextStyle(fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(24.0),
+        child: AppBar(
+          clipBehavior: Clip.none,
+          centerTitle: true,
+          titleSpacing: 0,
+          flexibleSpace: Padding(
+            padding: EdgeInsets.only(top: 4.0),
+            child: Center(
+              child: Text(
+                '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.black),
+              ),
+            ),
+          ),
+          leading: Transform.translate(
+            offset: Offset(0, -16.0),
+            child: BackButton(color: Colors.black),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: ProbabilityChart(
         attackerWinProbabilities: widget.attackerWinProbabilities,

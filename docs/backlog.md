@@ -1,12 +1,12 @@
 # Todo
-* Write a README
-* Refactoring the detailed diagram
-* Refactor simulator.dart
-* Refactor battle_simulator_page.dart
-  * validation logic contains duplication and could make smarter use of the state
 * Styling of the detailed diagram
 * Release it to the Apple App Store
 * Release it to the Google App Store
+* Write a README
+* Refactor the detailed diagram
+* Refactor simulator.dart
+* Refactor battle_simulator_page.dart
+  * Validation logic contains duplication and could make smarter use of the state
 
 
 # Maybe One Day

@@ -1,3 +1,10 @@
+19.10.2025, 1h
+* Solved problems with IntelliJ not recognizing the flutter project
+* Still failed to run it directly on my phone
+
+26.10.2025, 0.5h
+* Problems with IntelliJ and Dart/Flutter SDK
+
 12.10.2025, 4h
 * Making it run on an android emulator
 * Checking single probabilities for correctness
