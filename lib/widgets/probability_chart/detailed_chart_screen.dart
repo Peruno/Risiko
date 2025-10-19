@@ -37,9 +37,14 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const double appBarHeight = 24.0;
+    const double backButtonSize = 48.0;
+    const double backButtonVisualAdjustment = 4.0;
+    final double backButtonOffset = (appBarHeight - backButtonSize) / 2 - backButtonVisualAdjustment;
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(24.0),
+        preferredSize: Size.fromHeight(appBarHeight),
         child: AppBar(
           clipBehavior: Clip.none,
           centerTitle: true,
@@ -54,7 +59,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
             ),
           ),
           leading: Transform.translate(
-            offset: Offset(0, -16.0),
+            offset: Offset(0, backButtonOffset),
             child: BackButton(color: Colors.black),
           ),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
