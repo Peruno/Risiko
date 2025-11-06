@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../calculation/simulator.dart';
+import '../state/battle_state.dart';
 import '../utils/battle_result_formatter.dart';
-import '../utils/input_validator.dart';
+import '../validation/validation_message_formatter.dart';
 import '../widgets/attack_mode_selector.dart';
 import '../widgets/probability_chart/detailed_chart_screen.dart';
 import '../widgets/info_dialog.dart';
@@ -21,25 +23,17 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   final TextEditingController _defendersController = TextEditingController();
   final Simulator _simulator = Simulator();
   String _result = '';
-  bool _attackersInvalid = false;
-  bool _defendersInvalid = false;
-  String? _selectedAttackMode = 'allIn';
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    _attackersController.addListener(_validateInput);
-    _defendersController.addListener(_validateInput);
   }
 
   @override
   Widget build(BuildContext context) {
-    final validator = InputValidator(
-      attackers: int.tryParse(_attackersController.text),
-      defenders: int.tryParse(_defendersController.text),
-      selectedAttackMode: _selectedAttackMode,
-    );
+    final state = context.watch<BattleState>();
+    final errorBoxText = ValidationMessageFormatter.getErrorBoxText(state.validationResult);
 
     return Scaffold(
       appBar: _buildAppBar(context),
@@ -49,9 +43,9 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildAttackerInputField(validator),
+              _buildAttackerInputField(),
               const SizedBox(height: 16),
-              _buildDefenderInputField(validator),
+              _buildDefenderInputField(),
               const SizedBox(height: 24),
               _buildAttackModeSelector(),
               const SizedBox(height: 24),
@@ -61,7 +55,8 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               const SizedBox(height: 12),
               _buildShowResultButton(),
               const SizedBox(height: 24),
-              if (_result.isNotEmpty) _buildResultBox(),
+              if (errorBoxText != null) _buildResultBox(errorBoxText),
+              if (_result.isNotEmpty && errorBoxText == null) _buildResultBox(_result),
             ],
           ),
         ),
@@ -83,14 +78,14 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
   }
 
-  Container _buildResultBox() {
+  Container _buildResultBox(String text) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+      child: Text(text, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
     );
   }
 
@@ -131,35 +126,29 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   }
 
   AttackModeSelector _buildAttackModeSelector() {
+    final state = context.read<BattleState>();
     return AttackModeSelector(
-      selectedAttackMode: _selectedAttackMode,
+      selectedAttackMode: state.attackMode,
       onModeSelected: (mode) {
-        setState(() {
-          _selectedAttackMode = mode;
-        });
-        _validateInput();
+        context.read<BattleState>().setAttackMode(mode);
       },
       onTap: _dismissKeyboard,
     );
   }
 
-  ValidatedNumberField _buildDefenderInputField(InputValidator validator) {
+  ValidatedNumberField _buildDefenderInputField() {
     return ValidatedNumberField(
       key: const Key('defender_field'),
       controller: _defendersController,
       label: 'Anzahl Verteidiger',
-      isInvalid: _defendersInvalid,
-      validator: validator,
     );
   }
 
-  ValidatedNumberField _buildAttackerInputField(InputValidator validator) {
+  ValidatedNumberField _buildAttackerInputField() {
     return ValidatedNumberField(
       key: const Key('attacker_field'),
       controller: _attackersController,
       label: 'Anzahl Angreifer',
-      isInvalid: _attackersInvalid,
-      validator: validator,
       isAttackerField: true,
     );
   }
@@ -168,129 +157,56 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     FocusScope.of(context).unfocus();
   }
 
-  void _validateInput() {
-    final validator = InputValidator(
-      attackers: int.tryParse(_attackersController.text),
-      defenders: int.tryParse(_defendersController.text),
-      selectedAttackMode: _selectedAttackMode,
-    );
-
-    setState(() {
-      final validationError = validator.validate();
-      if (validationError != null) {
-        _result = validationError;
-        _attackersInvalid = validator.isAttackersInvalid;
-        _defendersInvalid = validator.isDefendersInvalid;
-      } else {
-        _result = '';
-        _attackersInvalid = false;
-        _defendersInvalid = false;
-      }
-    });
-  }
-
   void _calculateProbabilities() {
     _dismissKeyboard();
-    final validator = InputValidator(
-      attackers: int.tryParse(_attackersController.text),
-      defenders: int.tryParse(_defendersController.text),
-      selectedAttackMode: _selectedAttackMode,
-    );
+    final state = context.read<BattleState>();
 
-    final validationError = validator.validate();
-    if (validationError != null) {
-      setState(() {
-        _result = validationError;
-        _attackersInvalid = validationError.contains('Angreifer');
-        _defendersInvalid = validationError.contains('Verteidiger');
-      });
+    if (!state.validationResult.isValid) {
       return;
     }
 
-    final BattleResult result = _selectedAttackMode == 'safe'
-        ? _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: false)
-        : _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
+    final BattleResult result = state.attackMode == 'safe'
+        ? _simulator.safeAttack(state.attackers!, state.defenders!, simulateOutcome: false)
+        : _simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
 
-    final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
+    final formatter = BattleResultFormatter(result: result, selectedAttackMode: state.attackMode);
     setState(() {
       _result = formatter.formatProbabilities();
-      _attackersInvalid = false;
-      _defendersInvalid = false;
     });
   }
 
   void _simulateBattle() {
     _dismissKeyboard();
-    final validator = InputValidator(
-      attackers: int.tryParse(_attackersController.text),
-      defenders: int.tryParse(_defendersController.text),
-      selectedAttackMode: _selectedAttackMode,
-    );
+    final state = context.read<BattleState>();
 
-    final validationError = validator.validate();
-    if (validationError != null) {
-      setState(() {
-        _result = validationError;
-        _attackersInvalid = validationError.contains('Angreifer');
-        _defendersInvalid = validationError.contains('Verteidiger');
-      });
+    if (!state.validationResult.isValid) {
       return;
     }
 
     final BattleResult result;
-    if (_selectedAttackMode == 'safe') {
-      result = _simulator.safeAttack(validator.attackers!, validator.defenders!, simulateOutcome: true);
+    if (state.attackMode == 'safe') {
+      result = _simulator.safeAttack(state.attackers!, state.defenders!, simulateOutcome: true);
     } else {
-      result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: true);
+      result = _simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: true);
     }
 
-    final formatter = BattleResultFormatter(result: result, selectedAttackMode: _selectedAttackMode);
+    final formatter = BattleResultFormatter(result: result, selectedAttackMode: state.attackMode);
     setState(() {
       _result = formatter.formatBattleOutcome();
-      _attackersInvalid = false;
-      _defendersInvalid = false;
     });
   }
 
   void _showDetailedChart() {
     _dismissKeyboard();
-    final validator = InputValidator(
-      attackers: int.tryParse(_attackersController.text),
-      defenders: int.tryParse(_defendersController.text),
-      selectedAttackMode: _selectedAttackMode,
-    );
+    final state = context.read<BattleState>();
 
-    final validationError = validator.validate();
-    if (validationError != null) {
-      setState(() {
-        _result = validationError;
-      });
+    if (!state.validationResult.isValid) {
       return;
-    }
-
-    final BattleResult result;
-    result = _simulator.allIn(validator.attackers!, validator.defenders!, simulateOutcome: false);
-
-    List<double> attackerWinProbs = [];
-    List<double> defenderWinProbs = [];
-
-    for (int i = 0; i < validator.attackers!; i++) {
-      attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
-    }
-
-    for (int i = 0; i < validator.defenders!; i++) {
-      defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
     }
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => DetailedChartScreen(
-          attackerWinProbabilities: attackerWinProbs,
-          defenderWinProbabilities: defenderWinProbs,
-          attackers: validator.attackers!,
-          defenders: validator.defenders!,
-          totalWinProbability: result.winProbability,
-        ),
+        builder: (context) => const DetailedChartScreen(),
       ),
     );
   }

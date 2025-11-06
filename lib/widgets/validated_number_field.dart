@@ -1,33 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import '../utils/input_validator.dart';
+import '../state/battle_state.dart';
+import '../validation/validation_message_formatter.dart';
 
 class ValidatedNumberField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  final bool isInvalid;
-  final InputValidator validator;
   final bool isAttackerField;
 
   const ValidatedNumberField({
     super.key,
     required this.controller,
     required this.label,
-    required this.isInvalid,
-    required this.validator,
     this.isAttackerField = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final value = int.tryParse(controller.text);
-    final isRed = validator.isFieldRedForInput(isInvalid, value);
+    final state = context.watch<BattleState>();
+    final error = isAttackerField ? state.validationResult.attackersError : state.validationResult.defendersError;
+    final isRed = error != null;
+    final suffixText = ValidationMessageFormatter.getSuffixText(error);
 
     return TextField(
       controller: controller,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onChanged: (text) {
+        final value = int.tryParse(text);
+        if (isAttackerField) {
+          context.read<BattleState>().setAttackers(value);
+        } else {
+          context.read<BattleState>().setDefenders(value);
+        }
+      },
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderSide: BorderSide(color: isRed ? Colors.red : Colors.grey)),
@@ -35,7 +43,7 @@ class ValidatedNumberField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: isRed ? Colors.red : Colors.blue)),
         counterText: '',
         labelStyle: TextStyle(color: isRed ? Colors.red : null),
-        suffixText: validator.getSuffixTextForInput(isInvalid, value, isAttackerField: isAttackerField),
+        suffixText: suffixText,
         suffixStyle: const TextStyle(color: Colors.red, fontSize: 12),
       ),
     );

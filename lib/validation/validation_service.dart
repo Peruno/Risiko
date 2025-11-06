@@ -1,0 +1,58 @@
+import 'validation_result.dart';
+
+class ValidationService {
+  static const int minValue = 1;
+  static const int maxValue = 128;
+
+  static ValidationResult validate({
+    required int? attackers,
+    required int? defenders,
+    required String attackMode,
+  }) {
+    final minAttackers = attackMode == 'safe' ? 3 : minValue;
+
+    FieldError? attackersError;
+    FieldError? defendersError;
+
+    if (attackers != null) {
+      if (attackers < minAttackers) {
+        attackersError = FieldError(
+          type: ErrorType.belowMinimum,
+          value: attackers,
+          minValue: minAttackers,
+          maxValue: maxValue,
+        );
+      } else if (attackers > maxValue) {
+        attackersError = FieldError(
+          type: ErrorType.aboveMaximum,
+          value: attackers,
+          minValue: minAttackers,
+          maxValue: maxValue,
+        );
+      }
+    }
+
+    if (defenders != null) {
+      if (defenders < minValue) {
+        defendersError = FieldError(
+          type: ErrorType.belowMinimum,
+          value: defenders,
+          minValue: minValue,
+          maxValue: maxValue,
+        );
+      } else if (defenders > maxValue) {
+        defendersError = FieldError(
+          type: ErrorType.aboveMaximum,
+          value: defenders,
+          minValue: minValue,
+          maxValue: maxValue,
+        );
+      }
+    }
+
+    return ValidationResult(
+      attackersError: attackersError,
+      defendersError: defendersError,
+    );
+  }
+}

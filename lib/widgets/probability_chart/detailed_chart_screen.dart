@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:risiko_simulator/calculation/simulator.dart';
+import 'package:risiko_simulator/state/battle_state.dart';
 import 'package:risiko_simulator/widgets/probability_chart/probability_chart.dart';
 
 class DetailedChartScreen extends StatefulWidget {
-  final List<double> attackerWinProbabilities;
-  final List<double> defenderWinProbabilities;
-  final int attackers;
-  final int defenders;
-  final double totalWinProbability;
-
-  const DetailedChartScreen({
-    super.key,
-    required this.attackerWinProbabilities,
-    required this.defenderWinProbabilities,
-    required this.attackers,
-    required this.defenders,
-    required this.totalWinProbability,
-  });
+  const DetailedChartScreen({super.key});
 
   @override
   State<DetailedChartScreen> createState() => _DetailedChartScreenState();
@@ -37,6 +27,21 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<BattleState>();
+    final simulator = Simulator();
+    final result = simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
+
+    List<double> attackerWinProbs = [];
+    List<double> defenderWinProbs = [];
+
+    for (int i = 0; i < state.attackers!; i++) {
+      attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
+    }
+
+    for (int i = 0; i < state.defenders!; i++) {
+      defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
+    }
+
     const double appBarHeight = 24.0;
     const double backButtonSize = 48.0;
     const double backButtonVisualAdjustment = 4.0;
@@ -53,7 +58,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
             padding: EdgeInsets.only(top: 4.0),
             child: Center(
               child: Text(
-                '${widget.attackers} Angreifer gegen ${widget.defenders} Verteidiger',
+                '${state.attackers} Angreifer gegen ${state.defenders} Verteidiger',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.black),
               ),
             ),
@@ -66,11 +71,11 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
         ),
       ),
       body: ProbabilityChart(
-        attackerWinProbabilities: widget.attackerWinProbabilities,
-        defenderWinProbabilities: widget.defenderWinProbabilities,
-        attackers: widget.attackers,
-        defenders: widget.defenders,
-        totalWinProbability: widget.totalWinProbability,
+        attackerWinProbabilities: attackerWinProbs,
+        defenderWinProbabilities: defenderWinProbs,
+        attackers: state.attackers!,
+        defenders: state.defenders!,
+        totalWinProbability: result.winProbability,
       ),
     );
   }

@@ -2,10 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:risiko_simulator/app/risiko_app.dart';
+import 'package:risiko_simulator/state/battle_state.dart';
 
 void main() {
   group('Input Validation Behavior', () {
+    Widget createTestApp() {
+      return ChangeNotifierProvider(
+        create: (_) => BattleState(),
+        child: const RisikoApp(),
+      );
+    }
+
     Finder attackerField() => find.byKey(const Key('attacker_field'));
     Finder defenderField() => find.byKey(const Key('defender_field'));
 
@@ -18,7 +27,7 @@ void main() {
     }
 
     testWidgets('Defender field: valid and invalid ranges', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(defenderField(), '0');
       await tester.pump();
@@ -35,7 +44,7 @@ void main() {
     });
 
     testWidgets('Attacker field: valid and invalid ranges in "All-In" mode', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.pump();
@@ -52,7 +61,7 @@ void main() {
     });
 
     testWidgets('Attacker field: valid and invalid ranges in "Sicherer Angriff" mode', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.tap(find.text('Sicherer Angriff'));
       await tester.pump();
@@ -72,7 +81,7 @@ void main() {
     });
 
     testWidgets('Error box appears when field is invalid', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.enterText(defenderField(), '5');
@@ -82,7 +91,7 @@ void main() {
     });
 
     testWidgets('Error box disappears when input becomes valid', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.enterText(defenderField(), '5');
@@ -96,7 +105,7 @@ void main() {
     });
 
     testWidgets('Attack mode change triggers revalidation', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '2');
       await tester.enterText(defenderField(), '5');
@@ -113,7 +122,7 @@ void main() {
     });
 
     testWidgets('Input change triggers revalidation', (WidgetTester tester) async {
-      await tester.pumpWidget(const RisikoApp());
+      await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '5');
       await tester.pump();
