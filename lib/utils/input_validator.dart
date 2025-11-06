@@ -47,19 +47,19 @@ class InputValidator {
 
   String? validate() {
     if (attackers == null || attackers! < minAttackersForMode) {
-      return 'Anzahl der Angreifer muss mindestens $minAttackersForMode sein';
+      return 'Die Anzahl der Angreifer muss mindestens $minAttackersForMode sein.';
     }
 
     if (attackers! > maxValue) {
-      return 'Anzahl der Angreifer darf maximal $maxValue sein';
+      return 'Die Anzahl der Angreifer darf maximal $maxValue sein.';
     }
 
     if (defenders == null || defenders! < minValue) {
-      return 'Anzahl der Verteidiger muss mindestens $minValue sein';
+      return 'Die Anzahl der Verteidiger muss mindestens $minValue sein.';
     }
 
     if (defenders! > maxValue) {
-      return 'Anzahl der Verteidiger darf maximal $maxValue sein';
+      return 'Die Anzahl der Verteidiger darf maximal $maxValue sein.';
     }
 
     return null;
