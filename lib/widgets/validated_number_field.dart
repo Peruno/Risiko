@@ -30,21 +30,9 @@ class ValidatedNumberField extends StatelessWidget {
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: isRed ? Colors.red : Colors.grey,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: isRed ? Colors.red : Colors.grey,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: isRed ? Colors.red : Colors.blue,
-          ),
-        ),
+        border: OutlineInputBorder(borderSide: BorderSide(color: isRed ? Colors.red : Colors.grey)),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: isRed ? Colors.red : Colors.grey)),
+        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: isRed ? Colors.red : Colors.blue)),
         counterText: '',
         labelStyle: TextStyle(color: isRed ? Colors.red : null),
         suffixText: validator.getSuffixTextForInput(isInvalid, value, isAttackerField: isAttackerField),

@@ -145,6 +145,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   ValidatedNumberField _buildDefenderInputField(InputValidator validator) {
     return ValidatedNumberField(
+      key: const Key('defender_field'),
       controller: _defendersController,
       label: 'Anzahl Verteidiger',
       isInvalid: _defendersInvalid,
@@ -154,6 +155,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   ValidatedNumberField _buildAttackerInputField(InputValidator validator) {
     return ValidatedNumberField(
+      key: const Key('attacker_field'),
       controller: _attackersController,
       label: 'Anzahl Angreifer',
       isInvalid: _attackersInvalid,

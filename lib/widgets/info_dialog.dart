@@ -25,9 +25,15 @@ class InfoDialog extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
               children: const [
                 TextSpan(text: '2. Wenn sich '),
-                TextSpan(text: 'n', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text: 'n',
+                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+                ),
                 TextSpan(text: ' Truppen auf dem angreifenden Land befinden, so hat der Angreifer nur '),
-                TextSpan(text: 'n-1', style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold)),
+                TextSpan(
+                  text: 'n-1',
+                  style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+                ),
                 TextSpan(text: ' angreifende Truppen, da eine Truppe auf dem Land bleiben muss.'),
               ],
             ),
@@ -51,10 +57,7 @@ class InfoDialog extends StatelessWidget {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text(
-                'Diese App ist Open Source: ',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Text('Diese App ist Open Source: ', style: Theme.of(context).textTheme.bodyMedium),
               GestureDetector(
                 onTap: () async {
                   final url = Uri.parse('https://github.com/Peruno/Risiko');
@@ -64,10 +67,9 @@ class InfoDialog extends StatelessWidget {
                 },
                 child: Text(
                   'Quellcode',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.blue, decoration: TextDecoration.underline),
                 ),
               ),
             ],
