@@ -118,7 +118,7 @@ void main() {
       await tester.pump();
 
       expect(isFieldRed(tester, attackerField()), true);
-      expect(find.textContaining('Angreifer muss mindestens 3'), findsOneWidget);
+      expect(find.textContaining('bei einem sicheren Angriff mindestens 3'), findsOneWidget);
     });
 
     testWidgets('Input change triggers revalidation', (WidgetTester tester) async {
@@ -135,6 +135,31 @@ void main() {
       await tester.enterText(attackerField(), '10');
       await tester.pump();
       expect(isFieldRed(tester, attackerField()), false);
+    });
+
+    testWidgets('Error box shows "sicheren Angriff" context in safe mode', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.tap(find.text('Sicherer Angriff'));
+      await tester.pump();
+
+      await tester.enterText(attackerField(), '2');
+      await tester.enterText(defenderField(), '5');
+      await tester.pump();
+
+      expect(find.textContaining('Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens 3 sein.'),
+          findsOneWidget);
+    });
+
+    testWidgets('Error box shows regular text in all-in mode', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(attackerField(), '0');
+      await tester.enterText(defenderField(), '5');
+      await tester.pump();
+
+      expect(find.textContaining('Die Anzahl der Angreifer muss mindestens 1 sein.'), findsOneWidget);
+      expect(find.textContaining('sicheren Angriff'), findsNothing);
     });
   });
 }

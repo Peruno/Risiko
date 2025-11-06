@@ -204,11 +204,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const DetailedChartScreen(),
-      ),
-    );
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailedChartScreen()));
   }
 
   @override

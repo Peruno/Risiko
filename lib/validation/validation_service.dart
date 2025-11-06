@@ -4,11 +4,7 @@ class ValidationService {
   static const int minValue = 1;
   static const int maxValue = 128;
 
-  static ValidationResult validate({
-    required int? attackers,
-    required int? defenders,
-    required String attackMode,
-  }) {
+  static ValidationResult validate({required int? attackers, required int? defenders, required String attackMode}) {
     final minAttackers = attackMode == 'safe' ? 3 : minValue;
 
     FieldError? attackersError;
@@ -21,6 +17,7 @@ class ValidationService {
           value: attackers,
           minValue: minAttackers,
           maxValue: maxValue,
+          attackMode: attackMode,
         );
       } else if (attackers > maxValue) {
         attackersError = FieldError(
@@ -28,6 +25,7 @@ class ValidationService {
           value: attackers,
           minValue: minAttackers,
           maxValue: maxValue,
+          attackMode: attackMode,
         );
       }
     }
@@ -39,6 +37,7 @@ class ValidationService {
           value: defenders,
           minValue: minValue,
           maxValue: maxValue,
+          attackMode: attackMode,
         );
       } else if (defenders > maxValue) {
         defendersError = FieldError(
@@ -46,13 +45,11 @@ class ValidationService {
           value: defenders,
           minValue: minValue,
           maxValue: maxValue,
+          attackMode: attackMode,
         );
       }
     }
 
-    return ValidationResult(
-      attackersError: attackersError,
-      defendersError: defendersError,
-    );
+    return ValidationResult(attackersError: attackersError, defendersError: defendersError);
   }
 }

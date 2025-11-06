@@ -10,12 +10,7 @@ class ValidatedNumberField extends StatelessWidget {
   final String label;
   final bool isAttackerField;
 
-  const ValidatedNumberField({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.isAttackerField = false,
-  });
+  const ValidatedNumberField({super.key, required this.controller, required this.label, this.isAttackerField = false});
 
   @override
   Widget build(BuildContext context) {

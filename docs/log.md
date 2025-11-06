@@ -1,7 +1,7 @@
-06.11.2025, 1h
+06.11.2025, 2.5h
 * Infobox improved
 * Added clickable link to GitHub
-
+* Do proper state management
 
 19.10.2025, 1h
 * Solved problems with IntelliJ not recognizing the flutter project

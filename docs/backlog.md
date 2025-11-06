@@ -6,8 +6,6 @@
 * Write a README
 * Refactor the detailed diagram
 * Refactor simulator.dart
-* Refactor battle_simulator_page.dart
-  * Validation logic contains duplication and could make smarter use of the state
 
 
 # Maybe One Day

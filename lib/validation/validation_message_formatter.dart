@@ -19,7 +19,11 @@ class ValidationMessageFormatter {
       final error = result.attackersError!;
       switch (error.type) {
         case ErrorType.belowMinimum:
-          return 'Die Anzahl der Angreifer muss mindestens ${error.minValue} sein.';
+          if (error.attackMode == 'safe') {
+            return 'Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens ${error.minValue} sein.';
+          } else {
+            return 'Die Anzahl der Angreifer muss mindestens ${error.minValue} sein.';
+          }
         case ErrorType.aboveMaximum:
           return 'Die Anzahl der Angreifer darf maximal ${error.maxValue} sein.';
       }
