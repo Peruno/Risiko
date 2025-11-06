@@ -1,3 +1,8 @@
+06.11.2025, 1h
+* Infobox improved
+* Added clickable link to GitHub
+
+
 19.10.2025, 1h
 * Solved problems with IntelliJ not recognizing the flutter project
 * Still failed to run it directly on my phone

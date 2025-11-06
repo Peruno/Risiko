@@ -189,8 +189,10 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
 
   AxisTitles _buildLeftTitles() {
     return AxisTitles(
+      axisNameSize: 40,
       sideTitles: SideTitles(
         showTitles: true,
+        reservedSize: 30,
         getTitlesWidget: (value, meta) {
           if (value >= widget.maxY * 0.95) {
             return const SizedBox.shrink();
@@ -198,7 +200,7 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
           return Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 11));
         },
       ),
-      axisNameWidget: const Text('Wahrscheinlichkeit in %', style: TextStyle(fontSize: 12)),
+      axisNameWidget: const Text('Wahrscheinlichkeit in %', style: TextStyle(fontSize: 13)),
     );
   }
 
@@ -502,8 +504,10 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
         axisNameWidget: axisLabel,
       ),
       leftTitles: AxisTitles(
+        axisNameSize: 60,
         sideTitles: SideTitles(
           showTitles: true,
+          reservedSize: 40,
           getTitlesWidget: (value, meta) {
             if (value >= widget.maxY * 0.95) {
               return const SizedBox.shrink();
@@ -511,7 +515,7 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
             return Text(value.toStringAsFixed(1), style: const TextStyle(fontSize: 11));
           },
         ),
-        axisNameWidget: const Text('Wahrscheinlichkeit in %', style: TextStyle(fontSize: 12)),
+        axisNameWidget: const Text('Wahrscheinlichkeit in %', style: TextStyle(fontSize: 14)),
       ),
       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
