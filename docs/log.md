@@ -1,3 +1,9 @@
+07.11.2025, 2.5h
+* Add readme
+* Minor improvements of the diagram
+* Minor refactoring to prevent rebuilding the whole main page
+* Starting to publish it
+
 06.11.2025, 2.5h
 * Infobox improved
 * Added clickable link to GitHub

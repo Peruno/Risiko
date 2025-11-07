@@ -42,9 +42,12 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
       defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
     }
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final toolbarHeight = screenHeight * 0.06;
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 40.0,
+        toolbarHeight: toolbarHeight,
         centerTitle: true,
         title: Text(
           '${state.attackers} Angreifer gegen ${state.defenders} Verteidiger',
