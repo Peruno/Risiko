@@ -42,33 +42,16 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
       defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
     }
 
-    const double appBarHeight = 24.0;
-    const double backButtonSize = 48.0;
-    const double backButtonVisualAdjustment = 4.0;
-    final double backButtonOffset = (appBarHeight - backButtonSize) / 2 - backButtonVisualAdjustment;
-
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(appBarHeight),
-        child: AppBar(
-          clipBehavior: Clip.none,
-          centerTitle: true,
-          titleSpacing: 0,
-          flexibleSpace: Padding(
-            padding: EdgeInsets.only(top: 4.0),
-            child: Center(
-              child: Text(
-                '${state.attackers} Angreifer gegen ${state.defenders} Verteidiger',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.black),
-              ),
-            ),
-          ),
-          leading: Transform.translate(
-            offset: Offset(0, backButtonOffset),
-            child: BackButton(color: Colors.black),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      appBar: AppBar(
+        toolbarHeight: 40.0,
+        centerTitle: true,
+        title: Text(
+          '${state.attackers} Angreifer gegen ${state.defenders} Verteidiger',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: Colors.black),
         ),
+        leading: const BackButton(color: Colors.black),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: ProbabilityChart(
         attackerWinProbabilities: attackerWinProbs,
