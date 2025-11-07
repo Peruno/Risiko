@@ -15,9 +15,11 @@ void main() {
     expect(find.text('Ergebnis simulieren'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, '10');
-    await tester.enterText(find.byType(TextField).last, '5');
-    await tester.tap(find.text('Ergebnis simulieren'));
     await tester.pump();
+    await tester.enterText(find.byType(TextField).last, '5');
+    await tester.pump();
+    await tester.tap(find.text('Ergebnis simulieren'));
+    await tester.pumpAndSettle();
 
     expect(find.textContaining('🟢 SIEG DES ANGREIFERS!'), findsOneWidget);
   });

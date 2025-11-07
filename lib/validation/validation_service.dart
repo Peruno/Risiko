@@ -10,44 +10,56 @@ class ValidationService {
     FieldError? attackersError;
     FieldError? defendersError;
 
-    if (attackers != null) {
-      if (attackers < minAttackers) {
-        attackersError = FieldError(
-          type: ErrorType.belowMinimum,
-          value: attackers,
-          minValue: minAttackers,
-          maxValue: maxValue,
-          attackMode: attackMode,
-        );
-      } else if (attackers > maxValue) {
-        attackersError = FieldError(
-          type: ErrorType.aboveMaximum,
-          value: attackers,
-          minValue: minAttackers,
-          maxValue: maxValue,
-          attackMode: attackMode,
-        );
-      }
+    if (attackers == null) {
+      attackersError = FieldError(
+        type: ErrorType.missing,
+        value: null,
+        minValue: minAttackers,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
+    } else if (attackers < minAttackers) {
+      attackersError = FieldError(
+        type: ErrorType.belowMinimum,
+        value: attackers,
+        minValue: minAttackers,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
+    } else if (attackers > maxValue) {
+      attackersError = FieldError(
+        type: ErrorType.aboveMaximum,
+        value: attackers,
+        minValue: minAttackers,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
     }
 
-    if (defenders != null) {
-      if (defenders < minValue) {
-        defendersError = FieldError(
-          type: ErrorType.belowMinimum,
-          value: defenders,
-          minValue: minValue,
-          maxValue: maxValue,
-          attackMode: attackMode,
-        );
-      } else if (defenders > maxValue) {
-        defendersError = FieldError(
-          type: ErrorType.aboveMaximum,
-          value: defenders,
-          minValue: minValue,
-          maxValue: maxValue,
-          attackMode: attackMode,
-        );
-      }
+    if (defenders == null) {
+      defendersError = FieldError(
+        type: ErrorType.missing,
+        value: null,
+        minValue: minValue,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
+    } else if (defenders < minValue) {
+      defendersError = FieldError(
+        type: ErrorType.belowMinimum,
+        value: defenders,
+        minValue: minValue,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
+    } else if (defenders > maxValue) {
+      defendersError = FieldError(
+        type: ErrorType.aboveMaximum,
+        value: defenders,
+        minValue: minValue,
+        maxValue: maxValue,
+        attackMode: attackMode,
+      );
     }
 
     return ValidationResult(attackersError: attackersError, defendersError: defendersError);

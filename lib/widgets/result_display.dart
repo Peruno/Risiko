@@ -32,11 +32,7 @@ class ResultDisplayState extends State<ResultDisplay> {
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        _result,
-        style: const TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
-      ),
+      child: Text(_result, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
     );
   }
 }

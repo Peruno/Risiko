@@ -1,8 +1,8 @@
-enum ErrorType { belowMinimum, aboveMaximum }
+enum ErrorType { missing, belowMinimum, aboveMaximum }
 
 class FieldError {
   final ErrorType type;
-  final int value;
+  final int? value;
   final int minValue;
   final int maxValue;
   final String attackMode;

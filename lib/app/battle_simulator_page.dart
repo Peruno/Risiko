@@ -82,7 +82,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
   }
 
-
   ElevatedButton _buildShowResultButton() {
     return ElevatedButton(
       onPressed: _simulateBattle,
@@ -119,14 +118,17 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
   }
 
-  AttackModeSelector _buildAttackModeSelector() {
-    final state = context.read<BattleState>();
-    return AttackModeSelector(
-      selectedAttackMode: state.attackMode,
-      onModeSelected: (mode) {
-        context.read<BattleState>().setAttackMode(mode);
+  Widget _buildAttackModeSelector() {
+    return Consumer<BattleState>(
+      builder: (context, state, child) {
+        return AttackModeSelector(
+          selectedAttackMode: state.attackMode,
+          onModeSelected: (mode) {
+            context.read<BattleState>().setAttackMode(mode);
+          },
+          onTap: _dismissKeyboard,
+        );
       },
-      onTap: _dismissKeyboard,
     );
   }
 
@@ -156,6 +158,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final state = context.read<BattleState>();
 
     if (!state.validationResult.isValid) {
+      state.forceShowErrors();
       return;
     }
 
@@ -172,6 +175,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final state = context.read<BattleState>();
 
     if (!state.validationResult.isValid) {
+      state.forceShowErrors();
       return;
     }
 
@@ -191,6 +195,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     final state = context.read<BattleState>();
 
     if (!state.validationResult.isValid) {
+      state.forceShowErrors();
       return;
     }
 

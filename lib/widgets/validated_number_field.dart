@@ -16,8 +16,9 @@ class ValidatedNumberField extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<BattleState>();
     final error = isAttackerField ? state.validationResult.attackersError : state.validationResult.defendersError;
-    final isRed = error != null;
-    final suffixText = ValidationMessageFormatter.getSuffixText(error);
+    final touched = isAttackerField ? state.attackersTouched : state.defendersTouched;
+    final isRed = error != null && (touched || state.shouldShowErrors);
+    final suffixText = (touched || state.shouldShowErrors) ? ValidationMessageFormatter.getSuffixText(error) : null;
 
     return TextField(
       controller: controller,

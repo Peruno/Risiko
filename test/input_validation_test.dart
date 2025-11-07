@@ -77,28 +77,28 @@ void main() {
       expect(isFieldRed(tester, attackerField()), false);
     });
 
-    testWidgets('Error box appears when field is invalid', (WidgetTester tester) async {
+    testWidgets('Field turns red when value is invalid', (WidgetTester tester) async {
       await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.enterText(defenderField(), '5');
       await tester.pump();
 
-      expect(find.textContaining('Angreifer muss mindestens'), findsOneWidget);
+      expect(isFieldRed(tester, attackerField()), true);
     });
 
-    testWidgets('Error box disappears when input becomes valid', (WidgetTester tester) async {
+    testWidgets('Field color returns to normal when input becomes valid', (WidgetTester tester) async {
       await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.enterText(defenderField(), '5');
       await tester.pump();
-      expect(find.textContaining('Angreifer'), findsWidgets);
+      expect(isFieldRed(tester, attackerField()), true);
 
       await tester.enterText(attackerField(), '5');
       await tester.pump();
 
-      expect(find.textContaining('Angreifer muss mindestens'), findsNothing);
+      expect(isFieldRed(tester, attackerField()), false);
     });
 
     testWidgets('Attack mode change triggers revalidation', (WidgetTester tester) async {
@@ -109,13 +109,11 @@ void main() {
       await tester.pump();
 
       expect(isFieldRed(tester, attackerField()), false);
-      expect(find.textContaining('Angreifer muss'), findsNothing);
 
       await tester.tap(find.text('Sicherer Angriff'));
       await tester.pump();
 
       expect(isFieldRed(tester, attackerField()), true);
-      expect(find.textContaining('bei einem sicheren Angriff mindestens 3'), findsOneWidget);
     });
 
     testWidgets('Input change triggers revalidation', (WidgetTester tester) async {
@@ -134,7 +132,9 @@ void main() {
       expect(isFieldRed(tester, attackerField()), false);
     });
 
-    testWidgets('Error box shows "sicheren Angriff" context in safe mode', (WidgetTester tester) async {
+    testWidgets('Error box shows "sicheren Angriff" context in safe mode after button click', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createTestApp());
 
       await tester.tap(find.text('Sicherer Angriff'));
@@ -144,21 +144,110 @@ void main() {
       await tester.enterText(defenderField(), '5');
       await tester.pump();
 
+      await tester.tap(find.text('Chancen berechnen'));
+      await tester.pump();
+
       expect(
         find.textContaining('Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens 3 sein.'),
         findsOneWidget,
       );
     });
 
-    testWidgets('Error box shows regular text in all-in mode', (WidgetTester tester) async {
+    testWidgets('Error box shows regular text in all-in mode after button click', (WidgetTester tester) async {
       await tester.pumpWidget(createTestApp());
 
       await tester.enterText(attackerField(), '0');
       await tester.enterText(defenderField(), '5');
       await tester.pump();
 
+      await tester.tap(find.text('Chancen berechnen'));
+      await tester.pump();
+
       expect(find.textContaining('Die Anzahl der Angreifer muss mindestens 1 sein.'), findsOneWidget);
       expect(find.textContaining('sicheren Angriff'), findsNothing);
+    });
+
+    testWidgets('Clicking "Chancen berechnen" with empty attacker field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(defenderField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Chancen berechnen'));
+      await tester.pump();
+
+      expect(find.textContaining('Angreifer muss mindestens'), findsOneWidget);
+      expect(find.textContaining('%'), findsNothing);
+    });
+
+    testWidgets('Clicking "Detailliertes Diagramm" with empty attacker field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(defenderField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Detailliertes Diagramm'));
+      await tester.pump();
+
+      expect(find.textContaining('Angreifer muss mindestens'), findsOneWidget);
+    });
+
+    testWidgets('Clicking "Ergebnis simulieren" with empty attacker field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(defenderField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Ergebnis simulieren'));
+      await tester.pump();
+
+      expect(find.textContaining('Angreifer muss mindestens'), findsOneWidget);
+    });
+
+    testWidgets('Clicking "Chancen berechnen" with empty defender field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(attackerField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Chancen berechnen'));
+      await tester.pump();
+
+      expect(find.textContaining('Verteidiger muss mindestens'), findsOneWidget);
+      expect(find.textContaining('%'), findsNothing);
+    });
+
+    testWidgets('Clicking "Detailliertes Diagramm" with empty defender field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(attackerField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Detailliertes Diagramm'));
+      await tester.pump();
+
+      expect(find.textContaining('Verteidiger muss mindestens'), findsOneWidget);
+    });
+
+    testWidgets('Clicking "Ergebnis simulieren" with empty defender field shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.enterText(attackerField(), '5');
+      await tester.pump();
+
+      await tester.tap(find.text('Ergebnis simulieren'));
+      await tester.pump();
+
+      expect(find.textContaining('Verteidiger muss mindestens'), findsOneWidget);
+    });
+
+    testWidgets('Clicking buttons with completely empty fields shows error', (WidgetTester tester) async {
+      await tester.pumpWidget(createTestApp());
+
+      await tester.tap(find.text('Chancen berechnen'));
+      await tester.pump();
+
+      expect(find.textContaining('muss mindestens'), findsOneWidget);
     });
   });
 }
