@@ -32,7 +32,7 @@ class _ProbabilityChartState extends State<ProbabilityChart> {
     final maxY = _calculateMaxY();
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0, bottom: 6.0),
       child: ProbabilitySubChart(
         chartType: ChartType.merged,
         attackerProbabilities: widget.attackerWinProbabilities,

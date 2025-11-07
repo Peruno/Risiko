@@ -459,17 +459,17 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
 
     Widget axisLabel;
     if (hasAttackerData && !hasDefenderData) {
-      axisLabel = const Text('Verluste des Angreifers', style: TextStyle(fontSize: 12), textAlign: TextAlign.center);
+      axisLabel = const Text('Verluste des Angreifers', style: TextStyle(fontSize: 14), textAlign: TextAlign.center);
     } else if (!hasAttackerData && hasDefenderData) {
-      axisLabel = const Text('Verluste des Verteidigers', style: TextStyle(fontSize: 12), textAlign: TextAlign.center);
+      axisLabel = const Text('Verluste des Verteidigers', style: TextStyle(fontSize: 14), textAlign: TextAlign.center);
     } else {
       axisLabel = Row(
         children: [
           Expanded(
-            child: Text('Verluste des Angreifers', style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+            child: Text('Verluste des Angreifers', style: const TextStyle(fontSize: 14), textAlign: TextAlign.center),
           ),
           Expanded(
-            child: Text('Verluste des Verteidigers', style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+            child: Text('Verluste des Verteidigers', style: const TextStyle(fontSize: 14), textAlign: TextAlign.center),
           ),
         ],
       );
@@ -504,10 +504,10 @@ class _ProbabilitySubChartState extends State<ProbabilitySubChart> {
         axisNameWidget: axisLabel,
       ),
       leftTitles: AxisTitles(
-        axisNameSize: 60,
+        axisNameSize: 40,
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 40,
+          reservedSize: 20,
           getTitlesWidget: (value, meta) {
             if (value >= widget.maxY * 0.95) {
               return const SizedBox.shrink();
