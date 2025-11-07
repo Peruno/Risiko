@@ -14,34 +14,37 @@ class AttackModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildModeCard(
-            mode: 'allIn',
-            title: 'All In',
-            description: 'Kampf bis zum letzten Mann',
-            isSelected: selectedAttackMode == 'allIn',
-            onTap: () {
-              onTap();
-              onModeSelected('allIn');
-            },
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _buildModeCard(
+              mode: 'allIn',
+              title: 'All In',
+              description: 'Kampf bis zum letzten Mann',
+              isSelected: selectedAttackMode == 'allIn',
+              onTap: () {
+                onTap();
+                onModeSelected('allIn');
+              },
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildModeCard(
-            mode: 'safe',
-            title: 'Sicherer Angriff',
-            description: 'Rückzug bei 2 verbleibenden Angreifern',
-            isSelected: selectedAttackMode == 'safe',
-            onTap: () {
-              onTap();
-              onModeSelected('safe');
-            },
+          const SizedBox(width: 16),
+          Expanded(
+            child: _buildModeCard(
+              mode: 'safe',
+              title: 'Sicherer Angriff',
+              description: 'Rückzug bei 2 verbleibenden Angreifern',
+              isSelected: selectedAttackMode == 'safe',
+              onTap: () {
+                onTap();
+                onModeSelected('safe');
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -57,7 +60,7 @@ class AttackModeSelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey, width: isSelected ? 2 : 1),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey, width: 2),
           borderRadius: BorderRadius.circular(8),
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
         ),
