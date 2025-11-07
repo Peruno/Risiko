@@ -3,7 +3,6 @@
 * Research: Is the name "Risiko" proprietary/licensed?
 * Release it to the Apple App Store
 * Release it to the Google App Store
-* Write a README
 * Refactor the detailed diagram
 * Refactor simulator.dart
 
