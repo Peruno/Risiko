@@ -68,3 +68,7 @@ The application will calculate and visualize Risk battle probabilities with a na
 **TRAILING NEWLINE REQUIREMENT**: All files must end with a newline character. Ensure every file has exactly one empty line at the end.
 
 **FORMATTING**: Use `dart format --line-length=120` to format all code that is written and committed.
+
+## Communication Style
+
+**NO FILLER PHRASES**: Do not use unnecessary phrases like "Great question", "Excellent point", "Good catch", or similar validation language. Get straight to the technical content.

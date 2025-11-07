@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import '../calculation/simulator.dart';
 import '../state/battle_state.dart';
 import '../utils/battle_result_formatter.dart';
-import '../validation/validation_message_formatter.dart';
 import '../widgets/attack_mode_selector.dart';
-import '../widgets/probability_chart/detailed_chart_screen.dart';
+import '../widgets/error_display.dart';
 import '../widgets/info_dialog.dart';
+import '../widgets/probability_chart/detailed_chart_screen.dart';
+import '../widgets/result_display.dart';
 import '../widgets/validated_number_field.dart';
 
 class BattleSimulatorPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   final TextEditingController _attackersController = TextEditingController();
   final TextEditingController _defendersController = TextEditingController();
   final Simulator _simulator = Simulator();
-  String _result = '';
+  final GlobalKey<ResultDisplayState> _resultDisplayKey = GlobalKey<ResultDisplayState>();
 
   @override
   void initState() {
@@ -32,9 +33,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<BattleState>();
-    final errorBoxText = ValidationMessageFormatter.getErrorBoxText(state.validationResult);
-
     return Scaffold(
       appBar: _buildAppBar(context),
       body: Padding(
@@ -49,14 +47,20 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               const SizedBox(height: 24),
               _buildAttackModeSelector(),
               const SizedBox(height: 24),
-              buildCalculateProbabilitiesButton(),
+              _buildCalculateProbabilitiesButton(),
               const SizedBox(height: 12),
               _buildDetailedDiagramButton(),
               const SizedBox(height: 12),
               _buildShowResultButton(),
               const SizedBox(height: 24),
-              if (errorBoxText != null) _buildResultBox(errorBoxText),
-              if (_result.isNotEmpty && errorBoxText == null) _buildResultBox(_result),
+              Selector<BattleState, bool>(
+                selector: (context, state) => !state.validationResult.isValid,
+                builder: (context, hasErrors, child) {
+                  if (hasErrors) return const ErrorDisplay();
+                  return child!;
+                },
+                child: ResultDisplay(key: _resultDisplayKey),
+              ),
             ],
           ),
         ),
@@ -78,16 +82,6 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
   }
 
-  Container _buildResultBox(String text) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(text, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
-    );
-  }
 
   ElevatedButton _buildShowResultButton() {
     return ElevatedButton(
@@ -113,7 +107,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     );
   }
 
-  ElevatedButton buildCalculateProbabilitiesButton() {
+  ElevatedButton _buildCalculateProbabilitiesButton() {
     return ElevatedButton(
       onPressed: _calculateProbabilities,
       style: ElevatedButton.styleFrom(
@@ -170,9 +164,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
         : _simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
 
     final formatter = BattleResultFormatter(result: result, selectedAttackMode: state.attackMode);
-    setState(() {
-      _result = formatter.formatProbabilities();
-    });
+    _resultDisplayKey.currentState?.showResult(formatter.formatProbabilities());
   }
 
   void _simulateBattle() {
@@ -191,9 +183,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
 
     final formatter = BattleResultFormatter(result: result, selectedAttackMode: state.attackMode);
-    setState(() {
-      _result = formatter.formatBattleOutcome();
-    });
+    _resultDisplayKey.currentState?.showResult(formatter.formatBattleOutcome());
   }
 
   void _showDetailedChart() {

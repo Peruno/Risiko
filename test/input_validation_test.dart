@@ -9,10 +9,7 @@ import 'package:risiko_simulator/state/battle_state.dart';
 void main() {
   group('Input Validation Behavior', () {
     Widget createTestApp() {
-      return ChangeNotifierProvider(
-        create: (_) => BattleState(),
-        child: const RisikoApp(),
-      );
+      return ChangeNotifierProvider(create: (_) => BattleState(), child: const RisikoApp());
     }
 
     Finder attackerField() => find.byKey(const Key('attacker_field'));
@@ -147,8 +144,10 @@ void main() {
       await tester.enterText(defenderField(), '5');
       await tester.pump();
 
-      expect(find.textContaining('Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens 3 sein.'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens 3 sein.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('Error box shows regular text in all-in mode', (WidgetTester tester) async {
