@@ -1,0 +1,7 @@
+Die Michelson'sche Verzögerungstaktik sieht folgende Würfelregeln vor:
+
+Der Angreifer würfelt mit 1, 2 oder 3 Würfeln, wenn er 1, 2 oder >2 angreifende Truppen besitzt. Wenn sich n Truppen auf dem angreifenden Land befinden, so können maximal n-1 davon als angreifende Truppen eingesetzt werden, da eine Truppe auf dem Land verbleiben muss.
+
+Der Verteidiger würfelt mit 1 oder 2 Würfeln, wenn er 1 oder >1 verteidigende Truppen besitzt.
+
+In einer "Angriffsrunde" wird je die höchste Würfelzahl des Angreifers mit der des Verteidigers verglichen. Ist die des Angreifers höher als die des Verteidigers, so verliert der Verteidiger eine Truppe. Andernfalls (auch bei Gleichstand) verliert der Angreifer eine Truppe.

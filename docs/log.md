@@ -1,3 +1,6 @@
+08.11.2025, 2h
+* Submit for review in Apple App Store
+
 07.11.2025, 2.5h
 * Add readme
 * Minor improvements of the diagram

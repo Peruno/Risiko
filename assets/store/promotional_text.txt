@@ -1,0 +1,1 @@
+Ein Simulator um die Wahrscheinlichkeiten beim Brettspiel Risiko zu visualisieren und ein Ergebnis zu simulieren. Es gilt die Michelson'sche Verzögerungstaktik.

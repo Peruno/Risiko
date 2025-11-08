@@ -43,7 +43,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
     }
 
     final screenHeight = MediaQuery.of(context).size.height;
-    final toolbarHeight = screenHeight * 0.06;
+    final toolbarHeight = screenHeight * 0.10;
 
     return Scaffold(
       appBar: AppBar(
