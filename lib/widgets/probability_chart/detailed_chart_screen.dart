@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:risiko_simulator/calculation/simulator.dart';
-import 'package:risiko_simulator/state/battle_state.dart';
-import 'package:risiko_simulator/widgets/probability_chart/probability_chart.dart';
+
+import '../../calculation/simulator.dart';
+import '../../state/battle_state.dart';
+import 'battle_distribution_chart.dart';
+import 'utils/chart_data_transformer.dart';
 
 class DetailedChartScreen extends StatefulWidget {
   const DetailedChartScreen({super.key});
@@ -31,16 +33,14 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
     final simulator = Simulator();
     final result = simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
 
-    List<double> attackerWinProbs = [];
-    List<double> defenderWinProbs = [];
+    final attackerWinProbs = List.generate(state.attackers!, (i) => result.winProbabilities[i] ?? 0.0);
+    final defenderWinProbs = List.generate(state.defenders!, (i) => result.lossProbabilities[i] ?? 0.0);
 
-    for (int i = 0; i < state.attackers!; i++) {
-      attackerWinProbs.add(result.winProbabilities[i] ?? 0.0);
-    }
-
-    for (int i = 0; i < state.defenders!; i++) {
-      defenderWinProbs.add(result.lossProbabilities[i] ?? 0.0);
-    }
+    final chartData = ChartDataTransformer.transform(
+      attackerWinProbabilities: attackerWinProbs,
+      defenderWinProbabilities: defenderWinProbs,
+      totalWinProbability: result.winProbability,
+    );
 
     final screenHeight = MediaQuery.of(context).size.height;
     final toolbarHeight = screenHeight * 0.10;
@@ -56,13 +56,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
         leading: const BackButton(color: Colors.black),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: ProbabilityChart(
-        attackerWinProbabilities: attackerWinProbs,
-        defenderWinProbabilities: defenderWinProbs,
-        attackers: state.attackers!,
-        defenders: state.defenders!,
-        totalWinProbability: result.winProbability,
-      ),
+      body: BattleDistributionChart(data: chartData),
     );
   }
 }
