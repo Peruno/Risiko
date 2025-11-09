@@ -120,11 +120,11 @@ class Simulator {
     if (_random.nextDouble() < totalWinProb) {
       final losses = _weightedChoice(winProbs);
       return (outcome: BattleOutcome.victory, losses: losses);
-    } else {
-      final losses = _weightedChoice(lossProbs);
-      final outcome = isSafeAttack ? BattleOutcome.retreat : BattleOutcome.defeat;
-      return (outcome: outcome, losses: losses);
     }
+
+    final losses = _weightedChoice(lossProbs);
+    final outcome = isSafeAttack ? BattleOutcome.retreat : BattleOutcome.defeat;
+    return (outcome: outcome, losses: losses);
   }
 
   int _weightedChoice(Map<int, double> probabilities) {
