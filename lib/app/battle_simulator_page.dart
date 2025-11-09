@@ -162,7 +162,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
       return;
     }
 
-    final BattleResult result = state.attackMode == 'safe'
+    final BattleResult result = state.attackMode == AttackMode.safe
         ? _simulator.safeAttack(state.attackers!, state.defenders!, simulateOutcome: false)
         : _simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
 
@@ -180,7 +180,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
     }
 
     final BattleResult result;
-    if (state.attackMode == 'safe') {
+    if (state.attackMode == AttackMode.safe) {
       result = _simulator.safeAttack(state.attackers!, state.defenders!, simulateOutcome: true);
     } else {
       result = _simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: true);

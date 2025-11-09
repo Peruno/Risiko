@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:risiko_simulator/state/battle_state.dart';
 
 class AttackModeSelector extends StatelessWidget {
-  final String? selectedAttackMode;
-  final ValueChanged<String> onModeSelected;
+  final AttackMode? selectedAttackMode;
+  final ValueChanged<AttackMode> onModeSelected;
   final VoidCallback onTap;
 
   const AttackModeSelector({
@@ -20,26 +21,24 @@ class AttackModeSelector extends StatelessWidget {
         children: [
           Expanded(
             child: _buildModeCard(
-              mode: 'allIn',
               title: 'All In',
               description: 'Kampf bis zum letzten Mann',
-              isSelected: selectedAttackMode == 'allIn',
+              isSelected: selectedAttackMode == AttackMode.allIn,
               onTap: () {
                 onTap();
-                onModeSelected('allIn');
+                onModeSelected(AttackMode.allIn);
               },
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: _buildModeCard(
-              mode: 'safe',
               title: 'Sicherer Angriff',
               description: 'Rückzug bei 2 verbleibenden Angreifern',
-              isSelected: selectedAttackMode == 'safe',
+              isSelected: selectedAttackMode == AttackMode.safe,
               onTap: () {
                 onTap();
-                onModeSelected('safe');
+                onModeSelected(AttackMode.safe);
               },
             ),
           ),
@@ -49,7 +48,6 @@ class AttackModeSelector extends StatelessWidget {
   }
 
   Widget _buildModeCard({
-    required String mode,
     required String title,
     required String description,
     required bool isSelected,

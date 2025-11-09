@@ -1,8 +1,10 @@
+import 'package:risiko_simulator/state/battle_state.dart';
+
 import '../calculation/simulator.dart';
 
 class BattleResultFormatter {
   final BattleResult result;
-  final String? selectedAttackMode;
+  final AttackMode? selectedAttackMode;
 
   BattleResultFormatter({required this.result, this.selectedAttackMode});
 
@@ -10,7 +12,7 @@ class BattleResultFormatter {
     final buffer = StringBuffer();
 
     buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
-    if (selectedAttackMode == 'safe') {
+    if (selectedAttackMode == AttackMode.safe) {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
       buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
     } else {

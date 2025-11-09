@@ -1,3 +1,4 @@
+import '../state/battle_state.dart';
 import 'validation_result.dart';
 
 class ValidationMessageFormatter {
@@ -21,13 +22,13 @@ class ValidationMessageFormatter {
       final error = result.attackersError!;
       switch (error.type) {
         case ErrorType.missing:
-          if (error.attackMode == 'safe') {
+          if (error.attackMode == AttackMode.safe) {
             return 'Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens ${error.minValue} sein.';
           } else {
             return 'Die Anzahl der Angreifer muss mindestens ${error.minValue} sein.';
           }
         case ErrorType.belowMinimum:
-          if (error.attackMode == 'safe') {
+          if (error.attackMode == AttackMode.safe) {
             return 'Die Anzahl der Angreifer muss bei einem sicheren Angriff mindestens ${error.minValue} sein.';
           } else {
             return 'Die Anzahl der Angreifer muss mindestens ${error.minValue} sein.';

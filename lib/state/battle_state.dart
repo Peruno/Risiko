@@ -2,14 +2,16 @@ import 'package:flutter/foundation.dart';
 import '../validation/validation_result.dart';
 import '../validation/validation_service.dart';
 
+enum AttackMode { allIn, safe }
+
 class BattleState extends ChangeNotifier {
   int? _attackers;
   int? _defenders;
-  String _attackMode = 'allIn';
+  AttackMode _attackMode = AttackMode.allIn;
   late ValidationResult _validationResult;
-  bool _attackersTouched = false;
-  bool _defendersTouched = false;
-  bool _forceShowErrors = false;
+  bool _isAttackersTouched = false;
+  bool _isDefendersTouched = false;
+  bool _shouldShowErrors = false;
 
   BattleState() {
     _validate();
@@ -17,34 +19,34 @@ class BattleState extends ChangeNotifier {
 
   int? get attackers => _attackers;
   int? get defenders => _defenders;
-  String get attackMode => _attackMode;
+  AttackMode get attackMode => _attackMode;
   ValidationResult get validationResult => _validationResult;
-  bool get attackersTouched => _attackersTouched;
-  bool get defendersTouched => _defendersTouched;
-  bool get shouldShowErrors => _forceShowErrors;
+  bool get attackersTouched => _isAttackersTouched;
+  bool get defendersTouched => _isDefendersTouched;
+  bool get shouldShowErrors => _shouldShowErrors;
 
   void setAttackers(int? value) {
     _attackers = value;
-    _attackersTouched = true;
+    _isAttackersTouched = true;
     _validate();
     notifyListeners();
   }
 
   void setDefenders(int? value) {
     _defenders = value;
-    _defendersTouched = true;
+    _isDefendersTouched = true;
     _validate();
     notifyListeners();
   }
 
-  void setAttackMode(String mode) {
+  void setAttackMode(AttackMode mode) {
     _attackMode = mode;
     _validate();
     notifyListeners();
   }
 
   void forceShowErrors() {
-    _forceShowErrors = true;
+    _shouldShowErrors = true;
     notifyListeners();
   }
 
