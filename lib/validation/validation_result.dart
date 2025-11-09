@@ -8,12 +8,7 @@ class FieldError {
   final int maxValue;
   final AttackMode attackMode;
 
-  const FieldError({
-    required this.type,
-    required this.minValue,
-    required this.maxValue,
-    required this.attackMode,
-  });
+  const FieldError({required this.type, required this.minValue, required this.maxValue, required this.attackMode});
 }
 
 class ValidationResult {
