@@ -85,7 +85,7 @@ class Simulator {
     final safeProbs = _probs.pSafeStop(a, d);
     final lossProbs = <int, double>{};
     for (int i = 0; i < safeProbs.length; i++) {
-      lossProbs[d - 1 - i] = safeProbs[i];
+      lossProbs[i] = safeProbs[i];
     }
 
     final totalWinProb = winProbs.values.reduce((a, b) => a + b);
