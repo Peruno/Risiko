@@ -18,12 +18,12 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
   }
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 

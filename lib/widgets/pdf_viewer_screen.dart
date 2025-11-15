@@ -18,7 +18,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     _pdfController = PdfController(document: PdfDocument.openAsset('docs/latex/output/main.pdf'));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);

@@ -1,3 +1,6 @@
+09.11.2025, 3h
+* Refactoring of the diagram
+
 08.11.2025, 2h
 * Submit for review in Apple App Store
 
