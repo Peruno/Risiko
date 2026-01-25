@@ -6,7 +6,7 @@ import 'package:risiko_simulator/state/battle_state.dart';
 
 void main() {
   testWidgets('Battle simulator UI test', (WidgetTester tester) async {
-    await tester.pumpWidget(ChangeNotifierProvider(create: (_) => BattleState(), child: const RisikoApp()));
+    await tester.pumpWidget(ChangeNotifierProvider(create: (_) => BattleInputState(), child: const RisikoApp()));
 
     expect(find.text('Anzahl Angreifer'), findsOneWidget);
     expect(find.text('Anzahl Verteidiger'), findsOneWidget);

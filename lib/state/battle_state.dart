@@ -4,7 +4,7 @@ import '../validation/validation_service.dart';
 
 enum AttackMode { allIn, safe }
 
-class BattleState extends ChangeNotifier {
+class BattleInputState extends ChangeNotifier {
   int? _attackers;
   int? _defenders;
   AttackMode _attackMode = AttackMode.allIn;
@@ -13,7 +13,7 @@ class BattleState extends ChangeNotifier {
   bool _isDefendersTouched = false;
   bool _shouldShowErrors = false;
 
-  BattleState() {
+  BattleInputState() {
     _validate();
   }
 

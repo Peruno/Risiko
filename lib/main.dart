@@ -5,5 +5,5 @@ import 'app/risiko_app.dart';
 import 'state/battle_state.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(create: (_) => BattleState(), child: const RisikoApp()));
+  runApp(ChangeNotifierProvider(create: (_) => BattleInputState(), child: const RisikoApp()));
 }

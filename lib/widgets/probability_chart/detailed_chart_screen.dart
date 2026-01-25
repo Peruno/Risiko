@@ -29,7 +29,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<BattleState>();
+    final state = context.watch<BattleInputState>();
     final simulator = Simulator();
     final result = simulator.allIn(state.attackers!, state.defenders!, simulateOutcome: false);
 

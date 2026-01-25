@@ -14,7 +14,7 @@ class ValidatedNumberField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<BattleState>();
+    final state = context.watch<BattleInputState>();
     final error = isAttackerField ? state.validationResult.attackersError : state.validationResult.defendersError;
     final touched = isAttackerField ? state.attackersTouched : state.defendersTouched;
     final isRed = error != null && (touched || state.shouldShowErrors);
@@ -27,9 +27,9 @@ class ValidatedNumberField extends StatelessWidget {
       onChanged: (text) {
         final value = int.tryParse(text);
         if (isAttackerField) {
-          context.read<BattleState>().setAttackers(value);
+          context.read<BattleInputState>().setAttackers(value);
         } else {
-          context.read<BattleState>().setDefenders(value);
+          context.read<BattleInputState>().setDefenders(value);
         }
       },
       decoration: InputDecoration(

@@ -1,8 +1,8 @@
 # Todo
+* Release it to the Apple App Store
 * Release it to the Google App Store
   * Addressnachweis besorgen
 * Refactor the detailed diagram
-* Refactor simulator.dart
 
 
 # Maybe One Day

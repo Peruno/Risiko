@@ -9,7 +9,7 @@ import 'package:risiko_simulator/state/battle_state.dart';
 void main() {
   group('Input Validation Behavior', () {
     Widget createTestApp() {
-      return ChangeNotifierProvider(create: (_) => BattleState(), child: const RisikoApp());
+      return ChangeNotifierProvider(create: (_) => BattleInputState(), child: const RisikoApp());
     }
 
     Finder attackerField() => find.byKey(const Key('attacker_field'));

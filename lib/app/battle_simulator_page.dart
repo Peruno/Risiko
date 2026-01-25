@@ -53,7 +53,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
               const SizedBox(height: 12),
               _buildShowResultButton(),
               const SizedBox(height: 24),
-              Selector<BattleState, bool>(
+              Selector<BattleInputState, bool>(
                 selector: (context, state) => !state.validationResult.isValid,
                 builder: (context, hasErrors, child) {
                   if (hasErrors) return const ErrorDisplay();
@@ -119,12 +119,12 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
   }
 
   Widget _buildAttackModeSelector() {
-    return Consumer<BattleState>(
+    return Consumer<BattleInputState>(
       builder: (context, state, child) {
         return AttackModeSelector(
           selectedAttackMode: state.attackMode,
           onModeSelected: (mode) {
-            context.read<BattleState>().setAttackMode(mode);
+            context.read<BattleInputState>().setAttackMode(mode);
           },
           onTap: _dismissKeyboard,
         );
@@ -155,7 +155,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _calculateProbabilities() {
     _dismissKeyboard();
-    final state = context.read<BattleState>();
+    final state = context.read<BattleInputState>();
 
     if (!state.validationResult.isValid) {
       state.forceShowErrors();
@@ -172,7 +172,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _simulateBattle() {
     _dismissKeyboard();
-    final state = context.read<BattleState>();
+    final state = context.read<BattleInputState>();
 
     if (!state.validationResult.isValid) {
       state.forceShowErrors();
@@ -192,7 +192,7 @@ class _BattleSimulatorPageState extends State<BattleSimulatorPage> {
 
   void _showDetailedChart() {
     _dismissKeyboard();
-    final state = context.read<BattleState>();
+    final state = context.read<BattleInputState>();
 
     if (!state.validationResult.isValid) {
       state.forceShowErrors();

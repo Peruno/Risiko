@@ -9,7 +9,7 @@ class ErrorDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BattleState>(
+    return Consumer<BattleInputState>(
       builder: (context, state, child) {
         if (!state.shouldShowErrors) return const SizedBox.shrink();
 
