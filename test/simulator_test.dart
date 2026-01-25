@@ -3,16 +3,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:risiko_simulator/calculation/simulator.dart';
 import 'package:risiko_simulator/calculation/composite_probabilities.dart';
 
+import 'helper.dart';
+
 void main() {
   group('Simulator', () {
     late Simulator simulator;
     late Random deterministicRandom;
-    late CompositeProbabilities compositeProbs;
+    late Helper helper;
 
     setUp(() {
       deterministicRandom = Random(42);
       simulator = Simulator(random: deterministicRandom);
-      compositeProbs = CompositeProbabilities();
+      helper = Helper();
     });
 
     group('All-In Battle Simulation', () {
@@ -214,7 +216,7 @@ void main() {
     group('Integration with Probability Calculations', () {
       test('allIn win probability matches matrix calculation', () {
         final result = simulator.allIn(4, 3, simulateOutcome: false);
-        final directProb = compositeProbs.pMatrix(4, 3);
+        final directProb = helper.pMatrix(4, 3);
 
         expect(result.winProbability, closeTo(directProb, 1e-10));
       });

@@ -1,16 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:risiko_simulator/calculation/composite_probabilities.dart';
 
+import 'helper.dart';
+
 void main() {
   group('CompositeProbabilities', () {
     late CompositeProbabilities compositeProbs = CompositeProbabilities();
+    late Helper helper = Helper();
 
     group('Precise Win Probabilities', () {
       test('sum of all precise win probabilities equals overall win probability', () {
         const a = 10;
         const d = 7;
 
-        final overallWinProb = compositeProbs.pMatrix(a, d);
+        final overallWinProb = helper.pMatrix(a, d);
 
         double sumPreciseWins = 0.0;
         for (int aLeft = 0; aLeft <= a; aLeft++) {
@@ -30,7 +33,7 @@ void main() {
         const a = 4;
         const d = 6;
 
-        final overallLossProb = 1.0 - compositeProbs.pMatrix(a, d);
+        final overallLossProb = 1.0 - helper.pMatrix(a, d);
 
         double sumPreciseLosses = 0.0;
         for (int dLeft = 1; dLeft <= d; dLeft++) {
