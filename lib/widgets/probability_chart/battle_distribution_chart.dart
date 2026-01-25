@@ -23,10 +23,7 @@ class _BattleDistributionChartState extends State<BattleDistributionChart> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: ChartAxisBuilder.buildTitleWidget(widget.data),
-        ),
+        Padding(padding: const EdgeInsets.only(top: 8.0), child: ChartAxisBuilder.buildTitleWidget(widget.data)),
         Expanded(child: _buildChart()),
       ],
     );

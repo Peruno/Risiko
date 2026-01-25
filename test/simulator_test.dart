@@ -8,11 +8,10 @@ import 'helper.dart';
 void main() {
   group('Simulator', () {
     late Simulator simulator;
-    late Random deterministicRandom;
     late Helper helper;
 
     setUp(() {
-      deterministicRandom = Random(42);
+      Random deterministicRandom = Random(42);
       simulator = Simulator(random: deterministicRandom);
       helper = Helper();
     });
