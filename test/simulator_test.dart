@@ -18,16 +18,16 @@ void main() {
 
     group('All-In Battle Simulation', () {
       test('allIn input validation', () {
-        expect(() => simulator.allIn(0, 5), throwsA(isA<ArgumentError>()));
-        expect(() => simulator.allIn(5, 0), throwsA(isA<ArgumentError>()));
-        expect(() => simulator.allIn(-1, 3), throwsA(isA<ArgumentError>()));
+        expect(() => simulator.allIn(0, 5, simulateOutcome: false), throwsA(isA<ArgumentError>()));
+        expect(() => simulator.allIn(5, 0, simulateOutcome: false), throwsA(isA<ArgumentError>()));
+        expect(() => simulator.allIn(-1, 3, simulateOutcome: false), throwsA(isA<ArgumentError>()));
       });
 
       test('allIn returns valid battle result without simulation', () {
         final result = simulator.allIn(5, 3, simulateOutcome: false);
 
-        expect(result.winProbability, greaterThan(0.0));
-        expect(result.winProbability, lessThan(1.0));
+        expect(result.overallWinProbability, greaterThan(0.0));
+        expect(result.overallWinProbability, lessThan(1.0));
         expect(result.winProbabilities.length, equals(5));
         expect(result.lossProbabilities.length, equals(3));
 
@@ -50,7 +50,7 @@ void main() {
         final totalSum = winSum + lossSum;
 
         expect(totalSum, closeTo(1.0, 1e-10));
-        expect(winSum, closeTo(result.winProbability, 1e-10));
+        expect(winSum, closeTo(result.overallWinProbability, 1e-10));
       });
 
       test('allIn simulates outcomes correctly', () {
@@ -92,8 +92,8 @@ void main() {
 
           expect(result.winProbabilities.length, equals(a));
           expect(result.lossProbabilities.length, equals(d));
-          expect(result.winProbability, greaterThan(0.0));
-          expect(result.winProbability, lessThan(1.0));
+          expect(result.overallWinProbability, greaterThan(0.0));
+          expect(result.overallWinProbability, lessThan(1.0));
         }
       });
     });
@@ -108,8 +108,8 @@ void main() {
       test('safeAttack returns valid battle result without simulation', () {
         final result = simulator.safeAttack(5, 3, simulateOutcome: false);
 
-        expect(result.winProbability, greaterThanOrEqualTo(0.0));
-        expect(result.winProbability, lessThanOrEqualTo(1.0));
+        expect(result.overallWinProbability, greaterThanOrEqualTo(0.0));
+        expect(result.overallWinProbability, lessThanOrEqualTo(1.0));
         expect(result.winProbabilities.length, equals(3));
         expect(result.lossProbabilities.length, greaterThan(0));
 
@@ -161,8 +161,8 @@ void main() {
 
           expect(result.winProbabilities.length, equals(a - 2));
           expect(result.lossProbabilities.length, greaterThan(0));
-          expect(result.winProbability, greaterThanOrEqualTo(0.0));
-          expect(result.winProbability, lessThanOrEqualTo(1.0));
+          expect(result.overallWinProbability, greaterThanOrEqualTo(0.0));
+          expect(result.overallWinProbability, lessThanOrEqualTo(1.0));
         }
       });
     });
@@ -173,7 +173,7 @@ void main() {
 
         expect(result.outcome, isA<BattleOutcome>());
         expect(result.losses, isA<int>());
-        expect(result.winProbability, isA<double>());
+        expect(result.overallWinProbability, isA<double>());
         expect(result.winProbabilities, isA<Map<int, double>>());
         expect(result.lossProbabilities, isA<Map<int, double>>());
       });
@@ -217,7 +217,7 @@ void main() {
         final result = simulator.allIn(4, 3, simulateOutcome: false);
         final directProb = helper.pMatrix(4, 3);
 
-        expect(result.winProbability, closeTo(directProb, 1e-10));
+        expect(result.overallWinProbability, closeTo(directProb, 1e-10));
       });
 
       test('probability distributions are mathematically sound', () {

@@ -1,9 +1,6 @@
 # Todo
-* Research: Is the name "Risiko" proprietary/licensed?
-* Release it to the Apple App Store
-  * Waiting for review
 * Release it to the Google App Store
-  * Adressnachweis besorgen
+  * Addressnachweis besorgen
 * Refactor the detailed diagram
 * Refactor simulator.dart
 

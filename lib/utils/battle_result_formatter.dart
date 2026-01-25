@@ -11,12 +11,12 @@ class BattleResultFormatter {
   String formatProbabilities() {
     final buffer = StringBuffer();
 
-    buffer.writeln('Angreifer gewinnt: ${(result.winProbability * 100).toStringAsFixed(1)}%');
+    buffer.writeln('Angreifer gewinnt: ${(result.overallWinProbability * 100).toStringAsFixed(1)}%');
     if (selectedAttackMode == AttackMode.safe) {
       final retreatProb = result.lossProbabilities.values.reduce((a, b) => a + b);
       buffer.writeln('Rückzug: ${(retreatProb * 100).toStringAsFixed(1)}%');
     } else {
-      buffer.writeln('Verteidiger gewinnt: ${((1 - result.winProbability) * 100).toStringAsFixed(1)}%');
+      buffer.writeln('Verteidiger gewinnt: ${((1 - result.overallWinProbability) * 100).toStringAsFixed(1)}%');
     }
 
     return buffer.toString();

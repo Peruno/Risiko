@@ -6,14 +6,14 @@ enum BattleOutcome { victory, defeat, retreat }
 class BattleResult {
   final BattleOutcome outcome;
   final int losses;
-  final double winProbability;
+  final double overallWinProbability;
   final Map<int, double> winProbabilities;
   final Map<int, double> lossProbabilities;
 
   BattleResult({
     required this.outcome,
     required this.losses,
-    required this.winProbability,
+    required this.overallWinProbability,
     required this.winProbabilities,
     required this.lossProbabilities,
   });
@@ -28,7 +28,7 @@ class Simulator {
   }
 
   /// Simulates an all-in battle where attacker fights until victory or defeat
-  BattleResult allIn(int a, int d, {bool simulateOutcome = true}) {
+  BattleResult allIn(int a, int d, {required bool simulateOutcome}) {
     if (a < 1) {
       throw ArgumentError('Number of attackers must be at least 1, got: $a');
     }
@@ -52,7 +52,7 @@ class Simulator {
       return BattleResult(
         outcome: BattleOutcome.victory,
         losses: 0,
-        winProbability: totalWinProb,
+        overallWinProbability: totalWinProb,
         winProbabilities: winProbs,
         lossProbabilities: lossProbs,
       );
@@ -62,7 +62,7 @@ class Simulator {
     return BattleResult(
       outcome: result.outcome,
       losses: result.losses,
-      winProbability: totalWinProb,
+      overallWinProbability: totalWinProb,
       winProbabilities: winProbs,
       lossProbabilities: lossProbs,
     );
@@ -94,7 +94,7 @@ class Simulator {
       return BattleResult(
         outcome: BattleOutcome.victory,
         losses: 0,
-        winProbability: totalWinProb,
+        overallWinProbability: totalWinProb,
         winProbabilities: winProbs,
         lossProbabilities: lossProbs,
       );
@@ -104,7 +104,7 @@ class Simulator {
     return BattleResult(
       outcome: result.outcome,
       losses: result.losses,
-      winProbability: totalWinProb,
+      overallWinProbability: totalWinProb,
       winProbabilities: winProbs,
       lossProbabilities: lossProbs,
     );

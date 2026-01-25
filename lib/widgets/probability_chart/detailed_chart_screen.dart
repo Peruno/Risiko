@@ -39,7 +39,7 @@ class _DetailedChartScreenState extends State<DetailedChartScreen> {
     final chartData = ChartDataTransformer.transform(
       attackerWinProbabilities: attackerWinProbs,
       defenderWinProbabilities: defenderWinProbs,
-      totalWinProbability: result.winProbability,
+      totalWinProbability: result.overallWinProbability,
     );
 
     final screenHeight = MediaQuery.of(context).size.height;
